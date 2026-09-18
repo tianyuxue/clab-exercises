@@ -1,0 +1,5 @@
+id: 03-route-fix
+title: 静态路由修复
+topology: topology.clab.yml
+deploy:
+  timeout: 180s
