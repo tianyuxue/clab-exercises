@@ -9,4 +9,5 @@
 - `ip link set eth1 mtu 1500`
 - `vtysh` → `configure terminal` → `interface eth1` → `ip ospf mtu-ignore`
 
+修复后 OSPF 需要数秒重新协商（改动 MTU 会重置邻居），等待 `show ip ospf neighbor` 回到 `Full` 后，
 回到 `clablings watch` 终端，按 **Enter** 强制验证。

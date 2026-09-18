@@ -11,8 +11,8 @@ assertions:
     node: r1
     cmd: 'vtysh -c "show ip ospf neighbor json"'
     match:
-      json: "$.neighbors.*.state"
-      equals: "Full"
+      json: "$.neighbors.*.*.nbrState"
+      contains: "Full"
     hint: 检查链路两侧接口 MTU 是否一致（ip link show eth1），或配置 ip ospf mtu-ignore。
   - name: r1 可 ping 通 r2 环回
     type: exec
