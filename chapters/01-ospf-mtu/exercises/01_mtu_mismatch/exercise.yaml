@@ -1,0 +1,24 @@
+id: 01_mtu_mismatch
+title: 修复 OSPF 邻居卡在 ExStart
+type: config-fix
+timeout: 30s
+# 本题为运行态排错：故障由 topology 的 exec 注入，修复在 TUI/vtysh 内完成后按 Enter 强制验证。
+# 不声明 files/reload，不依赖哨兵门控。
+assertions:
+  - name: OSPF 邻居达到 Full
+    type: exec
+    layer: control-plane
+    node: r1
+    cmd: 'vtysh -c "show ip ospf neighbor json"'
+    match:
+      json: "$.neighbors.*.state"
+      equals: "Full"
+    hint: 检查链路两侧接口 MTU 是否一致（ip link show eth1），或配置 ip ospf mtu-ignore。
+  - name: r1 可 ping 通 r2 环回
+    type: exec
+    layer: data-plane
+    node: r1
+    cmd: "ping -c 2 -W 2 10.255.0.2"
+    match:
+      exit_code: 0
+    hint: OSPF 未收敛时路由不可达，先修复邻居。

@@ -1,0 +1,5 @@
+id: 01-ospf-mtu
+title: OSPF MTU 不匹配
+topology: topology.clab.yml
+deploy:
+  timeout: 180s
