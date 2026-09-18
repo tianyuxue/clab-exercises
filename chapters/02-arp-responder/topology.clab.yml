@@ -1,0 +1,17 @@
+name: clablings-arp
+topology:
+  nodes:
+    r1:
+      kind: linux
+      image: nicolaka/netshoot:v0.13
+      exec:
+        - ip addr add 10.0.1.2/24 dev eth1
+        - ip link set eth1 up
+    host1:
+      kind: linux
+      image: nicolaka/netshoot:v0.13
+      exec:
+        - ip addr add 10.0.1.3/24 dev eth1
+        - ip link set eth1 up
+  links:
+    - endpoints: ["r1:eth1", "host1:eth1"]

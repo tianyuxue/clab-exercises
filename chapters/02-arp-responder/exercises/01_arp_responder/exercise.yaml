@@ -1,0 +1,30 @@
+id: 01_arp_responder
+title: 实现 ARP responder
+type: code-implement
+timeout: 30s
+files:
+  - source: arp_responder.c
+  - source: Makefile
+build:
+  image: gcc:13
+  command: make
+  output: arp_responder
+run:
+  node: r1
+  dest: /opt/clablings/arp_responder
+  stop: "pkill -f /opt/clablings/arp_responder || true"
+  start: "setsid /opt/clablings/arp_responder --iface eth1 --ip 10.0.1.1 >/var/log/arp.log 2>&1 < /dev/null &"
+assertions:
+  - name: r1 源码已移除哨兵
+    type: file
+    source: arp_responder.c
+  - name: host1 能解析虚拟 IP 的 MAC
+    type: exec
+    layer: data-plane
+    node: host1
+    cmd: "arping -c 3 -I eth1 10.0.1.1"
+    match:
+      exit_code: 0
+      stdout:
+        contains: "reply from 10.0.1.1"
+    hint: 检查 responder 是否解析到 ARP 请求的 target IP，并用请求帧的 sender MAC 回包。
