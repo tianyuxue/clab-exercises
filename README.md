@@ -13,6 +13,7 @@ go run ./cmd/clablings test --all --root ../clab-exercises
 ## 前置
 
 - Linux 主机，已安装 containerlab、Docker
+- LACP 章需要 `ghcr.io/nokia/srlinux:24.10.1`（拓扑已设 `shm-size: 1g`；24.7.1 在本环境无法提交配置）
 - `make debug` 现在通过 `clablings debug` 启动 `clab-tui`，需要 PATH 上同时有 `clablings` 与 `clab-tui`（`clablings` 可在 `clablings/` 下用 `go build -o /usr/local/bin/clablings ./cmd/clablings` 安装到 PATH）。
 
 题库可通过 `CLABLINGS_ROOT` 环境变量或 `--root` 指向任意路径（便于独立成官方题库仓）。
