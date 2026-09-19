@@ -1,4 +1,4 @@
 .PHONY: debug
 
 debug:
-	clablings debug
+	clablings debug --sudo
