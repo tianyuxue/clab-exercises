@@ -1,21 +1,21 @@
-- title: IEEE 802.1Q
-  section: "Clause 9 (Tag format)"
+- title: Linux bridge — What does a bridge do?
+  section: "What does a bridge do?"
   kind: required
-  url: https://standards.ieee.org/standard/802_1Q-2022.html
+  url: https://docs.kernel.org/networking/bridge.html#what-does-a-bridge-do
   intro:
-    en: Defines the 802.1Q tag, VID and PCP, and how bridges forward tagged frames.
-    zh: 定义 802.1Q 标签、VID/PCP，以及网桥如何转发带标签帧。
+    en: Explains how a bridge learns MAC addresses and floods broadcasts/unknown unicast, which is exactly why a flat network leaks traffic.
+    zh: 说明网桥如何学习 MAC、泛洪广播/未知单播——这正是扁平网络泄漏流量的原因。
   question:
-    en: Which fields does the tag carry, and where is it inserted?
-    zh: 标签携带哪些字段？它插在帧的什么位置？
+    en: When does a bridge flood a frame to every port, and when does it forward to one port?
+    zh: 网桥什么时候把帧泛洪到所有端口？什么时候只转到一个端口？
 
-- title: iproute2 bridge vlan
-  section: "man 8 bridge"
+- title: Linux bridge — VLAN
+  section: "VLAN"
   kind: required
-  url: https://man7.org/linux/man-pages/man8/bridge.8.html
+  url: https://docs.kernel.org/networking/bridge.html#vlan
   intro:
-    en: How Linux exposes VLAN filtering; pvid/untagged configure an access port.
-    zh: Linux 如何暴露 VLAN filtering；pvid/untagged 即配置 access 口。
+    en: How the Linux bridge implements 802.1Q VLAN filtering; "pvid untagged" is how you configure an access port.
+    zh: Linux 网桥如何实现 802.1Q VLAN filtering；"pvid untagged" 就是配置 access 端口的写法。
   question:
-    en: 'What does "pvid untagged" mean for incoming and outgoing frames?'
-    zh: 'pvid untagged 对进出帧分别意味着什么？'
+    en: What do pvid and untagged each control for incoming and outgoing frames?
+    zh: pvid 与 untagged 分别控制入向和出向帧的什么行为？
