@@ -18,6 +18,10 @@ go run ./cmd/clablings test --all --root ../clab-exercises
 
 题库可通过 `CLABLINGS_ROOT` 环境变量或 `--root` 指向任意路径（便于独立成官方题库仓）。
 
+## 交互
+
+`clablings watch` 中按 `c` 可阅读当前章节的概念与 RFC 阅读切片；quiz 题会在 watch 中自动提示作答（多选以逗号分隔选项编号，答错显示解释并重新提示，答对后进入下一题）。
+
 ## 章节
 
 | 章节 | 题型 | 触发方式 | 说明 |
