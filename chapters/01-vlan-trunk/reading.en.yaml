@@ -1,13 +1,13 @@
-- title: Linux bridge — What does a bridge do?
-  section: "What does a bridge do?"
+- title: Linux bridge — Introduction
+  section: "Introduction"
   kind: required
-  url: https://docs.kernel.org/networking/bridge.html#what-does-a-bridge-do
+  url: https://docs.kernel.org/networking/bridge.html#introduction
   intro:
-    en: Explains how a bridge learns MAC addresses and floods broadcasts/unknown unicast, which is exactly why a flat network leaks traffic.
-    zh: 说明网桥如何学习 MAC、泛洪广播/未知单播——这正是扁平网络泄漏流量的原因。
+    en: Defines what a bridge is and how it connects several network segments into one logical Ethernet network — the reason a flat network is a single broadcast domain.
+    zh: 说明什么是网桥、它如何把多段网络连成一个逻辑以太网——这正是扁平网络只有一个广播域的原因。
   question:
-    en: When does a bridge flood a frame to every port, and when does it forward to one port?
-    zh: 网桥什么时候把帧泛洪到所有端口？什么时候只转到一个端口？
+    en: What does a bridge connect, and at which layer does it forward frames?
+    zh: 网桥连接的是什么？它在哪一层转发帧？
 
 - title: Linux bridge — VLAN
   section: "VLAN"
