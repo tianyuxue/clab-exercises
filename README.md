@@ -26,6 +26,8 @@ go run ./cmd/clablings test --all --root ../clab-exercises
 
 | 章节 | 题型 | 触发方式 | 说明 |
 |---|---|---|---|
-| 01-ospf-mtu | 运行态 config-fix | Enter | 修复 OSPF MTU 不匹配导致的邻居卡 ExStart |
-| 02-arp-responder | code-implement | 哨兵 + Enter | 用 C 实现替虚拟 IP 应答 ARP |
-| 03-route-fix | 文件驱动 config-fix | 哨兵 + Enter | 修复 routes.sh 中错误的静态路由下一跳 |
+| 01-vlan-trunk | quiz + 文件驱动 config-fix | 哨兵 + Enter | 理解 VLAN/802.1Q，修复 Linux bridge 两端 access VLAN 不一致 |
+
+## M1 路线（进行中）
+
+VLAN/Trunk（本章）→ STP/RSTP → 链路聚合 LACP → MLAG/EVPN-MH（L2 交换主线）。
