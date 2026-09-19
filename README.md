@@ -26,7 +26,8 @@ go run ./cmd/clablings test --all --root ../clab-exercises
 | 章节 | 题型 | 触发方式 | 说明 |
 |---|---|---|---|
 | 01-vlan-trunk | quiz + 文件驱动 config-fix | 哨兵 + Enter | 理解 VLAN/802.1Q，修复 Linux bridge 两端 access VLAN 不一致 |
+| 02-stp | quiz + 文件驱动 config-fix | 哨兵 + Enter | 理解 STP 根桥选举与环路防护，调整优先级让核心交换机成为根 |
 
 ## M1 路线（进行中）
 
-VLAN/Trunk（本章）→ STP/RSTP → 链路聚合 LACP → MLAG/EVPN-MH（L2 交换主线）。
+VLAN/Trunk ✅ → STP/RSTP ✅ → 链路聚合 LACP → MLAG/EVPN-MH（L2 交换主线）。
