@@ -2,7 +2,7 @@ id: 01_route_fix
 title: 修复缺失的静态路由
 type: config-fix
 hints:
-  - r1 与 r2 通过 10.0.2.0/30 直连，下一跳应是对端地址。
+  - r1 与 r2 通过 10.0.2.0/24 直连，下一跳应是对端地址。
   - 修改 routes.sh 后删掉 I AM NOT DONE 才会触发验证。
 timeout: 30s
 files:
