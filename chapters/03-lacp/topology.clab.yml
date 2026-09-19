@@ -1,0 +1,14 @@
+name: clablings-lacp
+topology:
+  nodes:
+    srl1:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:24.10.1
+      shm-size: 1g
+    srl2:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux:24.10.1
+      shm-size: 1g
+  links:
+    - endpoints: ["srl1:e1-1", "srl2:e1-1"]
+    - endpoints: ["srl1:e1-2", "srl2:e1-2"]

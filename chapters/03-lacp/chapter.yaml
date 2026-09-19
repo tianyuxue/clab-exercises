@@ -1,0 +1,20 @@
+id: 03-lacp
+title:
+  en: Link aggregation (LACP)
+  zh: 链路聚合（LACP）
+difficulty: 3
+tags: [l2, lacp, lag, redundancy]
+estimated_minutes: 45
+prerequisites: [02-stp]
+objectives:
+  en:
+    - Explain what link aggregation buys over STP-blocked redundant links
+    - Describe LACP active/passive negotiation and admin-key matching
+    - Bring a LAG up by fixing LACP configuration
+  zh:
+    - 解释链路聚合相比被 STP 阻塞的冗余链路有什么收益
+    - 描述 LACP 的 active/passive 协商与 admin-key 匹配
+    - 通过修复 LACP 配置让 LAG 起来
+topology: topology.clab.yml
+deploy:
+  timeout: 300s

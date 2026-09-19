@@ -1,0 +1,55 @@
+id: 00_why_lacp
+title:
+  en: Why LACP?
+  zh: 为什么需要 LACP？
+type: quiz
+difficulty: 2
+hints:
+  - en: Compare with how STP treats redundant links.
+    zh: 对比 STP 如何处理冗余链路。
+questions:
+  - prompt:
+      en: What does link aggregation give you that STP-blocked redundancy does not?
+      zh: 相比被 STP 阻塞的冗余链路，链路聚合多了什么？
+    multiple: false
+    options:
+      - text: {en: Active use of all member links, zh: 所有成员链路都能被使用}
+        correct: true
+        explanation:
+          en: Traffic is hashed across members instead of one link being blocked.
+          zh: 流量按哈希分摊到各成员，而不是只留一条。
+      - text: {en: A higher speed for a single flow, zh: 单条流也能获得更高带宽}
+        correct: false
+        explanation:
+          en: A single flow is hashed to one member, so it stays at one link's rate.
+          zh: 单条流只哈希到一个成员，速率仍受单链路限制。
+      - text: {en: Automatic VLAN configuration, zh: 自动配置 VLAN}
+        correct: false
+        explanation:
+          en: VLANs are independent of aggregation.
+          zh: VLAN 与聚合无关。
+  - prompt:
+      en: Which statements about LACP are true?
+      zh: 关于 LACP，哪些说法正确？
+    multiple: true
+    options:
+      - text: {en: At least one side must be active, zh: 至少一侧必须是 active}
+        correct: true
+        explanation:
+          en: Passive peers never initiate LACPDUs.
+          zh: passive 一侧不会主动发送 LACPDU。
+      - text: {en: Members must agree on the LACP admin-key, zh: 成员的 LACP admin-key 必须一致}
+        correct: true
+        explanation:
+          en: Mismatched keys keep members out of the bundle.
+          zh: key 不一致成员无法加入聚合。
+      - text: {en: min-links keeps the LAG down if too few members are up, zh: min-links 在成员不足时保持 LAG down}
+        correct: true
+        explanation:
+          en: It prevents a degraded bundle from carrying traffic.
+          zh: 避免降级的聚合组继续转发。
+      - text: {en: One flow is spread across all members, zh: 单条流会分散到所有成员}
+        correct: false
+        explanation:
+          en: Hashing picks one member per flow (per direction).
+          zh: 哈希为每条流（每方向）选择单一成员。

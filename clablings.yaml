@@ -3,3 +3,4 @@ name: clablings-exercises
 chapters:
   - chapters/01-vlan-trunk
   - chapters/02-stp
+  - chapters/03-lacp

@@ -1,0 +1,57 @@
+id: 01_fix_lacp
+title:
+  en: Bring the LAG up
+  zh: 让 LAG 起来
+type: config-fix
+difficulty: 3
+timeout: 60s
+hints:
+  - en: Check `sr_cli show lag` for oper-down-reason.
+    zh: 用 `sr_cli show lag` 查看 oper-down-reason。
+  - en: Two PASSIVE sides never send LACP frames; make one side ACTIVE.
+    zh: 两侧都 PASSIVE 不会发 LACP 帧；把一侧改为 ACTIVE。
+files:
+  - source: srl1/lag.sh
+    node: srl1
+    dest: /root/lag.sh
+  - source: srl2/lag.sh
+    node: srl2
+    dest: /root/lag.sh
+reload:
+  - node: srl2
+    cmd: "sh /root/lag.sh"
+  - node: srl1
+    cmd: "sh /root/lag.sh"
+assertions:
+  - name:
+      en: lag.sh has the sentinel removed
+      zh: lag.sh 已移除哨兵
+    type: file
+    source: srl1/lag.sh
+  - name:
+      en: lag1 is up with both members
+      zh: lag1 起来且两个成员都在
+    type: exec
+    layer: control-plane
+    node: srl1
+    cmd: "sr_cli -d \"show lag\""
+    wait: 30s
+    match:
+      stdout:
+        contains: "lag1 is up"
+    hint:
+      en: LACP must negotiate; make srl1 active.
+      zh: 需要 LACP 协商成功；把 srl1 改为 active。
+  - name:
+      en: can ping the peer over the LAG
+      zh: 可经 LAG ping 通对端
+    type: exec
+    layer: data-plane
+    node: srl1
+    cmd: "sr_cli -d \"ping -c 2 10.0.0.2 network-instance default\""
+    wait: 30s
+    match:
+      exit_code: 0
+    hint:
+      en: Verify the LAG is up and in the default network-instance first.
+      zh: 先确认 LAG 起来并加入了 default network-instance。

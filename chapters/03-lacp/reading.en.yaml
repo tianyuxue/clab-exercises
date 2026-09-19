@@ -1,0 +1,21 @@
+- title: IEEE 802.1AX (Link Aggregation)
+  section: "LACP"
+  kind: required
+  url: https://standards.ieee.org/standard/802_1AX-2020.html
+  intro:
+    en: Defines link aggregation and the LACP protocol used to negotiate membership.
+    zh: 定义链路聚合与用于协商成员关系的 LACP 协议。
+  question:
+    en: How do active and passive LACP participants differ, and when does a port join the bundle?
+    zh: LACP 的 active 与 passive 参与者有何区别？端口何时加入聚合组？
+
+- title: Nokia SR Linux LAG
+  section: "interface lag"
+  kind: required
+  url: https://documentation.nokia.com/srlinux/
+  intro:
+    en: SR Linux LAG model, LACP parameters and show lag oper-down-reason.
+    zh: SR Linux 的 LAG 模型、LACP 参数与 show lag 的 oper-down-reason。
+  question:
+    en: Which fields decide whether a member joins, and what does min-links do?
+    zh: 哪些字段决定成员是否加入？min-links 起什么作用？
