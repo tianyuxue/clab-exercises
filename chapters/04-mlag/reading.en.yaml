@@ -1,21 +1,21 @@
-- title: RFC 7432 (BGP MPLS-Based EVPN)
-  section: "8.2 Multi-homing"
+- title: RFC 7432 — Multihomed Ethernet Segment Auto-discovery
+  section: "8.1 Multihomed Ethernet Segment Auto-discovery"
   kind: required
-  url: https://www.rfc-editor.org/rfc/rfc7432
+  url: https://www.rfc-editor.org/rfc/rfc7432#section-8.1
   intro:
-    en: Defines Ethernet Segments, ESI and all-active multi-homing concepts.
-    zh: 定义 Ethernet Segment、ESI 与 all-active 多归概念。
+    en: Defines the Ethernet Segment Identifier (ESI) and how switches advertise that they multi-home the same segment.
+    zh: 定义 Ethernet Segment Identifier（ESI），以及交换机如何通告"它们共同对同一段做多归"。
   question:
-    en: What is an ESI, and who elects the Designated Forwarder?
-    zh: 什么是 ESI？谁负责选举 Designated Forwarder？
+    en: What does the ESI identify, and how do two switches learn they share a segment?
+    zh: ESI 标识的是什么？两台交换机如何得知它们共享同一段接入网络？
 
-- title: RFC 8365 (EVPN over NVO)
-  section: "Multi-homing"
-  kind: optional
-  url: https://www.rfc-editor.org/rfc/rfc8365
+- title: RFC 8365 — Multihoming NVEs (EVPN over NVO)
+  section: "8.1.1 Multihomed ES Auto-Discovery"
+  kind: required
+  url: https://www.rfc-editor.org/rfc/rfc8365#section-8.1.1
   intro:
-    en: How EVPN multi-homing works over VXLAN-style overlays.
-    zh: EVPN 多归在 VXLAN 类 overlay 上的工作方式。
+    en: How EVPN multi-homing works when the access switch is the NVE (overlay edge), including all-active multi-homing.
+    zh: 当接入交换机充当 NVE（overlay 边缘）时 EVPN 多归如何工作，包括 all-active 多归。
   question:
-    en: How does an all-active ES differ from a single-active one?
-    zh: all-active 与 single-active 的 ES 有何不同？
+    en: In all-active multi-homing, who forwards BUM traffic for a given VLAN, and why?
+    zh: 在 all-active 多归中，某个 VLAN 的 BUM 流量由谁转发？为什么？

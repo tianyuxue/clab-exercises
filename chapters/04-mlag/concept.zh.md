@@ -1,36 +1,72 @@
 # MLAG 与 EVPN 多归
 
-## 为什么
+## 场景
 
-服务器单归到一台交换机，交换机一挂服务器就断。最直接的补救——接到**两台**交换机——
-同时打破两个假设：
+一台服务器分别接到**两台**交换机，以便在其中一台故障时仍能工作：一根线到 `sw1`，另一根到
+`sw2`，两台交换机相互独立。服务器同时运行 LACP，期望这两根线组成一个捆绑。
 
-- 服务器的 LACP bond 现在面对**两个不同的 LACP 伙伴**，无法形成单一捆绑（还可能
-  抖动或黑洞）。
-- 两条上行构成**二层环路**，必须阻塞，于是又浪费一半带宽。
+## 术语
 
-你想要的是：冗余、active/active 带宽、且不被 STP 阻塞。
+- **MLAG**（多机箱链路聚合；Cisco vPC；MC-LAG）：让两台独立交换机对服务器表现为**同一个**
+  LACP 伙伴的技术。
+- **peer-link**：两台 MLAG 交换机之间的链路，用于承载二层流量，并让它们对捆绑的认知保持
+  一致。
+- **orphan 端口**：接在其中一台 peer 上的单归端口（不属于 MLAG）；它只能经 peer-link 才
+  能到达另一台 peer。
+- **脑裂（split-brain）**：peer-link 断开、但两台 peer 都在转发、各自都以为自己在拥有该
+  LAG 的故障状态。
+- **EVPN**：承载二层/三层可达性（MAC/IP）与多归信息的 BGP 地址族。
+- **EVPN 多归（EVPN-MH）**：厂商 MLAG 的开放标准替代——两台交换机用 BGP EVPN 协同接入
+  链路，而不依赖 peer-link。
+- **ESI**（Ethernet Segment Identifier）：两台交换机给同一段接入网络起的共享名字，让网络
+  知道它们共同对该段做多归。
+- **Designated Forwarder（DF）**：在一个 ES 的若干交换机中，被选出负责为某 VLAN 泛洪广播/
+  未知单播/组播（BUM）流量的那台。
+- **all-active / single-active**：ES 的所有交换机是同时转发（all-active），还是同一时刻只有
+  一台转发（single-active）。
+- **堆叠（stacking）**：把多台交换机融合成一台设备，拥有单一控制面与单一管理/故障域。
 
-## 是什么
+## 为什么疼
 
-**MLAG**（多机箱链路聚合，Cisco vPC、MC-LAG）让两台交换机对服务器表现为**同一个**
-LACP 伙伴。它们通过 **peer-link** 互连，peer-link 承载二层流量，并由控制协议保持两台
-peer 对 LAG 的认知一致。**EVPN 多归（EVPN-MH）** 用开放标准达到同样效果：两台 leaf 把
-接入链路绑定到共享的 **Ethernet Segment Identifier（ESI）**，再由 BGP EVPN 通告该
-网段，使两台交换机协调转发。
+把服务器双归到两台独立交换机，同时打破了服务器所依赖的两件事：
 
-## 怎么做
+1. 它的 **LACP** 现在面对两个不同的伙伴（两个 System ID），无法跨两根线形成一个捆绑。
+2. 两根上行在交换机之间构成**二层环路**，STP 通过阻塞其中一条来消除环路——于是两根线里有
+   一根完全不承载流量。
 
-- **Peer-link**：在两台 MLAG peer 之间承载二层；若 peer-link 断而上行仍在，两台 peer
-  都可能认为自己在拥有 LAG——即**脑裂**。生产 MLAG 会加 keepalive 与主/备角色来裁决。
-- **Orphan 口**：只接在一台 peer 上的单归端口；它们要靠 peer-link 才能到达另一台 peer。
-- **EVPN-MH**：每台 leaf 通告 **Ethernet Auto-Discovery（A-D）/ ES 路由**；通过
-  **Designated Forwarder** 选举决定谁泛洪 BUM 流量，因此转发不需要 peer-link，也没有
-  被阻塞的一半带宽。
-- **堆叠**（StackWise/VSS）：把多台交换融合为一个控制面、单一管理与故障域——简单，但
-  私有，且故障影响面更大。MLAG/EVPN-MH 保留两个独立控制面。
+## 为什么直觉方案不行
 
-## 精读
+- **让 STP 阻塞一条上行**：服务器实际又变成单归；被阻塞的线白费，且故障切换需要数秒。
+- **把两台交换机堆叠**：确实让它们成为一个 LACP 伙伴，但也把它们合并成单一控制面、单一
+  故障域——一次糟糕的软件升级或主控故障会拖垮整个堆叠。
 
-读懂 EVPN 如何通告 Ethernet Segment。然后回答：什么替代了 peer-link 的角色？为什么
-all-active 优于阻塞一条上行？
+## 机制
+
+MLAG 与 EVPN-MH 都保留**两个独立的控制面**，同时让它们在服务器眼里像一个伙伴：
+
+- **MLAG**：**peer-link** 在两台 peer 之间承载二层流量，控制协议让两者对捆绑的认知保持
+  一致。服务器的 LACP 只看到一个 System ID，从而跨两根线形成一个捆绑。当 peer-link 断而
+  两条上行仍在时很危险——两台 peer 都可能认为自己在拥有该 LAG（**脑裂**）——因此生产
+  MLAG 会加 keepalive 与主/备角色来裁决。
+- **EVPN-MH**：两台交换机把接入链路绑定到共享的 **ESI**，并用 **BGP EVPN** 通告。通过
+  **Designated Forwarder** 选举决定谁泛洪 BUM 流量，于是接入链路可以同时转发
+  （**all-active**），既不需要 peer-link，也没有被阻塞的一半带宽。这是取代厂商 MLAG 的
+  现代开放标准做法。
+
+## 配置与查看
+
+本章没有实验；需要记住的查看命令：
+
+- 在 Linux/SR Linux 交换机上，`show lag` 查看捆绑及其成员；
+- 在 EVPN-MH 交换机上，Ethernet Segment 及其 ESI 可在 EVPN 状态中看到（SR Linux：
+  `network-instance … protocols bgp-evpn ethernet-segments` 之下）。
+
+## 常见坑
+
+- **peer-link 故障 = 脑裂**：没有 keepalive 与主/备角色时，两台 peer 可能都接受 LAG，导致
+  流量黑洞。
+- **orphan 端口**：接在某台 peer 上的单归端口依赖 peer-link 才能到达另一台 peer；peer-link
+  中断会把它隔离。
+- **堆叠并非免费**：它放弃了"两个控制面"的好处——单一故障域、更大的影响面。
+- **EVPN-MH 需要控制面**：必须在两台交换机上配置 ESI/BGP EVPN；否则它们仍是两个互不相关
+  的 LACP 伙伴。

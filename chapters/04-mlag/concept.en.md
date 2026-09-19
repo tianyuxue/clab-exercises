@@ -1,42 +1,84 @@
 # MLAG and EVPN multi-homing
 
-## Why
+## Scenario
 
-A server single-homed to one switch dies with that switch. The obvious fix —
-connect it to **two** switches — breaks two assumptions at once:
+A server is cabled to **two** switches so it survives one switch failing: one
+cable to `sw1`, another to `sw2`. Each switch is independent. The server also runs
+LACP, expecting a single bundle across both cables.
 
-- The server's LACP bond now talks to **two different LACP partners**, so it
-  cannot form one bundle (and can flap or black-hole).
-- The two uplinks create a **layer-2 loop** that must be blocked, so half the
-  bandwidth is wasted again.
+## Terms
 
-You want redundancy, active/active bandwidth, and no STP blocking.
+- **MLAG** (multi-chassis LAG; Cisco vPC; MC-LAG): a technique that makes two
+  independent switches act as **one** LACP partner towards the server.
+- **peer-link**: the link between the two MLAG switches that carries L2 traffic
+  between them and lets them keep a consistent view of the bundle.
+- **orphan port**: a port on one peer that is single-homed (not part of the MLAG);
+  it reaches the other peer only through the peer-link.
+- **split-brain**: the failure mode where the peer-link breaks but both peers keep
+  forwarding, each believing it owns the LAG.
+- **EVPN**: a BGP address family that carries L2/L3 reachability (MAC/IP) and
+  multi-homing information.
+- **EVPN multi-homing (EVPN-MH)**: the open-standard alternative to vendor MLAG:
+  the two switches coordinate the access links with BGP EVPN instead of a
+  peer-link.
+- **ESI** (Ethernet Segment Identifier): the shared name the two switches give the
+  same access segment, so the network knows they multi-home it together.
+- **Designated Forwarder (DF)**: among the switches of an ES, the one elected to
+  flood broadcast/unknown/multicast (BUM) traffic for a given VLAN.
+- **all-active / single-active**: whether all switches of an ES forward at once
+  (all-active) or only one does at a time (single-active).
+- **stacking**: fusing several switches into one device with a single control
+  plane and a single management/failure domain.
 
-## What
+## Why it hurts
 
-**MLAG** (multi-chassis LAG, Cisco vPC, MC-LAG) makes two switches look like
-**one** LACP partner to the server. They are joined by a **peer-link** that
-carries L2 traffic between them and a control protocol that keeps their view of
-the LAG in sync. **EVPN multi-homing (EVPN-MH)** achieves the same with an open
-standard: both leaves attach the access links to a shared **Ethernet Segment
-Identifier (ESI)**, and BGP EVPN advertises the segment so the two switches
-coordinate forwarding.
+Dual-homing to two independent switches breaks the two things the server expects:
 
-## How
+1. Its **LACP** now talks to two different partners (two System IDs), so it cannot
+   form one bundle across both cables.
+2. The two uplinks form a **Layer-2 loop** between the switches, which STP removes
+   by blocking one uplink — so one of your two cables carries no traffic.
 
-- **Peer-link**: carries L2 between the MLAG peers; if it fails while the uplinks
-  stay up, both peers may think they own the LAG — **split-brain**. Production
-  MLAG adds a keepalive and a primary/secondary role to break the tie.
-- **Orphan ports**: single-homed ports on one peer; they need the peer-link to
-  reach the other peer.
-- **EVPN-MH**: each leaf advertises an **Ethernet Auto-Discovery (A-D) / ES
-  route**; a **Designated Forwarder** election decides who floods BUM traffic, so
-  no peer-link is needed for forwarding and there is no blocked half.
-- **Stacking** (StackWise/VSS): fuses switches into one control plane with a
-  single management and failure domain — simple, but proprietary and a bigger
-  blast radius. MLAG/EVPN-MH keep two independent control planes.
+## Why the naive fix fails
 
-## Reading
+- **Let STP block one uplink**: the server is now effectively single-homed again;
+  the blocked cable is wasted, and failover takes seconds.
+- **Stack the two switches**: this does make them one LACP partner, but it also
+  merges them into a single control plane and a single failure domain — one bad
+  software upgrade or one supervisor failure takes down the whole stack.
 
-Read how EVPN advertises an Ethernet Segment. Then answer: what replaces the
-peer-link's role, and why is an all-active design better than blocking one uplink?
+## The mechanism
+
+Both MLAG and EVPN-MH keep the switches as **two independent control planes** while
+making them look like one partner to the server:
+
+- **MLAG**: a **peer-link** carries L2 traffic between the peers, and a control
+  protocol keeps their view of the bundle in sync. The server's LACP sees one
+  System ID and forms one bundle across both cables. A failure of the peer-link
+  while both uplinks stay up is dangerous — each peer may think it owns the LAG
+  (**split-brain**) — so production MLAG adds a keepalive and a primary/secondary
+  role as a tie-breaker.
+- **EVPN-MH**: the two switches attach the access links to a shared **ESI**, and
+  advertise it with **BGP EVPN**. A **Designated Forwarder** election decides who
+  floods BUM traffic, so the access links can all forward at once (**all-active**)
+  with no peer-link and no blocked half. This is the modern, open-standard way to
+  replace vendor MLAG.
+
+## Configure and inspect
+
+There is no lab in this chapter; the inspection commands to remember are:
+
+- on a Linux/SR Linux switch, `show lag` shows the bundle and its members;
+- on an EVPN-MH switch, the Ethernet Segment and its ESI are visible in the EVPN
+  state (SR Linux: under `network-instance … protocols bgp-evpn ethernet-segments`).
+
+## Pitfalls
+
+- **Peer-link failure = split-brain**: without a keepalive and a primary/secondary
+  role, both peers can accept the LAG and black-hole traffic.
+- **Orphan ports**: a single-homed port on one peer depends on the peer-link to
+  reach the other peer; losing the peer-link isolates it.
+- **Stacking is not free**: it removes the two-control-plane benefit — one failure
+  domain and a bigger blast radius.
+- **EVPN-MH needs a control plane**: ESI/BGP EVPN must be configured on both
+  switches; without it they still act as two unrelated LACP partners.
