@@ -1,2 +1,4 @@
 *.o
 arp_responder
+.clablings_state.json
+clab-*/
