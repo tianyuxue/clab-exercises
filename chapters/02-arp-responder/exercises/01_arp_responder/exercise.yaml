@@ -12,7 +12,7 @@ build:
 run:
   node: r1
   dest: /opt/clablings/arp_responder
-  stop: "pkill -x arp_responder || true"
+  stop: "pkill -f '[a]rp_responder' || true"
   start: "setsid /opt/clablings/arp_responder --iface eth1 --ip 10.0.1.1 >/var/log/arp.log 2>&1 < /dev/null &"
 assertions:
   - name: r1 源码已移除哨兵
