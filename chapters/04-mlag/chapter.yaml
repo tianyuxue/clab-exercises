@@ -1,0 +1,17 @@
+id: 04-mlag
+title:
+  en: MLAG and EVPN multi-homing
+  zh: MLAG 与 EVPN 多归
+difficulty: 4
+tags: [l2, mlag, evpn, multi-homing, high-availability]
+estimated_minutes: 30
+prerequisites: [03-lacp]
+objectives:
+  en:
+    - Explain why dual-homing a host to two independent switches breaks LACP
+    - Describe how MLAG/vPC presents two switches as a single LACP partner
+    - Contrast stacking, MLAG/vPC and EVPN multi-homing
+  zh:
+    - 解释把主机双归到两台独立交换机为何会破坏 LACP
+    - 描述 MLAG/vPC 如何把两台交换机表现为同一个 LACP 伙伴
+    - 对比堆叠、MLAG/vPC 与 EVPN 多归

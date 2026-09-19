@@ -1,0 +1,21 @@
+- title: RFC 7432 (BGP MPLS-Based EVPN)
+  section: "8.2 Multi-homing"
+  kind: required
+  url: https://www.rfc-editor.org/rfc/rfc7432
+  intro:
+    en: Defines Ethernet Segments, ESI and all-active multi-homing concepts.
+    zh: 定义 Ethernet Segment、ESI 与 all-active 多归概念。
+  question:
+    en: What is an ESI, and who elects the Designated Forwarder?
+    zh: 什么是 ESI？谁负责选举 Designated Forwarder？
+
+- title: RFC 8365 (EVPN over NVO)
+  section: "Multi-homing"
+  kind: optional
+  url: https://www.rfc-editor.org/rfc/rfc8365
+  intro:
+    en: How EVPN multi-homing works over VXLAN-style overlays.
+    zh: EVPN 多归在 VXLAN 类 overlay 上的工作方式。
+  question:
+    en: How does an all-active ES differ from a single-active one?
+    zh: all-active 与 single-active 的 ES 有何不同？
