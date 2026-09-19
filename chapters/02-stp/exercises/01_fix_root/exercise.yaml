@@ -1,0 +1,74 @@
+id: 01_fix_root
+title:
+  en: Make sw1 the root bridge
+  zh: 让 sw1 成为根桥
+type: config-fix
+difficulty: 3
+timeout: 30s
+hints:
+  - en: Root election compares bridge IDs; lower priority wins.
+    zh: 根选举比较桥 ID，优先级越小越优。
+  - en: sw2 currently has priority 4096, so sw1 needs something lower.
+    zh: sw2 当前优先级是 4096，sw1 需要更低。
+files:
+  - source: sw1/stp.sh
+    node: sw1
+    dest: /root/stp.sh
+reload:
+  - node: sw1
+    cmd: "sh /root/stp.sh"
+assertions:
+  - name:
+      en: stp.sh has the sentinel removed
+      zh: stp.sh 已移除哨兵
+    type: file
+    source: sw1/stp.sh
+  - name:
+      en: STP is enabled on sw1
+      zh: sw1 的 STP 处于启用状态
+    type: exec
+    layer: control-plane
+    node: sw1
+    cmd: "test \"$(cat /sys/class/net/br0/bridge/stp_state)\" = 1"
+    wait: 5s
+    match:
+      exit_code: 0
+    hint:
+      en: Do not disable STP; fix the priority instead.
+      zh: 不要关闭 STP，去调整优先级。
+  - name:
+      en: sw1 is the root bridge
+      zh: sw1 是根桥
+    type: exec
+    layer: control-plane
+    node: sw1
+    cmd: "test \"$(cat /sys/class/net/br0/bridge/root_id)\" = \"$(cat /sys/class/net/br0/bridge/bridge_id)\""
+    wait: 20s
+    match:
+      exit_code: 0
+    hint:
+      en: Lower sw1's priority below sw2's 4096.
+      zh: 把 sw1 的优先级降到 sw2 的 4096 以下。
+  - name:
+      en: sw2 no longer acts as root
+      zh: sw2 不再是根桥
+    type: exec
+    layer: control-plane
+    node: sw2
+    cmd: "test \"$(cat /sys/class/net/br0/bridge/root_id)\" != \"$(cat /sys/class/net/br0/bridge/bridge_id)\""
+    wait: 20s
+    match:
+      exit_code: 0
+  - name:
+      en: h1 can still ping h2
+      zh: h1 仍能 ping 通 h2
+    type: exec
+    layer: data-plane
+    node: h1
+    cmd: "ping -c 2 -W 2 10.0.1.2"
+    wait: 20s
+    match:
+      exit_code: 0
+    hint:
+      en: STP must stay enabled; remove the loop by blocking a port, not the links.
+      zh: STP 必须保持启用；应通过阻塞端口消除环路，而不是删链路。

@@ -1,0 +1,20 @@
+id: 02-stp
+title:
+  en: STP/RSTP
+  zh: STP/RSTP
+difficulty: 3
+tags: [l2, stp, loop-prevention]
+estimated_minutes: 45
+prerequisites: [01-vlan-trunk]
+objectives:
+  en:
+    - Explain why a layer-2 loop breaks an Ethernet network
+    - Predict the root bridge from bridge IDs
+    - Restore a loop-free topology by tuning STP priority
+  zh:
+    - 解释二层环路为何会瘫痪以太网
+    - 根据桥 ID 预测根桥
+    - 通过调整 STP 优先级恢复无环拓扑
+topology: topology.clab.yml
+deploy:
+  timeout: 180s

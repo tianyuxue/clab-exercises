@@ -1,0 +1,55 @@
+id: 00_root_election
+title:
+  en: Root bridge election
+  zh: 根桥选举
+type: quiz
+difficulty: 2
+hints:
+  - en: Compare the full bridge ID, not just the MAC.
+    zh: 比较完整的桥 ID，而不只是 MAC。
+questions:
+  - prompt:
+      en: Which bridge becomes the STP root?
+      zh: 哪台网桥会成为 STP 根桥？
+    multiple: false
+    options:
+      - text: {en: The one with the lowest bridge ID, zh: 桥 ID 最小的那台}
+        correct: true
+        explanation:
+          en: "Bridge ID = priority + MAC; the lowest wins."
+          zh: 桥 ID = 优先级 + MAC，最小者胜出。
+      - text: {en: The one with the highest priority, zh: 优先级最大的那台}
+        correct: false
+        explanation:
+          en: Lower priority is better; default is 32768.
+          zh: 优先级越小越优，默认 32768。
+      - text: {en: The one with the most ports, zh: 端口最多的那台}
+        correct: false
+        explanation:
+          en: Port count is irrelevant to root election.
+          zh: 端口数量与根选举无关。
+  - prompt:
+      en: Which statements about STP are true?
+      zh: 关于 STP，哪些说法正确？
+    multiple: true
+    options:
+      - text: {en: A blocked port stays physically up, zh: 被阻塞的端口物理上仍处于 up}
+        correct: true
+        explanation:
+          en: Blocking is logical; the link can take over on failure.
+          zh: 阻塞是逻辑状态，链路可在故障时接管。
+      - text: {en: RSTP converges faster than STP, zh: RSTP 收敛比 STP 快}
+        correct: true
+        explanation:
+          en: 802.1w adds proposal/agreement for sub-second convergence.
+          zh: 802.1w 通过 proposal/agreement 实现亚秒级收敛。
+      - text: {en: STP prevents broadcast storms, zh: STP 能防止广播风暴}
+        correct: true
+        explanation:
+          en: By blocking redundant ports it removes the loop.
+          zh: 通过阻塞冗余端口消除环路。
+      - text: {en: Disabling STP is safe if the topology has redundancy, zh: 有冗余时关闭 STP 是安全的}
+        correct: false
+        explanation:
+          en: Redundancy without STP is exactly when storms happen.
+          zh: 冗余但无 STP，正是广播风暴的温床。

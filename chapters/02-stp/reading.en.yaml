@@ -1,0 +1,21 @@
+- title: IEEE 802.1D / 802.1w
+  section: "Root election and port roles"
+  kind: required
+  url: https://standards.ieee.org/standard/802_1D-2004.html
+  intro:
+    en: Defines bridge ID, root election, path cost and port states; 802.1w speeds convergence.
+    zh: 定义桥 ID、根选举、路径开销与端口状态；802.1w 加速收敛。
+  question:
+    en: How is the root bridge chosen, and which port is blocked?
+    zh: 根桥如何选出？哪个端口会被阻塞？
+
+- title: Linux bridge sysfs STP
+  section: "/sys/class/net/<br>/bridge"
+  kind: required
+  url: https://www.kernel.org/doc/Documentation/networking/bridge.rst
+  intro:
+    en: The kernel bridge exposes bridge_id, root_id and priority for scripting.
+    zh: 内核网桥通过 sysfs 暴露 bridge_id、root_id 与 priority，便于脚本判定。
+  question:
+    en: When does root_id equal bridge_id, and what does that mean?
+    zh: 什么时候 root_id 等于 bridge_id？这代表什么？
