@@ -1,6 +1,10 @@
 id: 01_arp_responder
 title: 实现 ARP responder
 type: code-implement
+hints:
+  - 用 AF_PACKET + SOCK_RAW 在 eth1 上收 ARP 帧。
+  - 只回应 target IP 等于虚拟 IP 的请求。
+  - 用请求帧的 sender MAC 作为应答帧的源 MAC。
 timeout: 30s
 files:
   - source: arp_responder.c

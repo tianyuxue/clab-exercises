@@ -1,6 +1,10 @@
 id: 01_mtu_mismatch
 title: 修复 OSPF 邻居卡在 ExStart
 type: config-fix
+hints:
+  - 对比 r1/r2 两侧 eth1 的 MTU（ip link show eth1）。
+  - OSPF 建立邻接时会校验 MTU；也可用 ip ospf mtu-ignore 绕过。
+  - 改完运行态配置后等几秒，再回到 watch 按 Enter。
 timeout: 30s
 # 本题为运行态排错：故障由 topology 的 exec 注入，修复在 TUI/vtysh 内完成后按 Enter 强制验证。
 # 不声明 files/reload，不依赖哨兵门控。
