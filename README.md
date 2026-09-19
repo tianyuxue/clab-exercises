@@ -13,7 +13,7 @@ go run ./cmd/clablings test --all --root ../clab-exercises
 ## 前置
 
 - Linux 主机，已安装 containerlab、Docker
-- `make debug` 需要 PATH 上有 `clab-tui`
+- `make debug` 现在通过 `clablings debug` 启动 `clab-tui`，需要 PATH 上同时有 `clablings` 与 `clab-tui`（`clablings` 可在 `clablings/` 下用 `go build -o /usr/local/bin/clablings ./cmd/clablings` 安装到 PATH）。
 - C 题首次构建会拉取题目声明的构建镜像（默认 `gcc:13`）
 
 题库可通过 `CLABLINGS_ROOT` 环境变量或 `--root` 指向任意路径（便于独立成官方题库仓）。
