@@ -1,0 +1,20 @@
+id: 01-vlan-trunk
+title:
+  en: VLAN and Trunk
+  zh: VLAN 与 Trunk
+difficulty: 2
+tags: [l2, vlan, switching]
+estimated_minutes: 40
+prerequisites: []
+objectives:
+  en:
+    - Explain how VLANs isolate broadcast domains
+    - Read an 802.1Q tag and tell access ports from trunk ports
+    - Configure Linux bridge VLAN filtering to restore host connectivity
+  zh:
+    - 解释 VLAN 如何隔离广播域
+    - 读懂 802.1Q 标签，区分 access 与 trunk 端口
+    - 配置 Linux bridge 的 VLAN filtering 恢复主机连通性
+topology: topology.clab.yml
+deploy:
+  timeout: 180s

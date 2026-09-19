@@ -1,6 +1,4 @@
 version: 1
 name: clablings-exercises
 chapters:
-  - chapters/01-ospf-mtu
-  - chapters/02-arp-responder
-  - chapters/03-route-fix
+  - chapters/01-vlan-trunk

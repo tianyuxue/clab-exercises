@@ -1,0 +1,55 @@
+id: 00_why_vlan
+title:
+  en: Why VLANs?
+  zh: 为什么需要 VLAN？
+type: quiz
+difficulty: 1
+hints:
+  - en: Think about what a switch does with an unknown destination MAC.
+    zh: 想想交换机收到目的未知的 MAC 时会做什么。
+questions:
+  - prompt:
+      en: What does a VLAN primarily isolate?
+      zh: VLAN 主要隔离的是什么？
+    multiple: false
+    options:
+      - text: {en: The broadcast domain, zh: 广播域}
+        correct: true
+        explanation:
+          en: A VLAN bounds how far broadcasts and unknown unicast are flooded.
+          zh: VLAN 限定了广播与未知单播的泛洪范围。
+      - text: {en: The collision domain, zh: 冲突域}
+        correct: false
+        explanation:
+          en: Collision domains are bounded by bridges/ports, not VLANs.
+          zh: 冲突域由网桥/端口界定，不是 VLAN。
+      - text: {en: The routing table, zh: 路由表}
+        correct: false
+        explanation:
+          en: Routing between VLANs is a separate (L3) concern.
+          zh: VLAN 间路由是独立的三层问题。
+  - prompt:
+      en: Which statements about the 802.1Q tag are true?
+      zh: 关于 802.1Q 标签，哪些说法正确？
+    multiple: true
+    options:
+      - text: {en: It carries a 12-bit VLAN ID, zh: 它携带 12 位 VLAN ID}
+        correct: true
+        explanation:
+          en: The VID is 12 bits, so 0-4095.
+          zh: VID 为 12 位，取值 0–4095。
+      - text: {en: It carries a 3-bit priority (PCP), zh: 它携带 3 位优先级（PCP）}
+        correct: true
+        explanation:
+          en: PCP enables L2 prioritisation.
+          zh: PCP 用于二层优先级。
+      - text: {en: Access ports tag every outgoing frame, zh: access 端口对每个出帧都打标签}
+        correct: false
+        explanation:
+          en: Access ports send untagged frames; trunks tag them.
+          zh: access 口出帧不带标签；trunk 才打标签。
+      - text: {en: It is inserted after the source MAC, zh: 它插在源 MAC 之后}
+        correct: true
+        explanation:
+          en: The tag sits between the source MAC and the EtherType.
+          zh: 标签位于源 MAC 与 EtherType 之间。
