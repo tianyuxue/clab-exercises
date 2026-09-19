@@ -16,6 +16,8 @@ go run ./cmd/clablings test --all --root ../clab-exercises
 - `make debug` 需要 PATH 上有 `clab-tui`
 - C 题首次构建会拉取题目声明的构建镜像（默认 `gcc:13`）
 
+题库可通过 `CLABLINGS_ROOT` 环境变量或 `--root` 指向任意路径（便于独立成官方题库仓）。
+
 ## 章节
 
 | 章节 | 题型 | 触发方式 | 说明 |
