@@ -23,10 +23,12 @@ now reaches the office computers too, and the whole network feels slower.
   **priority** (PCP).
 - **Access port**: a port that belongs to a single VLAN and sends frames
   untagged. Its **PVID** (port VLAN ID) is the VLAN that incoming untagged frames
-  are placed in.
+  are placed in. In a real network it faces an end device — a server, workstation,
+  or printer — so it is the **downlink** (edge) port.
 - **Trunk port**: a port that carries several VLANs and sends frames tagged. Its
   **native VLAN** handles any untagged frames on the trunk; both ends must agree
-  on it.
+  on it. In a real network it faces another network device — a switch, wireless
+  AP, router, or hypervisor — so it is the **uplink** port.
 
 ## Why it hurts
 
@@ -55,6 +57,16 @@ Instead of isolating groups by buying hardware, you assign ports to VLANs:
 Because the tag (not the cable) identifies the VLAN, one cable can carry many
 logical networks, and the loop/blocking problem disappears — you separate groups
 logically instead of physically.
+
+These two roles map to how ports are used in a real network. An **access port**
+faces an end device: a server, workstation, or printer plugs into it, so it is the
+**downlink** (edge) port and carries exactly one VLAN. A **trunk port** faces
+another network device: it connects two switches, or a switch to an AP, router, or
+hypervisor host, so it is the **uplink** port and carries many VLANs over one
+link. So yes — trunks are normally the uplinks and access ports the downlinks.
+The words describe the port's role and traffic direction, not a different kind of
+Ethernet; both are ordinary ports, and a server that does its own tagging (for
+example with a hypervisor) can also be attached to a trunk.
 
 ## Configure and inspect
 
