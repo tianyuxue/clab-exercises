@@ -26,7 +26,7 @@ assertions:
     layer: control-plane
     node: sw
     cmd: "bridge vlan show dev eth2"
-    wait: 5s
+    wait: 3s
     match:
       stdout:
         contains: "10"
@@ -40,7 +40,7 @@ assertions:
     layer: data-plane
     node: h1
     cmd: "ping -c 2 -W 2 10.0.1.2"
-    wait: 15s
+    wait: 8s
     match:
       exit_code: 0
     hint:
