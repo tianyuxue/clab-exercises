@@ -74,7 +74,7 @@ sr_cli -d "ping -c 2 10.0.0.2 network-instance default"
 The key output is `show lag`: whether `lag1` is **up**, each member's
 `oper-state`, and the `oper-down-reason` when it is not.
 
-## Pitfalls
+## Common questions
 
 - **Both sides passive**: neither sends LACP frames, so the bundle stays down with
   reason `no-active-links` — this is the fault the lab injects.

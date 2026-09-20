@@ -61,7 +61,7 @@ MLAG 与 EVPN-MH 都保留**两个独立的控制面**，同时让它们在服�
 - 在 EVPN-MH 交换机上，Ethernet Segment 及其 ESI 可在 EVPN 状态中看到（SR Linux：
   `network-instance … protocols bgp-evpn ethernet-segments` 之下）。
 
-## 常见坑
+## 常见问题
 
 - **peer-link 故障 = 脑裂**：没有 keepalive 与主/备角色时，两台 peer 可能都接受 LAG，导致
   流量黑洞。

@@ -72,7 +72,7 @@ There is no lab in this chapter; the inspection commands to remember are:
 - on an EVPN-MH switch, the Ethernet Segment and its ESI are visible in the EVPN
   state (SR Linux: under `network-instance … protocols bgp-evpn ethernet-segments`).
 
-## Pitfalls
+## Common questions
 
 - **Peer-link failure = split-brain**: without a keepalive and a primary/secondary
   role, both peers can accept the LAG and black-hole traffic.

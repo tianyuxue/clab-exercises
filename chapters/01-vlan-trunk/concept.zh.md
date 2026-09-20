@@ -70,7 +70,7 @@ bridge vlan add dev eth3 vid 20
 bridge vlan show          # 查看每个端口的 PVID 与出向标签
 ```
 
-## 常见坑
+## 常见问题
 
 - **同网段、不同 PVID**：两台主机可能在同一 IP 网段，但所在 access 端口的 PVID 不同；
   它们的 ARP 被 VLAN 隔离，因此互相不通。这正是本题注入的故障。

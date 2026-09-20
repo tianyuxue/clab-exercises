@@ -83,7 +83,7 @@ bridge vlan add dev eth3 vid 20
 bridge vlan show          # inspect PVID and egress tagging per port
 ```
 
-## Pitfalls
+## Common questions
 
 - **Same subnet, different PVID**: two hosts can be in the same IP subnet but sit
   on access ports with different PVIDs; their ARP is isolated by the VLAN, so they

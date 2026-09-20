@@ -76,7 +76,7 @@ bridge -j link show                         # per-port state: forwarding/blockin
 Default STP timers make the first convergence take tens of seconds; a lab can
 speed it up with `forward_delay`, `hello_time` and `max_age`.
 
-## Pitfalls
+## Common questions
 
 - **Default priority 32768**: with no priority configured, the **MAC address**
   decides the root — the result is arbitrary from an operations point of view.

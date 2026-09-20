@@ -65,7 +65,7 @@ sr_cli -d "ping -c 2 10.0.0.2 network-instance default"
 关键输出是 `show lag`：`lag1` 是否 **up**、每个成员的 `oper-state`，以及未 up 时的
 `oper-down-reason`。
 
-## 常见坑
+## 常见问题
 
 - **两侧都 passive**：没人发送 LACP 报文，捆绑保持 down，原因为 `no-active-links`——
   这正是本题注入的故障。
