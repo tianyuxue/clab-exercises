@@ -4,6 +4,7 @@ topology:
     sw1:
       kind: linux
       image: nicolaka/netshoot:v0.13
+      group: switch
       exec:
         - ip link add br0 type bridge stp_state 1
         - ip link set br0 up
@@ -17,6 +18,7 @@ topology:
     sw2:
       kind: linux
       image: nicolaka/netshoot:v0.13
+      group: switch
       exec:
         - ip link add br0 type bridge stp_state 1
         - ip link set br0 up
@@ -31,6 +33,7 @@ topology:
     sw3:
       kind: linux
       image: nicolaka/netshoot:v0.13
+      group: switch
       exec:
         - ip link add br0 type bridge stp_state 1
         - ip link set br0 up
@@ -42,12 +45,14 @@ topology:
     h1:
       kind: linux
       image: nicolaka/netshoot:v0.13
+      group: host
       exec:
         - ip addr add 10.0.1.1/24 dev eth1
         - ip link set eth1 up
     h2:
       kind: linux
       image: nicolaka/netshoot:v0.13
+      group: host
       exec:
         - ip addr add 10.0.1.2/24 dev eth1
         - ip link set eth1 up
