@@ -5,12 +5,10 @@
 
 ## 修复步骤
 
-在本章目录另开一个终端执行 `make debug`（或直接用 `docker exec`）查看网桥，
-然后在宿主机上编辑 `sw/vlan.sh`：
+在本章目录另开一个终端，直接配置正在运行的交换机（`make debug` 或 `docker exec`）：
 
-- `docker exec <sw> bridge vlan show`
-- 把 `eth1` 与 `eth2` 都放入 VLAN 10，并使用 `pvid untagged`
-- 删除 `I AM NOT DONE` 行
+- `docker exec <sw> bridge vlan show` —— 查看各端口的 PVID
+- 把 `eth1` 与 `eth2` 都改为 VLAN 10 且 `pvid untagged`，例如
+  `docker exec <sw> bridge vlan del dev eth2 vid 20 && docker exec <sw> bridge vlan add dev eth2 vid 10 pvid untagged`
 
-保存后 `clablings watch` 会自动把文件复制进 `sw` 并执行 reload 脚本；也可以按
-Enter 强制验证。
+改动立即生效。按 Enter 验证；按 `f`（fast reset）会重新注入故障，方便从头再来。

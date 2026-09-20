@@ -1,6 +1,6 @@
 #!/bin/sh
-# I AM NOT DONE
-# Goal: bring lag1 up by fixing LACP negotiation.
+# Fault injection: both sides run lacp-mode PASSIVE, so lag1 never comes up.
+# Fix the running switch, not this file.
 sr_cli -d <<'SRLEOF'
 enter candidate
 set / interface ethernet-1/1 admin-state enable

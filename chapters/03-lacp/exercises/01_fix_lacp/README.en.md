@@ -6,10 +6,12 @@ sends LACPDUs.
 
 ## How to fix
 
-Inspect the LAG, then edit `srl1/lag.sh` on the host and let watch reload it:
+Inspect the LAG and fix the running `srl1` directly:
 
 - `docker exec <srl1> sr_cli -d "show lag"` (look at `oper-down-reason`)
-- change `lacp-mode PASSIVE` to `ACTIVE` on srl1, remove `I AM NOT DONE`
+- set `lacp-mode` to `ACTIVE` on srl1, e.g.
+  `docker exec <srl1> sr_cli -d "enter candidate; set / interface lag1 lag lacp lacp-mode ACTIVE; commit now"`
 
-Saving triggers reload; Enter forces verification. Only one side needs to be
-ACTIVE; srl2 can stay PASSIVE.
+The change takes effect immediately; press Enter to verify. Only one side needs to
+be ACTIVE; srl2 can stay PASSIVE. `f` (fast reset) re-injects the fault if you want
+to start over.

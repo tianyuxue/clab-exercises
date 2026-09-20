@@ -20,11 +20,6 @@ reload:
     cmd: "sh /root/vlan.sh"
 assertions:
   - name:
-      en: vlan.sh has the sentinel removed
-      zh: vlan.sh 已移除哨兵
-    type: file
-    source: sw/vlan.sh
-  - name:
       en: eth2 is in VLAN 10
       zh: eth2 属于 VLAN 10
     type: exec

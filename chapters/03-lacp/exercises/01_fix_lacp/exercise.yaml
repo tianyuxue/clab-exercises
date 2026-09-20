@@ -25,11 +25,6 @@ reload:
     cmd: "sh /root/lag.sh"
 assertions:
   - name:
-      en: lag.sh has the sentinel removed
-      zh: lag.sh 已移除哨兵
-    type: file
-    source: srl1/lag.sh
-  - name:
       en: lag1 is up with both members
       zh: lag1 起来且两个成员都在
     type: exec

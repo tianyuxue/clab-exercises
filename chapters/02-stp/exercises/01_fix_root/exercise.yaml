@@ -20,11 +20,6 @@ reload:
     cmd: "sh /root/stp.sh"
 assertions:
   - name:
-      en: stp.sh has the sentinel removed
-      zh: stp.sh 已移除哨兵
-    type: file
-    source: sw1/stp.sh
-  - name:
       en: STP is enabled on sw1
       zh: sw1 的 STP 处于启用状态
     type: exec

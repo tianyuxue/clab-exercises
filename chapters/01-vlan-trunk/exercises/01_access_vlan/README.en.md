@@ -6,12 +6,12 @@ because the two access ports use different PVIDs.
 
 ## How to fix
 
-Open another terminal in the chapter directory and run `make debug` (or use
-`docker exec`), inspect the bridge, then edit `sw/vlan.sh` on the host:
+Open another terminal in the chapter directory and configure the running switch
+directly (`make debug`, or `docker exec`):
 
-- `docker exec <sw> bridge vlan show`
-- put both `eth1` and `eth2` in VLAN 10 with `pvid untagged`
-- remove the `I AM NOT DONE` line
+- `docker exec <sw> bridge vlan show` — see the PVID of each port
+- put both `eth1` and `eth2` in VLAN 10 with `pvid untagged`, e.g.
+  `docker exec <sw> bridge vlan del dev eth2 vid 20 && docker exec <sw> bridge vlan add dev eth2 vid 10 pvid untagged`
 
-Saving the file makes `clablings watch` re-copy it into `sw` and run the reload
-script automatically. You can also press Enter to force verification.
+The change takes effect immediately. Press Enter to verify; `f` (fast reset)
+re-injects the fault if you want to start over.
