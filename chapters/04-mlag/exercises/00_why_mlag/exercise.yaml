@@ -2,6 +2,7 @@ id: 00_why_mlag
 title:
   en: Why MLAG?
   zh: 为什么需要 MLAG？
+brief: {en: "Answer to proceed: why does dual-homing to two independent switches break LACP?", zh: "作答以推进：双归到两台独立交换机为何会破坏 LACP？"}
 type: quiz
 difficulty: 3
 hints:

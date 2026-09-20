@@ -2,6 +2,7 @@ id: 01_fix_root
 title:
   en: Make sw1 the root bridge
   zh: 让 sw1 成为根桥
+brief: {en: "sw1 must be the STP root. Change sw1 bridge priority so it wins the election.", zh: "sw1 必须是 STP 根桥。调整 sw1 的桥优先级让它赢得选举。"}
 type: config-fix
 difficulty: 3
 timeout: 30s

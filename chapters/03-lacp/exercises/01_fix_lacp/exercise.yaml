@@ -2,6 +2,7 @@ id: 01_fix_lacp
 title:
   en: Bring the LAG up
   zh: 让 LAG 起来
+brief: {en: "lag1 is down because both sides are LACP PASSIVE. Bring it up.", zh: "lag1 因两侧都是 LACP PASSIVE 而 down。让它起来。"}
 type: config-fix
 difficulty: 3
 timeout: 60s

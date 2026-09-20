@@ -2,6 +2,7 @@ id: 00_why_vlan
 title:
   en: Why VLANs?
   zh: 为什么需要 VLAN？
+brief: {en: "Answer to proceed: what does a VLAN isolate, and what does an 802.1Q tag carry?", zh: "作答以推进：VLAN 隔离的是什么？802.1Q 标签携带哪些内容？"}
 type: quiz
 difficulty: 1
 hints:

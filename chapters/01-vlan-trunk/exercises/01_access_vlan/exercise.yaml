@@ -2,6 +2,7 @@ id: 01_access_vlan
 title:
   en: Fix access VLANs
   zh: 修复 access VLAN
+brief: {en: "h1 and h2 are in the same subnet but cannot reach each other. Fix the access VLANs on sw so they can.", zh: "h1 与 h2 同网段却互不相通。修复 sw 上的 access VLAN，让它们能互通。"}
 type: config-fix
 difficulty: 2
 timeout: 30s
