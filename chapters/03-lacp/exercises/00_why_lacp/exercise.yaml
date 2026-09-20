@@ -2,7 +2,7 @@ id: 00_why_lacp
 title:
   en: Why LACP?
   zh: 为什么需要 LACP？
-brief: {en: "Answer to proceed: what does aggregation buy, and what must match for LACP?", zh: "作答以推进：聚合带来什么收益？LACP 需要哪些参数一致？"}
+brief: {en: "Answer the question to continue: what does aggregation buy, and what must match for LACP?", zh: "继续前请回答问题：聚合带来什么收益？LACP 需要哪些参数一致？"}
 type: quiz
 difficulty: 2
 hints:

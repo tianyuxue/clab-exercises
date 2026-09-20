@@ -2,7 +2,7 @@ id: 00_root_election
 title:
   en: Root bridge election
   zh: 根桥选举
-brief: {en: "Answer to proceed: which bridge becomes root, and what do the STP port states mean?", zh: "作答以推进：哪台网桥成为根？STP 端口状态分别意味着什么？"}
+brief: {en: "Answer the question to continue: which bridge becomes root, and what do the STP port states mean?", zh: "继续前请回答问题：哪台网桥成为根？STP 端口状态分别意味着什么？"}
 type: quiz
 difficulty: 2
 hints:
