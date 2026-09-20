@@ -14,7 +14,7 @@
 - **流哈希（flow hashing）**：交换机对每条流按报文头部做哈希，选出一条成员。因此一条流
   （每个方向）只会走一条成员。
 - **LACP**（802.1AX）：两端用来协商"哪些链路是成员、是否健康"的协议。
-- **Active / passive**：**active** 一侧主动发送 LACP 报文（LACPDU）；**passive** 一侧只
+- **Active / passive**：**active** 一侧主动发送 LACP 报文（`LACPDUs`）；**passive** 一侧只
   回应。至少一侧必须是 active。
 - **admin-key**：成员要加入同一个 LAG 必须一致的标识。
 - **min-links**：LAG 保持 up 所需的最少可用成员数。
