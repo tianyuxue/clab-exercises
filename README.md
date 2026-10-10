@@ -31,7 +31,7 @@ go run ./cmd/clablings test --all --root ../clab-exercises
 | 02-stp | quiz + 文件驱动 config-fix | 哨兵 + Enter | 理解 STP 根桥选举与环路防护，调整优先级让核心交换机成为根 |
 | 03-lacp | quiz + 文件驱动 config-fix | 哨兵 + Enter | 理解链路聚合与 LACP 协商，修复 active/passive 让 LAG 起来（SR Linux） |
 | 04-mlag | quiz（概念章，无实验） | 答题推进 | 理解 MLAG/vPC、脑裂与 EVPN 多归，对比堆叠 |
-| 05-bgp-basics | quiz + 文件驱动 config-fix（含抓包） | Enter（运行态修复） | 理解 eBGP 会话建立与状态机，修复 remote-as、协商 hold time（FRR） |
+| 05-bgp-basics | quiz + 运行态 config-fix（含抓包） | Enter | 理解 eBGP 会话建立与状态机，修复 remote-as、协商 hold time（FRR） |
 
 ## M1 路线（已完成）
 
