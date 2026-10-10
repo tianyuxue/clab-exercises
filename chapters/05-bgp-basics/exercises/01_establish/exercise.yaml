@@ -1,0 +1,40 @@
+id: 01_establish
+title:
+  en: Bring up the eBGP session
+  zh: 让 eBGP 会话起来
+brief: {en: "r1 and r2 are in AS 65001 and 65002 but the session never reaches Established. Find and fix it.", zh: "r1、r2 分属 AS 65001 与 65002，但会话一直起不来。找出并修复它。"}
+type: config-fix
+difficulty: 2
+timeout: 60s
+hints:
+  - en: Compare `show bgp summary` on both routers; look at the expected remote AS.
+    zh: 对比两端 `show bgp summary`，看期望的 remote AS。
+  - en: On r2 the neighbor's remote-as does not match r1's actual AS (65001).
+    zh: r2 上该邻居的 remote-as 与 r1 实际 AS（65001）不符。
+files:
+  - source: r1/establish.sh
+    node: r1
+    dest: /root/establish.sh
+  - source: r2/establish.sh
+    node: r2
+    dest: /root/establish.sh
+reload:
+  - node: r1
+    cmd: "sh /root/establish.sh"
+  - node: r2
+    cmd: "sh /root/establish.sh"
+assertions:
+  - name:
+      en: r1 sees the peer as Established
+      zh: r1 看到邻居为 Established
+    type: exec
+    layer: control-plane
+    node: r1
+    cmd: "vtysh -c 'show bgp summary json'"
+    wait: 40s
+    match:
+      json: "$.ipv4Unicast.peers.*.state"
+      equals: "Established"
+    hint:
+      en: Fix r2's remote-as to 65001 so the OPEN is accepted.
+      zh: 把 r2 的 remote-as 改成 65001，让对端 OPEN 被接受。
