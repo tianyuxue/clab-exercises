@@ -5,3 +5,4 @@ chapters:
   - chapters/02-stp
   - chapters/03-lacp
   - chapters/04-mlag
+  - chapters/05-bgp-basics

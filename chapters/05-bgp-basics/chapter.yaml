@@ -1,0 +1,20 @@
+id: 05-bgp-basics
+title:
+  en: BGP basics — session establishment
+  zh: BGP 入门——会话建立
+difficulty: 2
+tags: [l3, bgp, routing, fsm]
+estimated_minutes: 45
+prerequisites: [04-mlag]
+objectives:
+  en:
+    - Explain the BGP finite state machine and how a session reaches Established
+    - Read the OPEN message fields that two peers negotiate
+    - Bring an eBGP session up by fixing the neighbor configuration
+  zh:
+    - 解释 BGP 有限状态机，以及会话如何达到 Established
+    - 读懂两个对等体协商的 OPEN 报文字段
+    - 通过修复邻居配置让 eBGP 会话起来
+topology: topology.clab.yml
+deploy:
+  timeout: 180s
