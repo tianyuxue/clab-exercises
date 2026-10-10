@@ -17,6 +17,8 @@
 - **KEEPALIVE**：周期性发送、用于确认会话仍然存活的消息。
 - **NOTIFICATION**：报告错误并关闭会话的消息。
 - **Hold Time**：在对端被判失效前，允许没有收到 KEEPALIVE 或 UPDATE 的最长时间；在 OPEN 中协商。
+- **BGP Identifier**：OPEN 中用于标识发送方的 4 字节值，通常取 router-id。
+- **能力（Optional Parameters，Capabilities）**：OPEN 中用于协商能力（如地址族）的可选字段。
 
 ## 痛点
 
@@ -56,3 +58,4 @@ tshark -r /tmp/bgp.pcap -Y 'bgp.type==1' -T fields -e bgp.open.myas -e bgp.open.
 - 邻居一直达不到 `Established`，先查哪个字段？期望的 `remote-as` 必须与对端实际 AS 一致；不匹配会报 "Bad Peer AS"。
 - 为什么 KEEPALIVE 要短于 Hold Time？整整一个 Hold Time 收不到 KEEPALIVE，对端就会判定会话失效（Hold Timer Expired）。
 - 为什么改计时器要重置会话？计时器在 OPEN 中协商，只对新会话生效。
+- 两端提议的 Hold Time 不同，最终用哪个？取两者中的较小值。
