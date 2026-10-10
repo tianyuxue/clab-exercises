@@ -12,6 +12,9 @@ hints:
   - en: Timers apply to a new session; reset it with `clear bgp *`.
     zh: 计时器对新会话生效；用 `clear bgp *` 重置会话。
 files:
+  - source: sniff/recapture.sh
+    node: sniff
+    dest: /root/recapture.sh
   - source: r1/hold.sh
     node: r1
     dest: /root/hold.sh
@@ -19,6 +22,8 @@ files:
     node: r2
     dest: /root/hold.sh
 reload:
+  - node: sniff
+    cmd: "sh /root/recapture.sh"
   - node: r1
     cmd: "sh /root/hold.sh"
   - node: r2
@@ -37,7 +42,7 @@ assertions:
       equals: "Established"
     hint: {en: The session must be up before its OPEN can be observed., zh: 必须先建立会话，才能观察到它的 OPEN。}
   - name:
-      en: r1 negotiates an OPEN with the configured hold time
+      en: r1 proposes an OPEN with the configured hold time
       zh: r1 发出的 OPEN 携带所配置的 hold time
     type: exec
     layer: control-plane

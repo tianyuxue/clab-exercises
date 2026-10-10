@@ -1,4 +1,5 @@
 #!/bin/sh
+# r2 is the default-timer peer; it is not part of the fix. Left as reference.
 ip link set eth1 up
 vtysh <<'EOF'
 configure terminal

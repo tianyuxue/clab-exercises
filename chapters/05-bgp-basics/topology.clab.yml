@@ -26,7 +26,6 @@ topology:
         - ip link set eth2 master br0
         - ip link set eth1 up
         - ip link set eth2 up
-        - sh -c "setsid tcpdump -U -i any -w /tmp/bgp.pcap tcp port 179 >/dev/null 2>&1 </dev/null &"
   links:
     - endpoints: ["r1:eth1", "sniff:eth1"]
     - endpoints: ["sniff:eth2", "r2:eth1"]
