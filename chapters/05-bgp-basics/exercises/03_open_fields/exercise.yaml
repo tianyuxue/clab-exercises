@@ -44,7 +44,7 @@ questions:
       zh: OPEN 中的 BGP Identifier 是什么？
     multiple: false
     options:
-      - text: {en: A 32-bit value, usually the router-id, zh: 一个 32 位值，通常取 router-id}
+      - text: {en: "A 32-bit value, usually the router-id", zh: 一个 32 位值，通常取 router-id}
         correct: true
         explanation:
           en: It is a 32-bit value used for tie-breaking; commonly a loopback address.
