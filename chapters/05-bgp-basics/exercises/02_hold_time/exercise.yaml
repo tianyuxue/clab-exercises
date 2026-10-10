@@ -1,0 +1,52 @@
+id: 02_hold_time
+title:
+  en: Negotiate a 9-second hold time
+  zh: 协商 9 秒 hold time
+brief: {en: "The session is up with default timers. Set r1's hold time to 9s (keepalive 3s) and renegotiate, so the OPEN carries hold_time 9.", zh: "会话当前用默认计时器建立。把 r1 的 hold time 设为 9 秒（keepalive 3 秒）并重新协商，使 OPEN 携带 hold_time 9。"}
+type: config-fix
+difficulty: 2
+timeout: 60s
+hints:
+  - en: The neighbor timers are set under `router bgp`: `neighbor <ip> timers 9 3`.
+    zh: 邻居计时器配在 `router bgp` 下：`neighbor <ip> timers 9 3`。
+  - en: Timers apply to a new session; reset it with `clear bgp *`.
+    zh: 计时器对新会话生效；用 `clear bgp *` 重置会话。
+files:
+  - source: r1/hold.sh
+    node: r1
+    dest: /root/hold.sh
+  - source: r2/hold.sh
+    node: r2
+    dest: /root/hold.sh
+reload:
+  - node: r1
+    cmd: "sh /root/hold.sh"
+  - node: r2
+    cmd: "sh /root/hold.sh"
+assertions:
+  - name:
+      en: r1 session is Established
+      zh: r1 会话已 Established
+    type: exec
+    layer: control-plane
+    node: r1
+    cmd: "vtysh -c 'show bgp summary json'"
+    wait: 40s
+    match:
+      json: "$.ipv4Unicast.peers.*.state"
+      equals: "Established"
+    hint: {en: The session must be up before its OPEN can be observed., zh: 必须先建立会话，才能观察到它的 OPEN。}
+  - name:
+      en: r1 negotiates an OPEN with the configured hold time
+      zh: r1 发出的 OPEN 携带所配置的 hold time
+    type: exec
+    layer: control-plane
+    node: sniff
+    cmd: "tshark -r /tmp/bgp.pcap -Y 'bgp.type==1 && ip.src==10.1.12.1' -T fields -e bgp.open.holdtime | tail -1"
+    wait: 10s
+    match:
+      stdout:
+        equals: "9"
+    hint:
+      en: Set `neighbor 10.1.12.2 timers 9 3` on r1, then reset the session.
+      zh: 在 r1 上设置 `neighbor 10.1.12.2 timers 9 3`，然后重置会话。
