@@ -6,12 +6,12 @@ brief: {en: "Answer the question to continue: which fields does a BGP OPEN carry
 type: quiz
 difficulty: 1
 hints:
-  - en: The OPEN negotiates version, AS number, hold time, router-id and capabilities.
-    zh: OPEN 协商版本、AS 号、hold time、router-id 与能力。
+  - en: The OPEN carries version, the sender's AS number, hold time and BGP Identifier, plus capabilities.
+    zh: OPEN 携带版本、发送方 AS 号、hold time 与 BGP Identifier，以及能力。
 questions:
   - prompt:
-      en: Which fields does a BGP OPEN message carry?
-      zh: BGP OPEN 报文携带哪些字段？
+      en: Which of the following fields does a BGP OPEN carry?
+      zh: 下列哪些字段由 BGP OPEN 携带？
     multiple: true
     options:
       - text: {en: Version (currently 4), zh: 版本（当前为 4）}
@@ -29,6 +29,11 @@ questions:
         explanation:
           en: The proposed Hold Time; the peers use the smaller value.
           zh: 提议的 Hold Time；双方取较小值。
+      - text: {en: BGP Identifier, zh: BGP Identifier}
+        correct: true
+        explanation:
+          en: A 4-octet value (usually the router-id) that identifies the sender.
+          zh: 用于标识发送方的 4 字节值（通常取 router-id）。
       - text: {en: NLRI (advertised prefixes), zh: NLRI（通告的前缀）}
         correct: false
         explanation:
@@ -59,18 +64,18 @@ questions:
       zh: 两端提议的 Hold Time 分别为 180 与 9，最终采用哪个？
     multiple: false
     options:
-      - text: {en: 180, zh: 180}
+      - text: {en: "180", zh: "180"}
         correct: false
         explanation:
           en: The smaller value is used to detect dead peers sooner.
           zh: 采用较小值，以便更快发现对端失效。
-      - text: {en: 9, zh: 9}
+      - text: {en: "9", zh: "9"}
         correct: true
         explanation:
           en: The negotiated Hold Time is the minimum of the two.
           zh: 协商后的 Hold Time 取两者中的最小值。
-      - text: {en: 0, zh: 0}
+      - text: {en: "0", zh: "0"}
         correct: false
         explanation:
-          en: 0 means no keepalives and is only agreed if explicitly proposed.
-          zh: 0 表示不发送 keepalive，只有在显式提议时才成立。
+          en: 0 disables keepalives; since the negotiated value is the minimum, a single peer proposing 0 makes it 0.
+          zh: 0 表示不发送 keepalive；由于协商值取最小值，只要一方提议 0，结果就是 0。
