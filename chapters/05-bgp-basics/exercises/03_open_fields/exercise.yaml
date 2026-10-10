@@ -1,0 +1,76 @@
+id: 03_open_fields
+title:
+  en: What the OPEN message carries
+  zh: OPEN 报文携带什么
+brief: {en: "Answer the question to continue: which fields does a BGP OPEN carry?", zh: "继续前请回答问题：BGP OPEN 携带哪些字段？"}
+type: quiz
+difficulty: 1
+hints:
+  - en: The OPEN negotiates version, AS number, hold time, router-id and capabilities.
+    zh: OPEN 协商版本、AS 号、hold time、router-id 与能力。
+questions:
+  - prompt:
+      en: Which fields does a BGP OPEN message carry?
+      zh: BGP OPEN 报文携带哪些字段？
+    multiple: true
+    options:
+      - text: {en: Version (currently 4), zh: 版本（当前为 4）}
+        correct: true
+        explanation:
+          en: The version field carries the BGP version, 4 for BGP-4.
+          zh: 版本字段携带 BGP 版本，BGP-4 为 4。
+      - text: {en: My Autonomous System, zh: 本端自治系统号}
+        correct: true
+        explanation:
+          en: The sender's 2-octet AS number (4 octets via a capability).
+          zh: 发送方的 2 字节 AS 号（经能力协商可为 4 字节）。
+      - text: {en: Hold Time, zh: Hold Time}
+        correct: true
+        explanation:
+          en: The proposed Hold Time; the peers use the smaller value.
+          zh: 提议的 Hold Time；双方取较小值。
+      - text: {en: NLRI (advertised prefixes), zh: NLRI（通告的前缀）}
+        correct: false
+        explanation:
+          en: NLRI is carried in UPDATE, not OPEN.
+          zh: NLRI 由 UPDATE 携带，不在 OPEN 中。
+  - prompt:
+      en: What is the BGP Identifier in the OPEN?
+      zh: OPEN 中的 BGP Identifier 是什么？
+    multiple: false
+    options:
+      - text: {en: A 32-bit value, usually the router-id, zh: 一个 32 位值，通常取 router-id}
+        correct: true
+        explanation:
+          en: It is a 32-bit value used for tie-breaking; commonly a loopback address.
+          zh: 它是用于打破平局的 32 位值，常取一个 loopback 地址。
+      - text: {en: The TCP source port, zh: TCP 源端口}
+        correct: false
+        explanation:
+          en: TCP details are not in the BGP Identifier.
+          zh: TCP 信息不在 BGP Identifier 里。
+      - text: {en: The peer's MAC address, zh: 对端 MAC 地址}
+        correct: false
+        explanation:
+          en: BGP is an L3/L4 protocol; MAC addresses are irrelevant.
+          zh: BGP 是三层/四层协议，与 MAC 无关。
+  - prompt:
+      en: Two peers propose Hold Times of 180 and 9. Which value is used?
+      zh: 两端提议的 Hold Time 分别为 180 与 9，最终采用哪个？
+    multiple: false
+    options:
+      - text: {en: 180, zh: 180}
+        correct: false
+        explanation:
+          en: The smaller value is used to detect dead peers sooner.
+          zh: 采用较小值，以便更快发现对端失效。
+      - text: {en: 9, zh: 9}
+        correct: true
+        explanation:
+          en: The negotiated Hold Time is the minimum of the two.
+          zh: 协商后的 Hold Time 取两者中的最小值。
+      - text: {en: 0, zh: 0}
+        correct: false
+        explanation:
+          en: 0 means no keepalives and is only agreed if explicitly proposed.
+          zh: 0 表示不发送 keepalive，只有在显式提议时才成立。
