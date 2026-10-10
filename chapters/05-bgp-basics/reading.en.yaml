@@ -1,0 +1,32 @@
+- title: RFC 4271 — BGP Finite State Machine
+  section: "BGP Finite State Machine (FSM)"
+  kind: required
+  url: https://www.rfc-editor.org/rfc/rfc4271.html#section-8
+  intro:
+    en: The exact states and the events that move a session between them — the backbone of this chapter.
+    zh: 会话的状态定义与状态之间的触发事件，是本章的主干。
+  question:
+    en: Which event moves the session from OpenSent to OpenConfirm?
+    zh: 哪个事件让会话从 OpenSent 转到 OpenConfirm？
+
+- title: RFC 4271 — OPEN Message
+  section: "OPEN Message Format"
+  kind: required
+  url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.2
+  intro:
+    en: The field layout of the OPEN you read on the wire in this chapter.
+    zh: 本章在线路上读到的 OPEN 的字段布局。
+  question:
+    en: What does the Hold Time field propose, and how is it negotiated?
+    zh: Hold Time 字段提议了什么？它是如何协商的？
+
+- title: RFC 4271 — BGP Timers
+  section: "BGP Timers"
+  kind: optional
+  url: https://www.rfc-editor.org/rfc/rfc4271.html#section-10
+  intro:
+    en: How Hold Time and Keepalive relate, and why a dead peer is detected within one Hold Time.
+    zh: Hold Time 与 Keepalive 的关系，以及为何在一个 Hold Time 内就能发现对端失效。
+  question:
+    en: What is the recommended relationship between Keepalive and Hold Time?
+    zh: Keepalive 与 Hold Time 之间的推荐关系是什么？
