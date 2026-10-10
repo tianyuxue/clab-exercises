@@ -2,7 +2,7 @@ id: 00_fsm
 title:
   en: The BGP finite state machine
   zh: BGP 有限状态机
-brief: {en: "Answer to continue: how does a BGP session reach Established?", zh: "继续前请作答：BGP 会话如何达到 Established？"}
+brief: {en: "Answer the question to continue: how does a BGP session reach Established?", zh: "继续前请回答问题：BGP 会话如何达到 Established？"}
 type: quiz
 difficulty: 1
 hints:
@@ -49,11 +49,11 @@ questions:
         explanation:
           en: OpenConfirm waits for the peer KEEPALIVE; on receipt the session is Established.
           zh: OpenConfirm 等待对端 KEEPALIVE；收到后进入 Established。
-      - text: {en: The peer negotiating a router-id, zh: 对端协商出 router-id}
+      - text: {en: The peer negotiating a BGP Identifier, zh: 对端协商出 BGP Identifier}
         correct: false
         explanation:
-          en: router-id is just an OPEN field, not the trigger.
-          zh: router-id 只是 OPEN 字段，不是触发条件。
+          en: The BGP Identifier is a 4-octet OPEN field, not an FSM trigger.
+          zh: BGP Identifier 是 OPEN 中的 4 字节字段，不是状态机触发条件。
   - prompt:
       en: Which statements about Idle and Active are correct?
       zh: 关于 Idle 与 Active，哪些说法正确？
@@ -67,18 +67,18 @@ questions:
       - text: {en: Active means the session is usable, zh: Active 表示会话已经可用}
         correct: false
         explanation:
-          en: Active is a connection-retry state; it does not mean the session is up.
-          zh: Active 是连接重试状态，不代表会话可用。
+          en: Active means listening for and accepting an inbound TCP connection, not a working session.
+          zh: Active 表示在监听并接受入向 TCP 连接，并不意味着会话可用。
       - text: {en: In Active the peer waits for an inbound TCP connection, zh: Active 下等待对端主动发起的 TCP 连接}
         correct: true
         explanation:
           en: Active is the passive listening state; Connect actively retries.
           zh: Active 是被动监听状态；Connect 才主动重试。
-      - text: {en: A failed Connect attempt falls back to Active, zh: Connect 连接失败会退回 Active}
+      - text: {en: When the ConnectRetry timer expires in Active, the FSM starts a new TCP connection and moves to Connect, zh: Active 下 ConnectRetry 计时器到期时，会发起新的 TCP 连接并转入 Connect}
         correct: true
         explanation:
-          en: On ConnectRetry timeout the FSM moves to Active.
-          zh: ConnectRetry 超时后状态机转入 Active。
+          en: Active retries on the ConnectRetry timer; the retry enters Connect, which initiates the TCP connection.
+          zh: Active 依靠 ConnectRetry 计时器重试；重试进入 Connect，由 Connect 发起 TCP 连接。
   - prompt:
       en: What happens when the Hold Timer expires (no KEEPALIVE/UPDATE within Hold Time)?
       zh: Hold Timer 到期（Hold Time 内未收到 KEEPALIVE/UPDATE）会怎样？
