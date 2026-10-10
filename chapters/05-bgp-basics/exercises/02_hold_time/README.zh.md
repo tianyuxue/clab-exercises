@@ -5,8 +5,8 @@
 
 ## 修复步骤
 
-- 在 `r1` 上设置邻居计时器：
-  `docker exec <r1> vtysh -c 'conf t' -c 'router bgp 65001' -c 'neighbor 10.1.12.2 timers 9 3'`
+- 在 `r1` 上设置邻居计时器（FRR 的顺序是先 keepalive 后 hold time）：
+  `docker exec <r1> vtysh -c 'conf t' -c 'router bgp 65001' -c 'neighbor 10.1.12.2 timers 3 9'`
 - 计时器只对新会话生效，因此重置它：
   `docker exec <r1> vtysh -c 'clear bgp *'`
 

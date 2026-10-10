@@ -6,8 +6,8 @@ The session between `r1` and `r2` is established with the default timers. Make
 
 ## How to fix
 
-- Set the neighbor timers on `r1`:
-  `docker exec <r1> vtysh -c 'conf t' -c 'router bgp 65001' -c 'neighbor 10.1.12.2 timers 9 3'`
+- Set the neighbor timers on `r1` (FRR order is keepalive then hold time):
+  `docker exec <r1> vtysh -c 'conf t' -c 'router bgp 65001' -c 'neighbor 10.1.12.2 timers 3 9'`
 - Timers only take effect on a new session, so reset it:
   `docker exec <r1> vtysh -c 'clear bgp *'`
 

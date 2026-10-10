@@ -7,8 +7,8 @@ type: config-fix
 difficulty: 2
 timeout: 60s
 hints:
-  - en: "The neighbor timers are set under `router bgp`: `neighbor <ip> timers 9 3`."
-    zh: "邻居计时器配在 `router bgp` 下：`neighbor <ip> timers 9 3`。"
+  - en: "The neighbor timers are set under `router bgp` (keepalive then hold time): `neighbor <ip> timers 3 9`."
+    zh: "邻居计时器配在 `router bgp` 下（先 keepalive 后 hold time）：`neighbor <ip> timers 3 9`。"
   - en: Timers apply to a new session; reset it with `clear bgp *`.
     zh: 计时器对新会话生效；用 `clear bgp *` 重置会话。
 files:
@@ -48,5 +48,5 @@ assertions:
       stdout:
         equals: "9"
     hint:
-      en: Set `neighbor 10.1.12.2 timers 9 3` on r1, then reset the session.
-      zh: 在 r1 上设置 `neighbor 10.1.12.2 timers 9 3`，然后重置会话。
+      en: Set `neighbor 10.1.12.2 timers 3 9` on r1 (keepalive 3, hold 9), then reset the session.
+      zh: 在 r1 上设置 `neighbor 10.1.12.2 timers 3 9`（keepalive 3、hold 9），然后重置会话。
