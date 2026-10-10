@@ -8,11 +8,16 @@ across a single point-to-point link.
 
 ## Terms
 
+- **BGP (Border Gateway Protocol)**: the routing protocol that exchanges routes between ASes.
 - **Autonomous System (AS)**: a network under one administration, identified by an AS number (e.g. 65001).
+- **IGP (Interior Gateway Protocol)**: the routing protocol one operator runs inside its own network (e.g. OSPF); it is not exchanged between different ASes.
 - **Peer (neighbor)**: the router at the other end of a BGP session.
 - **eBGP**: a BGP session between two different ASes.
 - **Finite State Machine (FSM)**: the fixed set of states a BGP session moves through, e.g. `Idle`, `Connect`, `Active`, `OpenSent`, `OpenConfirm`, `Established`.
 - **OPEN**: the first BGP message, which negotiates parameters.
+- **KEEPALIVE**: a periodic message that confirms the session is still alive.
+- **NOTIFICATION**: an error message that reports a problem and closes the session.
+- **Hold Time**: the maximum interval without a KEEPALIVE or UPDATE before the peer is declared dead; negotiated in the OPEN.
 
 ## Why it hurts
 

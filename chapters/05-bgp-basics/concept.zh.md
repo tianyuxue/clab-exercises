@@ -7,11 +7,16 @@
 
 ## 术语
 
+- **BGP（Border Gateway Protocol，边界网关协议）**：在 AS 之间交换路由的路由协议。
 - **自治系统（Autonomous System，AS）**：由单一管理机构维护、以 AS 号标识的网络（例如 65001）。
+- **IGP（Interior Gateway Protocol，内部网关协议）**：单个运营商在自己网络内运行的路由协议（如 OSPF），不在不同 AS 之间交换。
 - **对等体（peer，邻居）**：BGP 会话另一端的路由器。
 - **eBGP**：两个不同 AS 之间的 BGP 会话。
 - **有限状态机（Finite State Machine，FSM）**：BGP 会话依次经历的固定状态集合，如 `Idle`、`Connect`、`Active`、`OpenSent`、`OpenConfirm`、`Established`。
 - **OPEN**：第一条 BGP 报文，用于协商参数。
+- **KEEPALIVE**：周期性发送、用于确认会话仍然存活的消息。
+- **NOTIFICATION**：报告错误并关闭会话的消息。
+- **Hold Time**：在对端被判失效前，允许没有收到 KEEPALIVE 或 UPDATE 的最长时间；在 OPEN 中协商。
 
 ## 痛点
 
@@ -19,13 +24,13 @@
 
 ## 为什么直觉方案不行
 
-用一条指向邻居的静态路由只对那一个前缀有效，既不可扩展，也不会随故障变化。
+用一条指向邻居的静态路由只对那一个前缀有效，既不可扩展，也不会对故障作出响应。
 BGP 用 KEEPALIVE 维持会话、在对端消失时拆除会话，这是静态路由做不到的。
 
 ## 机制
 
 BGP 跑在 TCP 179 端口上。会话沿 FSM 前进：TCP 建立后本端发出 OPEN；对端以它的 OPEN 回应；
-双方各自发送 KEEPALIVE 后进入 `Established`。remote AS 不匹配的会话会被 NOTIFICATION（"Bad Peer AS"）拒绝。
+双方各自发送 KEEPALIVE 后进入 `Established`。对端 AS（remote AS）不匹配的会话会被 NOTIFICATION（"Bad Peer AS"）拒绝。
 OPEN 携带：
 
 ```

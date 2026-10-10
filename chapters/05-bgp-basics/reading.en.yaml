@@ -1,4 +1,4 @@
-- title: RFC 4271 — BGP Finite State Machine
+- title: RFC 4271 — BGP Finite State Machine (FSM)
   section: "BGP Finite State Machine (FSM)"
   kind: required
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-8
@@ -9,7 +9,7 @@
     en: Which event moves the session from OpenSent to OpenConfirm?
     zh: 哪个事件让会话从 OpenSent 转到 OpenConfirm？
 
-- title: RFC 4271 — OPEN Message
+- title: RFC 4271 — OPEN Message Format
   section: "OPEN Message Format"
   kind: required
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.2
