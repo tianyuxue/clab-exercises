@@ -14,6 +14,7 @@ go run ./cmd/clablings test --all --root ../clab-exercises
 
 - Linux 主机，已安装 containerlab、Docker
 - LACP 章需要 `ghcr.io/nokia/srlinux:24.10.1`（拓扑已设 `shm-size: 1g`；24.7.1 在本环境无法提交配置）
+- BGP 章需要 `quay.io/frrouting/frr:10.7.1` 与 `nicolaka/netshoot:v0.13`（抓包/解构用 tshark）
 - `make debug` 现在通过 `clablings debug` 启动 `clab-tui`，需要 PATH 上同时有 `clablings` 与 `clab-tui`（`clablings` 可在 `clablings/` 下用 `go build -o /usr/local/bin/clablings ./cmd/clablings` 安装到 PATH）。
 
 题库可通过 `CLABLINGS_ROOT` 环境变量或 `--root` 指向任意路径（便于独立成官方题库仓）。
@@ -30,9 +31,14 @@ go run ./cmd/clablings test --all --root ../clab-exercises
 | 02-stp | quiz + 文件驱动 config-fix | 哨兵 + Enter | 理解 STP 根桥选举与环路防护，调整优先级让核心交换机成为根 |
 | 03-lacp | quiz + 文件驱动 config-fix | 哨兵 + Enter | 理解链路聚合与 LACP 协商，修复 active/passive 让 LAG 起来（SR Linux） |
 | 04-mlag | quiz（概念章，无实验） | 答题推进 | 理解 MLAG/vPC、脑裂与 EVPN 多归，对比堆叠 |
+| 05-bgp-basics | quiz + 文件驱动 config-fix（含抓包） | Enter（运行态修复） | 理解 eBGP 会话建立与状态机，修复 remote-as、协商 hold time（FRR） |
 
 ## M1 路线（已完成）
 
 VLAN/Trunk ✅ → STP/RSTP ✅ → 链路聚合 LACP ✅ → MLAG/EVPN-MH（概念）✅。
 
 > 完整 EVPN-MH 实验（underlay + iBGP EVPN + ESI + 双归主机 LAG）留作后续。
+
+## BGP 路线（进行中）
+
+BGP basics（会话建立/状态机）✅ → 报文格式 → 路径选择 → 排错 → C 实现最小 speaker。
