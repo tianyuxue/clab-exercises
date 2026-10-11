@@ -14,7 +14,7 @@ objectives:
   zh:
     - 说出四种 BGP 报文类型并读懂报文头部
     - 解释前缀为何可能未被通告（FRR ebgp-requires-policy）
-    - 在线上解构 UPDATE 的路径属性与 NOTIFICATION
+    - 在链路上解构 UPDATE 的路径属性与 NOTIFICATION
 topology: topology.clab.yml
 deploy:
   timeout: 180s
