@@ -1,0 +1,32 @@
+- title: RFC 4271 — Message Header Format
+  section: "Message Header Format"
+  kind: required
+  url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.1
+  intro:
+    en: The 19-octet header you read first in every captured message.
+    zh: 每条抓到的报文最先读到的 19 字节头部。
+  question:
+    en: What is the marker set to, and does Length include the header?
+    zh: marker 被设为什么？Length 是否包含头部？
+
+- title: RFC 4271 — UPDATE Message Format
+  section: "UPDATE Message Format"
+  kind: required
+  url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.3
+  intro:
+    en: The field layout of the UPDATE whose AS_PATH and NLRI you decode in this chapter.
+    zh: 本章你解构其 AS_PATH 与 NLRI 的 UPDATE 的字段布局。
+  question:
+    en: How are ORIGIN, AS_PATH, and NEXT_HOP carried?
+    zh: ORIGIN、AS_PATH、NEXT_HOP 是如何承载的？
+
+- title: RFC 4271 — NOTIFICATION Message Format
+  section: "NOTIFICATION Message Format"
+  kind: optional
+  url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.5
+  intro:
+    en: The error codes, including the Cease (6) you capture on teardown.
+    zh: 错误码，包括拆链时抓到的 Cease（6）。
+  question:
+    en: What does error code 6 mean?
+    zh: 错误码 6 表示什么？
