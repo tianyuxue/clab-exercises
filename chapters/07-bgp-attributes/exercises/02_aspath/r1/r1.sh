@@ -15,6 +15,7 @@ interface eth3
  ip address 10.1.13.1/30
 exit
 no route-map FROM_R2
+no router bgp 65001
 router bgp 65001
  bgp router-id 10.0.0.1
  bgp bestpath compare-routerid
