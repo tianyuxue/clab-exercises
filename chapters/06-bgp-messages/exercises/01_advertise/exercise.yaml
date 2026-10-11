@@ -1,0 +1,40 @@
+id: 01_advertise
+title:
+  en: Advertise the prefix
+  zh: 通告这个前缀
+brief: {en: "r1 has a network statement for 192.0.2.0/24 but r2 never receives it. Make r2 learn the prefix.", zh: "r1 配了 192.0.2.0/24 的 network 语句，但 r2 始终收不到。让 r2 学到该前缀。"}
+type: config-fix
+difficulty: 3
+timeout: 60s
+hints:
+  - en: On r1 `show bgp summary` shows peerState "Policy" and pfxSnt 0.
+    zh: r1 的 `show bgp summary` 显示 peerState "Policy"、pfxSnt 0。
+  - en: FRR needs `no bgp ebgp-requires-policy` (or an outbound route-map) for eBGP.
+    zh: FRR 的 eBGP 需要 `no bgp ebgp-requires-policy`（或一条出向 route-map）。
+files:
+  - source: r1/advertise.sh
+    node: r1
+    dest: /root/advertise.sh
+  - source: r2/advertise.sh
+    node: r2
+    dest: /root/advertise.sh
+reload:
+  - node: r1
+    cmd: "sh /root/advertise.sh"
+  - node: r2
+    cmd: "sh /root/advertise.sh"
+assertions:
+  - name:
+      en: r2 learns 192.0.2.0/24
+      zh: r2 学到 192.0.2.0/24
+    type: exec
+    layer: control-plane
+    node: r2
+    cmd: "vtysh -c 'show bgp ipv4 unicast json'"
+    wait: 40s
+    match:
+      stdout:
+        contains: "192.0.2.0/24"
+    hint:
+      en: Enable eBGP advertisement on r1 with `no bgp ebgp-requires-policy`.
+      zh: 在 r1 上用 `no bgp ebgp-requires-policy` 允许 eBGP 通告。
