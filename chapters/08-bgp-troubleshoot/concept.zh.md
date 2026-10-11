@@ -31,7 +31,7 @@
 
 先看 FSM 状态：停在 `Active` 通常表示对端不可达（地址或路由问题）；到达 `OpenSent` 后
 重置并伴随 NOTIFICATION `Bad Peer AS` 表示 remote AS 不匹配。"学到却未安装"的路由，
-通常是 `NEXT_HOP` 无法解析，一般用 iBGP 边界的 `next-hop-self` 修复（或让下一跳可达）。
+通常是 `NEXT_HOP` 无法解析，通常用 iBGP 边界的 `next-hop-self` 修复（或让下一跳可达）。
 
 ## 配置与查看
 

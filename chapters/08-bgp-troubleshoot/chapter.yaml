@@ -10,10 +10,12 @@ objectives:
   en:
     - Map symptoms (stuck Active, no routes, bad peer AS) to BGP states
     - Fix a neighbor that never leaves Active
+    - Fix a rejected OPEN (NOTIFICATION Bad Peer AS)
     - Fix an iBGP route that is learned but not installed (next-hop-self)
   zh:
     - 把症状（卡 Active、收不到路由、bad peer AS）映射到 BGP 状态
     - 修复一直停留在 Active 的邻居
+    - 修复被拒绝的 OPEN（NOTIFICATION Bad Peer AS）
     - 修复"学到但未安装"的 iBGP 路由（next-hop-self）
 topology: topology.clab.yml
 deploy:
