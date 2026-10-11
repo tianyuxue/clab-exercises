@@ -43,3 +43,14 @@ assertions:
     hint:
       en: Prepend on r2's outbound, then reset the session.
       zh: 在 r2 出向 prepend，然后重置会话。
+  - name:
+      en: h1 can reach h2
+      zh: h1 能到达 h2
+    type: exec
+    layer: data-plane
+    node: h1
+    cmd: "ping -c 2 -W 2 10.2.2.100"
+    wait: 20s
+    match:
+      exit_code: 0
+    hint: {en: Ensure forwarding works and the path is up., zh: 确保转发生效、路径可达。}
