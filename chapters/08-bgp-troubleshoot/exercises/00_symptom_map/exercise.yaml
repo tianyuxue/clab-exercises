@@ -30,8 +30,8 @@ questions:
           en: An AS mismatch shows as OpenSent then resets, with a NOTIFICATION Bad Peer AS.
           zh: AS 不匹配会表现为 OpenSent 后重置，并发出 NOTIFICATION Bad Peer AS。
   - prompt:
-      en: The neighbor reaches Established but sends a NOTIFICATION "Bad Peer AS". What is wrong?
-      zh: 邻居到了 Established 但发出 NOTIFICATION “Bad Peer AS”。哪里不对？
+      en: The neighbor never reaches Established and logs a NOTIFICATION "Bad Peer AS". What is wrong?
+      zh: 邻居始终建立不起来，并记录 NOTIFICATION “Bad Peer AS”。哪里不对？
     multiple: false
     options:
       - text: {en: "The configured remote-as does not match the peer's real AS", zh: 配置的 remote-as 与对端真实 AS 不符}
@@ -67,5 +67,5 @@ questions:
       - text: {en: Clear the BGP session, zh: 重置 BGP 会话}
         correct: false
         explanation:
-          en: The problem recurs; the next-hop rewrite is the fix.
-          zh: 问题会复现；真正的修复是改写下一跳。
+          en: The problem recurs; the next-hop rewrite is a standard fix.
+          zh: 问题会复现；改写下一跳是标准做法。
