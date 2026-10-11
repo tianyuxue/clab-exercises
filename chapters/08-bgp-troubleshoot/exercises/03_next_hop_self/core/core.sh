@@ -2,6 +2,7 @@
 ip link set eth1 up
 vtysh <<'EOF'
 configure terminal
+no ip nht resolve-via-default
 interface eth1
  ip address 10.1.1.2/30
 exit
