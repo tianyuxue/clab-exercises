@@ -9,12 +9,14 @@ not.
 ## Terms
 
 - **Message header**: the fixed 19-octet prefix of every message: a 16-octet marker (all ones), a 2-octet length (including the header), and a 1-octet type.
+- **OPEN**: type 1; the first message, which negotiates session parameters.
 - **UPDATE**: type 2; carries withdrawn routes, path attributes, and NLRI (the advertised prefixes).
 - **NOTIFICATION**: type 3; reports an error and closes the session.
 - **KEEPALIVE**: type 4; a bare header confirming the session is alive.
 - **NLRI (Network Layer Reachability Information)**: the list of prefixes an UPDATE advertises.
 - **Path attribute**: a typed, flagged field in an UPDATE, e.g. ORIGIN, AS_PATH, NEXT_HOP.
 - **AS_PATH**: the ordered list of ASes a route has traversed.
+- **Route-map**: FRR's policy construct; an outbound route-map can filter or modify attributes such as AS_PATH.
 
 ## Why it hurts
 
@@ -35,12 +37,12 @@ prefixed by the message header and holds path attributes such as AS_PATH:
 
 ```
 Marker(16, all ones) | Length(2) | Type(1)          <- header
-Withdrawn Routes Length(2) | Withdrawn Routes | Total Path Attr Length(2) | Path Attributes | NLRI
+Withdrawn Routes Length(2) | Withdrawn Routes | Total Path Attribute Length(2) | Path Attributes | NLRI
 ```
 
 FRR requires a policy for eBGP by default (`ebgp-requires-policy`); without one
-the session is up but `pfxSnt` stays 0. On teardown, BGP sends NOTIFICATION
-`Cease` (code 6).
+the session is up but `pfxSnt` stays 0. FRR sends a NOTIFICATION `Cease` (code 6)
+on a deliberate reset (`clear bgp *`).
 
 ## Configure and inspect
 
@@ -50,8 +52,9 @@ vtysh -c 'show bgp summary'
 vtysh -c 'show bgp ipv4 unicast'
 ```
 
-On the sniffer, read the messages on the wire:
+On the sniffer, capture and then read the messages on the wire:
 ```
+tcpdump -i any -w /tmp/bgp.pcap tcp port 179
 tshark -r /tmp/bgp.pcap -Y 'bgp.type==2' -T fields -e bgp.update.path_attribute.type_code
 tshark -r /tmp/bgp.pcap -Y 'bgp.type==2' -T fields -e bgp.update.path_attribute.as_path_segment.as4 -e bgp.nlri_prefix
 tshark -r /tmp/bgp.pcap -Y 'bgp.type==3' -T fields -e bgp.notify.major_error
@@ -59,6 +62,6 @@ tshark -r /tmp/bgp.pcap -Y 'bgp.type==3' -T fields -e bgp.notify.major_error
 
 ## Common questions
 
-- The neighbor is Established but sends no prefixes. Why? FRR's `ebgp-requires-policy` is on; add `no bgp ebgp-requires-policy` or an outbound route-map, then `clear bgp *`.
+- The neighbor is Established but sends no prefixes. Why? FRR's `ebgp-requires-policy` is on (the neighbor shows `peerState` `Policy`); add `no bgp ebgp-requires-policy` or an outbound route-map, then `clear bgp *`.
 - Where is the prefix in the UPDATE? In the NLRI field (`bgp.nlri_prefix`); AS_PATH is a path attribute (`...as_path_segment.as4`).
-- Why does `clear bgp *` produce a NOTIFICATION? A deliberate teardown sends `Cease` (code 6) before closing.
+- Why does `clear bgp *` produce a NOTIFICATION? FRR sends `Cease` (code 6) on a deliberate reset before closing.

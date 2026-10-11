@@ -4,7 +4,7 @@
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.1
   intro:
     en: The 19-octet header you read first in every captured message.
-    zh: 每条抓到的报文最先读到的 19 字节头部。
+    zh: 抓包时每条报文最前面、最先读到的 19 字节头部。
   question:
     en: What is the marker set to, and does Length include the header?
     zh: marker 被设为什么？Length 是否包含头部？
@@ -15,7 +15,7 @@
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.3
   intro:
     en: The field layout of the UPDATE whose AS_PATH and NLRI you decode in this chapter.
-    zh: 本章你解构其 AS_PATH 与 NLRI 的 UPDATE 的字段布局。
+    zh: 本章所解构的 UPDATE（含 AS_PATH 与 NLRI）的字段布局。
   question:
     en: How are ORIGIN, AS_PATH, and NEXT_HOP carried?
     zh: ORIGIN、AS_PATH、NEXT_HOP 是如何承载的？
