@@ -77,8 +77,8 @@ questions:
       - text: {en: Cease (code 6), zh: Cease（码 6）}
         correct: true
         explanation:
-          en: A deliberate reset sends Cease before closing.
-          zh: 主动重置会在关闭前发送 Cease。
+          en: FRR sends Cease when a session is reset, before closing.
+          zh: FRR 在重置会话、关闭前发送 Cease。
       - text: {en: Hold Timer Expired (code 4), zh: Hold Timer 到期（码 4）}
         correct: false
         explanation:
@@ -87,5 +87,5 @@ questions:
       - text: {en: No NOTIFICATION is sent, zh: 不发送 NOTIFICATION}
         correct: false
         explanation:
-          en: BGP sends NOTIFICATION Cease on teardown.
-          zh: BGP 在拆链时会发送 NOTIFICATION Cease。
+          en: FRR sends a NOTIFICATION Cease on a deliberate teardown (RFC 4271 permits this).
+          zh: FRR 在主动拆链时发送 NOTIFICATION Cease（RFC 4271 允许这样做）。
