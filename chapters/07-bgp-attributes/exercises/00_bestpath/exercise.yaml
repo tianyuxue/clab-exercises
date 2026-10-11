@@ -17,8 +17,8 @@ questions:
       - text: {en: Weight, zh: Weight}
         correct: true
         explanation:
-          en: Weight is local to the router and checked first.
-          zh: Weight 是本机属性，最先比较。
+          en: Weight is a Cisco/FRR-specific value (not defined in RFC 4271); it is local to the router and checked first.
+          zh: Weight 是 Cisco/FRR 特有值（RFC 4271 未定义）；它是本机属性，最先比较。
       - text: {en: AS_PATH length, zh: AS_PATH 长度}
         correct: false
         explanation:
@@ -28,7 +28,7 @@ questions:
         correct: false
         explanation:
           en: Router-id is a late tie-breaker.
-          zh: Router-id 是最后的打破平局项。
+          zh: Router-id 是靠后的打破平局项。
   - prompt:
       en: Which attributes are well-known mandatory?
       zh: 下列哪些是 well-known mandatory 属性？
@@ -37,8 +37,8 @@ questions:
       - text: {en: ORIGIN, zh: ORIGIN}
         correct: true
         explanation:
-          en: Required in every UPDATE.
-          zh: 每条 UPDATE 都必须携带。
+          en: Required when NLRI is present.
+          zh: 存在 NLRI 时必须携带。
       - text: {en: AS_PATH, zh: AS_PATH}
         correct: true
         explanation:
@@ -47,8 +47,8 @@ questions:
       - text: {en: NEXT_HOP, zh: NEXT_HOP}
         correct: true
         explanation:
-          en: Required in every UPDATE.
-          zh: 每条 UPDATE 都必须携带。
+          en: Required when NLRI is present.
+          zh: 存在 NLRI 时必须携带。
       - text: {en: MED, zh: MED}
         correct: false
         explanation:
