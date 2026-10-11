@@ -1,0 +1,45 @@
+id: 03_next_hop_self
+title:
+  en: Learned but not installed
+  zh: 学到了却没安装
+brief: {en: "core learned 192.0.2.0/24 from edge over iBGP but did not install it. Make core install the route.", zh: "core 从 edge 经 iBGP 学到 192.0.2.0/24，却没有安装。让 core 安装该路由。"}
+type: config-fix
+difficulty: 4
+timeout: 60s
+hints:
+  - en: On core, `show bgp ipv4 unicast 192.0.2.0/24` shows the path is not valid; check its NEXT_HOP.
+    zh: 在 core 上 `show bgp ipv4 unicast 192.0.2.0/24` 显示路径无效；看它的 NEXT_HOP。
+  - en: On edge, announce the iBGP route with your own address using `next-hop-self`.
+    zh: 在 edge 上用 `next-hop-self` 让通告的 iBGP 路由使用自己的地址作下一跳。
+files:
+  - source: edge/edge.sh
+    node: edge
+    dest: /root/edge.sh
+  - source: core/core.sh
+    node: core
+    dest: /root/core.sh
+  - source: ext/ext.sh
+    node: ext
+    dest: /root/ext.sh
+reload:
+  - node: edge
+    cmd: "sh /root/edge.sh"
+  - node: core
+    cmd: "sh /root/core.sh"
+  - node: ext
+    cmd: "sh /root/ext.sh"
+assertions:
+  - name:
+      en: core installs 192.0.2.0/24 via edge
+      zh: core 经 edge 安装 192.0.2.0/24
+    type: exec
+    layer: control-plane
+    node: core
+    cmd: "ip route get 192.0.2.1"
+    wait: 40s
+    match:
+      stdout:
+        contains: "10.1.1.1"
+    hint:
+      en: Add `neighbor 10.1.1.2 next-hop-self` on edge, then clear the session.
+      zh: 在 edge 上加 `neighbor 10.1.1.2 next-hop-self`，然后重置会话。
