@@ -1,0 +1,91 @@
+id: 03_notify
+title:
+  en: NOTIFICATION error codes
+  zh: NOTIFICATION 错误码
+brief: {en: "Answer the question to continue: what do the NOTIFICATION error codes mean?", zh: "继续前请回答问题：NOTIFICATION 的错误码分别代表什么？"}
+type: quiz
+difficulty: 2
+hints:
+  - en: A remote-AS mismatch is an OPEN Message Error; clearing a session is Cease.
+    zh: remote AS 不匹配是 OPEN Message Error；重置会话是 Cease。
+questions:
+  - prompt:
+      en: Which are valid NOTIFICATION error codes?
+      zh: 下列哪些是有效的 NOTIFICATION 错误码？
+    multiple: true
+    options:
+      - text: {en: "1 Message Header Error", zh: "1 报文头部错误"}
+        correct: true
+        explanation:
+          en: Code 1; e.g. a bad marker or bad length.
+          zh: 错误码 1；如 marker 或 length 错误。
+      - text: {en: "2 OPEN Message Error", zh: "2 OPEN 报文错误"}
+        correct: true
+        explanation:
+          en: Code 2; e.g. Bad Peer AS, Unsupported Version.
+          zh: 错误码 2；如 Bad Peer AS、Unsupported Version。
+      - text: {en: "3 UPDATE Message Error", zh: "3 UPDATE 报文错误"}
+        correct: true
+        explanation:
+          en: Code 3; malformed path attributes or NLRI.
+          zh: 错误码 3；路径属性或 NLRI 格式错误。
+      - text: {en: "4 Hold Timer Expired", zh: "4 Hold Timer 到期"}
+        correct: true
+        explanation:
+          en: Code 4; no KEEPALIVE/UPDATE within the Hold Time.
+          zh: 错误码 4；Hold Time 内未收到 KEEPALIVE/UPDATE。
+      - text: {en: "5 FSM Error", zh: "5 状态机错误"}
+        correct: true
+        explanation:
+          en: Code 5; the FSM received an unexpected event.
+          zh: 错误码 5；状态机收到意外事件。
+      - text: {en: "6 Cease", zh: "6 Cease"}
+        correct: true
+        explanation:
+          en: Code 6; the session is being torn down deliberately.
+          zh: 错误码 6；会话被主动关闭。
+      - text: {en: "7 Route Withdrawn", zh: "7 路由撤销"}
+        correct: false
+        explanation:
+          en: There is no such code; withdrawals travel in UPDATE.
+          zh: 没有该错误码；撤销路由由 UPDATE 承载。
+  - prompt:
+      en: r2 expects its neighbor in AS 65099 but the peer is AS 65001. What does r2 send?
+      zh: r2 期望邻居属于 AS 65099，但对端实际是 AS 65001。r2 会发送什么？
+    multiple: false
+    options:
+      - text: {en: "OPEN Message Error, subcode Bad Peer AS", zh: "OPEN Message Error，子码 Bad Peer AS"}
+        correct: true
+        explanation:
+          en: The AS check fails while processing the OPEN (code 2, subcode 2).
+          zh: 处理 OPEN 时 AS 校验失败（码 2，子码 2）。
+      - text: {en: UPDATE Message Error, zh: UPDATE Message Error}
+        correct: false
+        explanation:
+          en: The error happens at OPEN time, before any UPDATE.
+          zh: 错误发生在 OPEN 阶段，早于任何 UPDATE。
+      - text: {en: Cease, zh: Cease}
+        correct: false
+        explanation:
+          en: Cease is an administrative teardown, not an AS mismatch.
+          zh: Cease 是管理性关闭，不是 AS 不匹配。
+  - prompt:
+      en: You run `clear bgp *` on an established session. Which NOTIFICATION is sent?
+      zh: 你对一个已建立的会话执行 `clear bgp *`。会发送哪条 NOTIFICATION？
+    multiple: false
+    options:
+      - text: {en: Cease (code 6), zh: Cease（码 6）}
+        correct: true
+        explanation:
+          en: A deliberate reset sends Cease before closing.
+          zh: 主动重置会在关闭前发送 Cease。
+      - text: {en: Hold Timer Expired (code 4), zh: Hold Timer 到期（码 4）}
+        correct: false
+        explanation:
+          en: That fires only when KEEPALIVEs stop.
+          zh: 只有在 KEEPALIVE 停止时才会触发。
+      - text: {en: No NOTIFICATION is sent, zh: 不发送 NOTIFICATION}
+        correct: false
+        explanation:
+          en: BGP sends NOTIFICATION Cease on teardown.
+          zh: BGP 在拆链时会发送 NOTIFICATION Cease。
