@@ -8,3 +8,4 @@ chapters:
   - chapters/05-bgp-basics
   - chapters/06-bgp-messages
   - chapters/07-bgp-attributes
+  - chapters/08-bgp-troubleshoot

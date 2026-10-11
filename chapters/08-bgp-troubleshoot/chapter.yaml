@@ -1,0 +1,20 @@
+id: 08-bgp-troubleshoot
+title:
+  en: BGP troubleshooting
+  zh: BGP 排错
+difficulty: 4
+tags: [l3, bgp, troubleshooting, routing]
+estimated_minutes: 60
+prerequisites: [07-bgp-attributes]
+objectives:
+  en:
+    - Map symptoms (stuck Active, no routes, bad peer AS) to BGP states
+    - Fix a neighbor that never leaves Active
+    - Fix an iBGP route that is learned but not installed (next-hop-self)
+  zh:
+    - 把症状（卡 Active、收不到路由、bad peer AS）映射到 BGP 状态
+    - 修复一直停留在 Active 的邻居
+    - 修复"学到但未安装"的 iBGP 路由（next-hop-self）
+topology: topology.clab.yml
+deploy:
+  timeout: 240s
