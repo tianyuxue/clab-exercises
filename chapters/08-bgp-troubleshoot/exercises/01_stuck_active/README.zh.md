@@ -8,6 +8,6 @@
 
 - `docker exec <edge> vtysh -c 'show bgp summary'` —— 邻居处于 Active/Connect 列。
 - 对照链路网段（`10.1.12.0/30`）检查配置的邻居地址。删掉错误的、加上 `10.1.12.2`：
-  `docker exec <edge> vtysh -c 'conf t' -c 'router bgp 65001' -c 'no neighbor 10.1.12.9 remote-as 65002' -c 'neighbor 10.1.12.2 remote-as 65002' -c 'clear bgp *'`
+  `docker exec <edge> vtysh -c 'conf t' -c 'router bgp 65001' -c 'no neighbor 10.1.12.9 remote-as 65002' -c 'neighbor 10.1.12.2 remote-as 65002' -c 'end' -c 'clear bgp *'`
 
 按 Enter 验证；按 `f` 重新注入故障。
