@@ -1,0 +1,45 @@
+id: 01_stuck_active
+title:
+  en: The neighbor that never comes up
+  zh: 起不来的邻居
+brief: {en: "edge has an eBGP neighbor stuck in Active. Make the session reach Established.", zh: "edge 的一个 eBGP 邻居卡在 Active。让会话达到 Established。"}
+type: config-fix
+difficulty: 3
+timeout: 60s
+hints:
+  - en: "`show bgp summary` shows the neighbor in the Active/Connect column."
+    zh: "`show bgp summary` 显示邻居处于 Active/Connect 列。"
+  - en: Check the configured neighbor address against the link subnet.
+    zh: 对照链路网段检查配置的邻居地址。
+files:
+  - source: edge/edge.sh
+    node: edge
+    dest: /root/edge.sh
+  - source: core/core.sh
+    node: core
+    dest: /root/core.sh
+  - source: ext/ext.sh
+    node: ext
+    dest: /root/ext.sh
+reload:
+  - node: edge
+    cmd: "sh /root/edge.sh"
+  - node: core
+    cmd: "sh /root/core.sh"
+  - node: ext
+    cmd: "sh /root/ext.sh"
+assertions:
+  - name:
+      en: edge sees the eBGP peer as Established
+      zh: edge 看到 eBGP 邻居为 Established
+    type: exec
+    layer: control-plane
+    node: edge
+    cmd: "vtysh -c 'show bgp summary json'"
+    wait: 40s
+    match:
+      json: "$.ipv4Unicast.peers.*.state"
+      equals: "Established"
+    hint:
+      en: Correct the neighbor address to 10.1.12.2, then clear the session.
+      zh: 把邻居地址改正为 10.1.12.2，然后重置会话。
