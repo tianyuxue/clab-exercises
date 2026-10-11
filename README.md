@@ -34,6 +34,7 @@ go run ./cmd/clablings test --all --root ../clab-exercises
 | 05-bgp-basics | quiz + 运行态 config-fix（含抓包） | Enter | 理解 eBGP 会话建立与状态机，修复 remote-as、协商 hold time（FRR） |
 | 06-bgp-messages | quiz + 运行态 config-fix（含抓包） | Enter | 理解 BGP 报文格式，修复未通告（ebgp-requires-policy）、解构 UPDATE/NOTIFICATION（FRR） |
 | 07-bgp-attributes | quiz + 运行态 config-fix | Enter | 理解 BGP 选路与属性，用 LOCAL_PREF/AS_PATH 改变选路（FRR） |
+| 08-bgp-troubleshoot | quiz + 运行态 config-fix（含抓包） | Enter | BGP 排错：卡 Active、bad peer AS、iBGP next-hop-self（FRR） |
 
 ## M1 路线（已完成）
 
@@ -43,4 +44,4 @@ VLAN/Trunk ✅ → STP/RSTP ✅ → 链路聚合 LACP ✅ → MLAG/EVPN-MH（概
 
 ## BGP 路线（进行中）
 
-BGP basics（会话建立/状态机）✅ → 报文格式 ✅ → 路径选择 ✅ → 排错 → C 实现最小 speaker。
+BGP basics（会话建立/状态机）✅ → 报文格式 ✅ → 路径选择 ✅ → 排错 ✅ → C 实现最小 speaker。
