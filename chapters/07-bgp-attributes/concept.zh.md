@@ -8,9 +8,9 @@
 ## 术语
 
 - **Weight**：Cisco/FRR 本机值，最先比较；不发给对等体。
-- **LOCAL_PREF**：本 AS 对某路由的偏好，只在 iBGP 中传递。
 - **iBGP**：同一 AS 内两台路由器之间的 BGP 会话。
-- **MED（MULTI_EXIT_DISC）**：提示相邻 AS 使用哪个入口；可选且非传递。
+- **LOCAL_PREF**：本 AS 对某路由的偏好，只在 iBGP 中传递。
+- **MED（MULTI_EXIT_DISC）**：提示邻居 AS 使用哪个入口；可选且非传递。
 - **最优路径（Best path）**：BGP 发言者按顺序比较属性后安装并通告的那一条。
 - **AS_PATH prepending**：把本 AS 号重复加入，使路径看起来更长、更不被优先。
 - **本地产生（Locally originated）**：本路由器自己注入的路由（例如通过 network 语句），在选路中较早被优先。
@@ -23,7 +23,7 @@
 
 ## 为什么直觉方案不行
 
-不了解作用域就调下游度量可能毫无作用：MED 只在来自同一相邻 AS 的路径之间比较，
+不了解作用域就调下游度量可能毫无作用：MED 只在来自同一邻居 AS 的路径之间比较，
 因此面对两家不同运营商，较低的 MED 会被完全忽略。
 
 ## 机制
@@ -31,7 +31,7 @@
 BGP 依次比较（FRR/Cisco 顺序）：Weight、LOCAL_PREF、本地产生、AS_PATH 长度、
 ORIGIN、MED、eBGP 优于 iBGP、IGP 度量，最后才打破平局。这里涉及两个旋钮：
 `local-preference`（按邻居、入向）与 `as-path prepend`（出向）。MED 只在
-来自同一相邻 AS 的路径之间比较。
+来自同一邻居 AS 的路径之间比较。
 
 ## 配置与查看
 
@@ -44,6 +44,6 @@ vtysh -c 'show bgp ipv4 unicast'
 ## 常见问题
 
 - 怎么让一条路径更被优先？对从该邻居学到的路由提高 LOCAL_PREF；LOCAL_PREF 越高越早胜出。
-- 我把 MED 调低了为什么没生效？MED 只在同一相邻 AS 内比较；跨 AS 默认忽略。
+- 我把 MED 调低了为什么没生效？MED 只在同一邻居 AS 内比较；跨 AS 默认忽略。
 - 为什么对端看不到 LOCAL_PREF？LOCAL_PREF 是本 AS 内部属性，不跨 eBGP 发送。
 - 怎么让一条路径更不被优先？在出向 UPDATE 上 prepend 本 AS，使 AS_PATH 更长。

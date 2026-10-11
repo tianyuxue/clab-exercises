@@ -9,8 +9,8 @@ them to steer traffic.
 ## Terms
 
 - **Weight**: a Cisco/FRR-local value, checked first; never sent to peers.
-- **LOCAL_PREF**: how much this AS prefers a route, sent only in iBGP.
 - **iBGP**: a BGP session between two routers in the same AS.
+- **LOCAL_PREF**: how much this AS prefers a route, sent only in iBGP.
 - **MED (MULTI_EXIT_DISC)**: a hint to a neighboring AS about which entry point to use; optional and non-transitive.
 - **Best path**: the single route a BGP speaker installs and advertises, chosen by comparing attributes in order.
 - **AS_PATH prepending**: adding your own AS number repeatedly to make a path look longer and less preferred.
