@@ -2,48 +2,48 @@
 
 ## Scenario
 
-A server needs more bandwidth than one 1 Gbit/s link, and it must keep working if
-a cable or switch port fails. Its operating system can bundle several links into
-one with LACP. You plug two cables from the server into a switch and configure a
-bundle on both sides.
+A server needs more bandwidth than one 1 Gbit/s link can give, and it must keep
+running when a cable or switch port fails. Its OS can bundle several links into
+one with LACP. You run two cables from the server to a switch and configure a
+bundle at both ends.
 
 ## Terms
 
 - **LAG** (link aggregation group, also PortChannel or bond): one *logical*
-  interface made of several physical **member** links.
+  interface built from several physical **member** links.
 - **Member**: a physical link that belongs to a LAG.
-- **Flow hashing**: for each traffic flow, the switch picks one member by hashing
-  header fields. One flow therefore uses one member (per direction).
-- **LACP** (802.1AX): the protocol the two ends use to agree which links are
+- **Flow hashing**: for each traffic flow, the switch hashes header fields to pick
+  one member. A flow therefore uses one member (per direction).
+- **LACP** (802.1AX): the protocol the two ends use to agree on which links are
   members and whether they are healthy.
 - **Active / passive**: an **active** participant sends LACP frames (`LACPDUs`);
   a **passive** one only replies. At least one side must be active.
 - **admin-key**: an identifier that members must agree on to join the same LAG.
-- **min-links**: the minimum number of up members needed for the LAG to be up.
+- **min-links**: the minimum number of up members needed for the LAG to stay up.
 
 ## Why it hurts
 
-A single link gives neither redundancy nor more than its own speed. Using a second
-link *without* aggregation makes STP block it, so you still use only one. And if
-you connect the server's two links to **two independent switches**, the server's
-LACP now faces two different partners, so it cannot form one bundle at all.
+A single link gives neither redundancy nor more than its own speed. Adding a
+second link *without* aggregation makes STP block it, so you still use only one.
+And if you connect the server's two links to **two independent switches**, its
+LACP now faces two different partners and cannot form one bundle at all.
 
 ## Why the naive fix fails
 
 - **Static bond (no LACP)**: the link comes up even when the far end is
-  misconfigured, and a member that is half-broken keeps carrying (and losing)
+  misconfigured, and a half-broken member keeps carrying — and dropping —
   traffic, because nothing negotiates health.
 - **Two independent switches**: each switch is a separate LACP partner with its
   own System ID, so the server sees two one-link bundles instead of one two-link
-  bundle. Making that work needs MLAG/EVPN-MH (next chapter).
+  bundle. Making this work takes MLAG/EVPN-MH (next chapter).
 
 ## The mechanism
 
 A **LAG** presents the member links as one logical interface, so a single IP
-configuration and routing entry cover all of them. Traffic is spread across the
-members by flow hashing, giving aggregate bandwidth and member-failure resilience.
+configuration and route cover all of them. Flow hashing spreads traffic across
+the members, delivering aggregate bandwidth and resilience to member failure.
 
-**LACP** keeps the bundle honest: both ends exchange LACP frames that list the
+**LACP** keeps the bundle honest: both ends exchange LACP frames listing the
 members they consider part of the bundle and their state. A member joins only when
 both ends agree (same LAG, compatible **admin-key**) and the link is healthy. If a
 member fails, it leaves the bundle and traffic rehashes onto the remaining members
@@ -76,8 +76,8 @@ The key output is `show lag`: whether `lag1` is **up**, each member's
 
 ## Common questions
 
-- **Both sides passive**: neither sends LACP frames, so the bundle stays down with
-  reason `no-active-links` — this is the fault the lab injects.
+- **Both sides passive**: neither end sends LACP frames, so the bundle stays down
+  with reason `no-active-links` — this is the fault the lab injects.
 - **admin-key mismatch**: members stay out of the bundle with reason `lacp-down`.
 - **One flow, one member**: a single flow never exceeds one member's speed;
   aggregation helps many flows, not one.

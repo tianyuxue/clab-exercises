@@ -3,15 +3,15 @@
 ## Scenario
 
 A server is cabled to **two** switches so it survives one switch failing: one
-cable to `sw1`, another to `sw2`. Each switch is independent. The server also runs
-LACP, expecting a single bundle across both cables.
+cable to `sw1`, another to `sw2`, with each switch independent. The server also
+runs LACP, expecting a single bundle across both cables.
 
 ## Terms
 
 - **MLAG** (multi-chassis LAG; Cisco vPC; MC-LAG): a technique that makes two
   independent switches act as **one** LACP partner towards the server.
 - **peer-link**: the link between the two MLAG switches that carries L2 traffic
-  between them and lets them keep a consistent view of the bundle.
+  between them and keeps their view of the bundle consistent.
 - **orphan port**: a port on one peer that is single-homed (not part of the MLAG);
   it reaches the other peer only through the peer-link.
 - **split-brain**: the failure mode where the peer-link breaks but both peers keep
@@ -41,28 +41,28 @@ Dual-homing to two independent switches breaks the two things the server expects
 
 ## Why the naive fix fails
 
-- **Let STP block one uplink**: the server is now effectively single-homed again;
-  the blocked cable is wasted, and failover takes seconds.
+- **Let STP block one uplink**: the server is effectively single-homed again; the
+  blocked cable is wasted, and failover takes seconds.
 - **Stack the two switches**: this does make them one LACP partner, but it also
   merges them into a single control plane and a single failure domain — one bad
   software upgrade or one supervisor failure takes down the whole stack.
 
 ## The mechanism
 
-Both MLAG and EVPN-MH keep the switches as **two independent control planes** while
-making them look like one partner to the server:
+Both MLAG and EVPN-MH keep the switches as **two independent control planes**
+while making them look like one partner to the server:
 
 - **MLAG**: a **peer-link** carries L2 traffic between the peers, and a control
   protocol keeps their view of the bundle in sync. The server's LACP sees one
-  System ID and forms one bundle across both cables. A failure of the peer-link
-  while both uplinks stay up is dangerous — each peer may think it owns the LAG
+  System ID and forms one bundle across both cables. A peer-link failure while
+  both uplinks stay up is dangerous — each peer may think it owns the LAG
   (**split-brain**) — so production MLAG adds a keepalive and a primary/secondary
   role as a tie-breaker.
-- **EVPN-MH**: the two switches attach the access links to a shared **ESI**, and
+- **EVPN-MH**: the two switches attach the access links to a shared **ESI** and
   advertise it with **BGP EVPN**. A **Designated Forwarder** election decides who
   floods BUM traffic, so the access links can all forward at once (**all-active**)
-  with no peer-link and no blocked half. This is the modern, open-standard way to
-  replace vendor MLAG.
+  with no peer-link and no blocked half. This is the modern, open-standard
+  replacement for vendor MLAG.
 
 ## Configure and inspect
 
@@ -78,7 +78,7 @@ There is no lab in this chapter; the inspection commands to remember are:
   role, both peers can accept the LAG and black-hole traffic.
 - **Orphan ports**: a single-homed port on one peer depends on the peer-link to
   reach the other peer; losing the peer-link isolates it.
-- **Stacking is not free**: it removes the two-control-plane benefit — one failure
+- **Stacking is not free**: it gives up the two-control-plane benefit — one failure
   domain and a bigger blast radius.
 - **EVPN-MH needs a control plane**: ESI/BGP EVPN must be configured on both
   switches; without it they still act as two unrelated LACP partners.
