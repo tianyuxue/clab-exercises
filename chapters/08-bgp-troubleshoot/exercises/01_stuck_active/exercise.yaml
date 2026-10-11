@@ -43,3 +43,17 @@ assertions:
     hint:
       en: Correct the neighbor address to 10.1.12.2, then clear the session.
       zh: 把邻居地址改正为 10.1.12.2，然后重置会话。
+  - name:
+      en: edge has two peers configured
+      zh: edge 配置了两个邻居
+    type: exec
+    layer: control-plane
+    node: edge
+    cmd: "vtysh -c 'show bgp summary json'"
+    wait: 5s
+    match:
+      json: "$.ipv4Unicast.peerCount"
+      equals: "2"
+    hint:
+      en: Remove the wrong neighbor and add 10.1.12.2; do not just delete it.
+      zh: 删掉错误邻居并加上 10.1.12.2，不要只是删除。

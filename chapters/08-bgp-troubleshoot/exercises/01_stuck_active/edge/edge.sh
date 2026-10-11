@@ -13,6 +13,7 @@ exit
 router bgp 65001
  bgp router-id 10.0.0.1
  no bgp ebgp-requires-policy
+ no neighbor 10.1.12.2 remote-as 65002
  neighbor 10.1.12.9 remote-as 65002
  neighbor 10.1.1.2 remote-as 65001
 exit
