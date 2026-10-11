@@ -1,0 +1,45 @@
+id: 02_aspath
+title:
+  en: Steer with AS_PATH prepending
+  zh: 用 AS_PATH prepending 改选路径
+brief: {en: "r1 currently prefers the path via r2. Prepend r2's AS number on its outbound UPDATE so r1 switches to r3.", zh: "r1 当前偏好经 r2 的路径。在 r2 的出向 UPDATE 上 prepend 本 AS 号，使 r1 切换到 r3。"}
+type: config-fix
+difficulty: 3
+timeout: 60s
+hints:
+  - en: A longer AS_PATH is less preferred.
+    zh: AS_PATH 越长越不被优先。
+  - en: Prepend on r2's outbound with a route-map named `PAD_65002` (`set as-path prepend 65002 65002`), then `clear bgp *`.
+    zh: 用名为 `PAD_65002` 的 route-map 在 r2 出向 prepend（`set as-path prepend 65002 65002`），然后 `clear bgp *`。
+files:
+  - source: r1/r1.sh
+    node: r1
+    dest: /root/r1.sh
+  - source: r2/r2.sh
+    node: r2
+    dest: /root/r2.sh
+  - source: r3/r3.sh
+    node: r3
+    dest: /root/r3.sh
+reload:
+  - node: r1
+    cmd: "sh /root/r1.sh"
+  - node: r2
+    cmd: "sh /root/r2.sh"
+  - node: r3
+    cmd: "sh /root/r3.sh"
+assertions:
+  - name:
+      en: r1 selects the path via r3
+      zh: r1 选择经 r3 的路径
+    type: exec
+    layer: control-plane
+    node: r1
+    cmd: "ip route get 10.2.2.100"
+    wait: 40s
+    match:
+      stdout:
+        contains: "10.1.13.2"
+    hint:
+      en: Prepend on r2's outbound, then reset the session.
+      zh: 在 r2 出向 prepend，然后重置会话。
