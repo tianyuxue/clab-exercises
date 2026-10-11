@@ -14,7 +14,7 @@
   kind: required
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-9.1
   intro:
-    en: The phase-2 route-selection steps you exercise when steering r1.
+    en: The decision-process steps you exercise when steering r1.
     zh: 你在引导 r1 选路时所对应的第二阶段选路步骤。
   question:
     en: Where do LOCAL_PREF and AS_PATH sit in the decision order?
@@ -25,7 +25,7 @@
   kind: optional
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-5.1.4
   intro:
-    en: Why MED is only meaningful between entry points to the same neighbouring AS.
+    en: Why MED is only meaningful between entry points to the same neighboring AS.
     zh: 为什么 MED 只对同一邻居 AS 的多个入口点有意义。
   question:
     en: To whom is MED intended to be a hint?
