@@ -6,3 +6,4 @@ chapters:
   - chapters/03-lacp
   - chapters/04-mlag
   - chapters/05-bgp-basics
+  - chapters/06-bgp-messages

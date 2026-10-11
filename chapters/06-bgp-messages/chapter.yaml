@@ -1,0 +1,20 @@
+id: 06-bgp-messages
+title:
+  en: BGP messages — UPDATE and NOTIFICATION
+  zh: BGP 报文——UPDATE 与 NOTIFICATION
+difficulty: 3
+tags: [l3, bgp, messages, routing]
+estimated_minutes: 50
+prerequisites: [05-bgp-basics]
+objectives:
+  en:
+    - Name the four BGP message types and read the message header
+    - Explain why a prefix may not be advertised (FRR ebgp-requires-policy)
+    - Decode an UPDATE's path attributes and a NOTIFICATION on the wire
+  zh:
+    - 说出四种 BGP 报文类型并读懂报文头部
+    - 解释前缀为何可能未被通告（FRR ebgp-requires-policy）
+    - 在线上解构 UPDATE 的路径属性与 NOTIFICATION
+topology: topology.clab.yml
+deploy:
+  timeout: 180s
