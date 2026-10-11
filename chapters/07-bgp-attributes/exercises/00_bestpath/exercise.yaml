@@ -1,0 +1,76 @@
+id: 00_bestpath
+title:
+  en: The best-path decision order
+  zh: 选路决策顺序
+brief: {en: "Answer the question to continue: in what order does BGP compare path attributes?", zh: "继续前请回答问题：BGP 按什么顺序比较路径属性？"}
+type: quiz
+difficulty: 3
+hints:
+  - en: LOCAL_PREF is compared before AS_PATH; MED is near the end.
+    zh: LOCAL_PREF 早于 AS_PATH；MED 接近最后。
+questions:
+  - prompt:
+      en: Which comparison comes earliest in BGP best-path selection?
+      zh: BGP 选路中最先比较的是哪一项？
+    multiple: false
+    options:
+      - text: {en: Weight, zh: Weight}
+        correct: true
+        explanation:
+          en: Weight is local to the router and checked first.
+          zh: Weight 是本机属性，最先比较。
+      - text: {en: AS_PATH length, zh: AS_PATH 长度}
+        correct: false
+        explanation:
+          en: AS_PATH is compared after LOCAL_PREF.
+          zh: AS_PATH 在 LOCAL_PREF 之后比较。
+      - text: {en: Router-id, zh: Router-id}
+        correct: false
+        explanation:
+          en: Router-id is a late tie-breaker.
+          zh: Router-id 是最后的打破平局项。
+  - prompt:
+      en: Which attributes are well-known mandatory?
+      zh: 下列哪些是 well-known mandatory 属性？
+    multiple: true
+    options:
+      - text: {en: ORIGIN, zh: ORIGIN}
+        correct: true
+        explanation:
+          en: Required in every UPDATE.
+          zh: 每条 UPDATE 都必须携带。
+      - text: {en: AS_PATH, zh: AS_PATH}
+        correct: true
+        explanation:
+          en: Required when NLRI is present.
+          zh: 存在 NLRI 时必须携带。
+      - text: {en: NEXT_HOP, zh: NEXT_HOP}
+        correct: true
+        explanation:
+          en: Required in every UPDATE.
+          zh: 每条 UPDATE 都必须携带。
+      - text: {en: MED, zh: MED}
+        correct: false
+        explanation:
+          en: MED is optional non-transitive.
+          zh: MED 是 optional non-transitive。
+  - prompt:
+      en: Which attribute is NOT carried across an eBGP session?
+      zh: 哪个属性不会跨 eBGP 会话传递？
+    multiple: false
+    options:
+      - text: {en: LOCAL_PREF, zh: LOCAL_PREF}
+        correct: true
+        explanation:
+          en: LOCAL_PREF is local and only sent to iBGP peers.
+          zh: LOCAL_PREF 是本机属性，只发给 iBGP 对等体。
+      - text: {en: AS_PATH, zh: AS_PATH}
+        correct: false
+        explanation:
+          en: AS_PATH is mandatory and crosses every eBGP session.
+          zh: AS_PATH 是必携带属性，跨每条 eBGP 会话。
+      - text: {en: NEXT_HOP, zh: NEXT_HOP}
+        correct: false
+        explanation:
+          en: NEXT_HOP is mandatory and present in eBGP UPDATEs.
+          zh: NEXT_HOP 是必携带属性，存在于 eBGP UPDATE 中。
