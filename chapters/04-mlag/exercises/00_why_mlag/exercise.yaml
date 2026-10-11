@@ -14,12 +14,12 @@ questions:
       zh: 一台带 LACP bond 的服务器分别接到两台独立交换机，会怎样？
     multiple: false
     options:
-      - text: {en: The bond cannot form one bundle, because each switch is a different LACP partner, zh: bond 无法形成单一捆绑，因为每台交换机是不同的 LACP 伙伴}
+      - text: {en: "The bond cannot form one bundle, because each switch is a different LACP partner", zh: bond 无法形成单一捆绑，因为每台交换机是不同的 LACP 伙伴}
         correct: true
         explanation:
           en: LACP aggregates with one System ID; two switches present two of them.
           zh: LACP 与单一 System ID 聚合；两台交换机给出两个不同的 System ID。
-      - text: {en: It works out of the box, giving twice the bandwidth, zh: 开箱即用，带宽翻倍}
+      - text: {en: "It works out of the box, giving twice the bandwidth", zh: 开箱即用，带宽翻倍}
         correct: false
         explanation:
           en: Without MLAG/EVPN-MH the two switches do not coordinate the bundle.
