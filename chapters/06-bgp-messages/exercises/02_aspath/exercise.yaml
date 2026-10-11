@@ -7,8 +7,8 @@ type: config-fix
 difficulty: 3
 timeout: 60s
 hints:
-  - en: Use a route-map with `set as-path prepend 65001 65001` and apply it outbound.
-    zh: 用一条 route-map，`set as-path prepend 65001 65001`，并应用为出向。
+  - en: Use a route-map named `PREPEND` with `set as-path prepend 65001 65001`, applied outbound.
+    zh: 用名为 `PREPEND` 的 route-map，`set as-path prepend 65001 65001`，应用为出向。
   - en: Reset the session so the new UPDATE is sent (`clear bgp *`).
     zh: 重置会话以重发 UPDATE（`clear bgp *`）。
 files:
@@ -47,7 +47,7 @@ assertions:
     type: exec
     layer: control-plane
     node: sniff
-    cmd: "tshark -r /tmp/bgp.pcap -Y 'bgp.type==2 && ip.src==10.1.12.1' -T fields -e bgp.update.path_attribute.as_path_segment.as4 | tail -1"
+    cmd: "tshark -r /tmp/bgp.pcap -Y 'bgp.type==2 && ip.src==10.1.12.1' -T fields -e bgp.update.path_attribute.as_path_segment.as4 | grep -v '^$' | tail -1"
     wait: 10s
     match:
       stdout:

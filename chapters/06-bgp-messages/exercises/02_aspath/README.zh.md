@@ -13,6 +13,6 @@ prepend 两次，使线上的 AS_PATH 变为 `65001 65001 65001`。
   `docker exec <r1> vtysh -c 'clear bgp *'`
 
 可自行查看线上报文：
-`docker exec <sniff> tshark -r /tmp/bgp.pcap -Y 'bgp.type==2 && ip.src==10.1.12.1' -T fields -e bgp.update.path_attribute.as_path_segment.as4`
+`docker exec <sniff> tshark -r /tmp/bgp.pcap -Y 'bgp.type==2 && ip.src==10.1.12.1' -T fields -e bgp.update.path_attribute.as_path_segment.as4 | tail -1`
 
 按 Enter 验证；按 `f` 重新注入故障。

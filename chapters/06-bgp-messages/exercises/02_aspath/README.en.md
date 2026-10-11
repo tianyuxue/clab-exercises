@@ -13,6 +13,6 @@ Open a second terminal and log into the running routers (`make debug`, or `docke
   `docker exec <r1> vtysh -c 'clear bgp *'`
 
 Inspect the wire yourself:
-`docker exec <sniff> tshark -r /tmp/bgp.pcap -Y 'bgp.type==2 && ip.src==10.1.12.1' -T fields -e bgp.update.path_attribute.as_path_segment.as4`
+`docker exec <sniff> tshark -r /tmp/bgp.pcap -Y 'bgp.type==2 && ip.src==10.1.12.1' -T fields -e bgp.update.path_attribute.as_path_segment.as4 | tail -1`
 
 Press Enter to verify; `f` re-injects the fault.
