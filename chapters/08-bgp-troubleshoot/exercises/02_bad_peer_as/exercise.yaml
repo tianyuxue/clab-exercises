@@ -1,0 +1,64 @@
+id: 02_bad_peer_as
+title:
+  en: The rejected OPEN
+  zh: 被拒绝的 OPEN
+brief: {en: "edge's eBGP session never establishes. The peer rejects it with NOTIFICATION Bad Peer AS. Fix the peer.", zh: "edge 的 eBGP 会话始终建立不起来。对端以 NOTIFICATION Bad Peer AS 拒绝。修复对端。"}
+type: config-fix
+difficulty: 3
+timeout: 60s
+hints:
+  - en: Capture the reset with tshark and read the NOTIFICATION error code.
+    zh: 用 tshark 抓重置过程，读出 NOTIFICATION 错误码。
+  - en: On ext the neighbor's remote-as is wrong; it should be edge's real AS (65001).
+    zh: ext 上该邻居的 remote-as 配错了；应为 edge 的真实 AS（65001）。
+files:
+  - source: sniff/recapture.sh
+    node: sniff
+    dest: /root/recapture.sh
+  - source: edge/edge.sh
+    node: edge
+    dest: /root/edge.sh
+  - source: core/core.sh
+    node: core
+    dest: /root/core.sh
+  - source: ext/ext.sh
+    node: ext
+    dest: /root/ext.sh
+reload:
+  - node: sniff
+    cmd: "sh /root/recapture.sh"
+  - node: edge
+    cmd: "sh /root/edge.sh"
+  - node: core
+    cmd: "sh /root/core.sh"
+  - node: ext
+    cmd: "sh /root/ext.sh"
+assertions:
+  - name:
+      en: edge sees the eBGP peer as Established
+      zh: edge 看到 eBGP 邻居为 Established
+    type: exec
+    layer: control-plane
+    node: edge
+    cmd: "vtysh -c 'show bgp summary json'"
+    wait: 40s
+    match:
+      json: "$.ipv4Unicast.peers.*.state"
+      equals: "Established"
+    hint:
+      en: On ext, set neighbor 10.1.12.1 remote-as 65001, then clear the session.
+      zh: 在 ext 上把 neighbor 10.1.12.1 remote-as 改为 65001，然后重置会话。
+  - name:
+      en: edge has two peers configured
+      zh: edge 配置了两个邻居
+    type: exec
+    layer: control-plane
+    node: edge
+    cmd: "vtysh -c 'show bgp summary json'"
+    wait: 5s
+    match:
+      json: "$.ipv4Unicast.peerCount"
+      equals: "2"
+    hint:
+      en: Fix ext's remote-as; do not merely delete the neighbor.
+      zh: 修正 ext 的 remote-as；不要只是删除邻居。
