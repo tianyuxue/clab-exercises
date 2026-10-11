@@ -6,8 +6,8 @@
     en: The states behind the symptoms you debug (Active, OpenSent).
     zh: 你所排错的症状背后的状态（Active、OpenSent）。
   question:
-    en: What does being stuck in Active tell you about the peer?
-    zh: 停在 Active 说明了对端的什么情况？
+    en: Stuck in Active - what does it usually point to (operationally)?
+    zh: 停在 Active 通常指向什么（运维经验）？
 
 - title: RFC 4271 — OPEN Message Error Handling
   section: "OPEN Message Error Handling"

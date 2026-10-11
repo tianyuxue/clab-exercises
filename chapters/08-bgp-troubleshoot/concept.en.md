@@ -32,7 +32,7 @@ remote AS, or the next-hop reachability is wrong; the same failure returns.
 Read the FSM state first: stuck `Active` typically means the peer is unreachable
 (address or routing); reaching `OpenSent` then resetting with a NOTIFICATION
 `Bad Peer AS` means the remote AS does not match. A route that is learned but not
-installed is usually an unresolvable `NEXT_HOP`, usually fixed with
+installed is usually an unresolvable `NEXT_HOP`, often fixed with
 `next-hop-self` on the iBGP edge (or by making the next-hop reachable).
 
 ## Configure and inspect
