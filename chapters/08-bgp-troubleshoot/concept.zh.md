@@ -7,7 +7,11 @@
 
 ## 术语
 
-- **Active**：状态机中持续尝试连接对端的状态；TCP 连接失败。
+- **iBGP**：同一 AS 内两台路由器之间的 BGP 会话。
+- **eBGP**：不同 AS 之间的 BGP 会话。
+- **FSM（有限状态机）**：BGP 会话依次经历的固定状态集合（见第 05 章）。
+- **OpenSent**：TCP 已建立且本端已发出 OPEN 之后的状态机状态。
+- **Active**：状态机中持续（重）尝试连接对端的状态；通常是到对端的 TCP 连接未能完成，例如邻居地址错误或没有到它的路由。
 - **Bad Peer AS**：当对端 AS 号与配置不符时发出的 OPEN Message Error（码 2，子码 2）。
 - **NEXT_HOP**：UPDATE 告诉接收方转发所用地址；iBGP 默认保留 eBGP 的下一跳，除非被改写。
 - **next-hop-self**：一条 iBGP 设置，把 NEXT_HOP 改写为通告路由器自己的地址。
@@ -25,9 +29,9 @@
 
 ## 机制
 
-先看状态机状态：停在 `Active` 表示对端不可达（地址或路由问题）；到达 `OpenSent` 后
+先看 FSM 状态：停在 `Active` 通常表示对端不可达（地址或路由问题）；到达 `OpenSent` 后
 重置并伴随 NOTIFICATION `Bad Peer AS` 表示 remote AS 不匹配。"学到却未安装"的路由，
-通常是 `NEXT_HOP` 无法解析——在 iBGP 边界用 `next-hop-self` 修复。
+通常是 `NEXT_HOP` 无法解析，一般用 iBGP 边界的 `next-hop-self` 修复（或让下一跳可达）。
 
 ## 配置与查看
 
