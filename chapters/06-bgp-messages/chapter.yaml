@@ -10,11 +10,11 @@ objectives:
   en:
     - Name the four BGP message types and read the message header
     - Explain why a prefix may not be advertised (FRR ebgp-requires-policy)
-    - Decode an UPDATE's path attributes and a NOTIFICATION on the wire
+    - Decode an UPDATE's AS_PATH on the wire and explain NOTIFICATION error codes
   zh:
     - 说出四种 BGP 报文类型并读懂报文头部
     - 解释前缀为何可能未被通告（FRR ebgp-requires-policy）
-    - 在链路上解构 UPDATE 的路径属性与 NOTIFICATION
+    - 在链路上解构 UPDATE 的 AS_PATH，并读懂 NOTIFICATION 错误码
 topology: topology.clab.yml
 deploy:
   timeout: 180s
