@@ -44,21 +44,21 @@ questions:
       zh: 19 字节的 BGP 报文头部由哪些字段组成？
     multiple: false
     options:
-      - text: {en: 16-octet marker, 2-octet length, 1-octet type, zh: 16 字节 marker、2 字节 length、1 字节 type}
+      - text: {en: "16-octet marker, 2-octet length, 1-octet type", zh: 16 字节 marker、2 字节 length、1 字节 type}
         correct: true
         explanation:
           en: Marker is all ones; length includes the header; type is the message code.
           zh: marker 全为 1；length 含头部；type 是报文类型码。
-      - text: {en: 4-octet version, 2-octet AS, 1-octet type, zh: 4 字节版本、2 字节 AS、1 字节类型}
+      - text: {en: "8-octet marker, 10-octet length, 1-octet type", zh: 8 字节 marker、10 字节 length、1 字节 type}
         correct: false
         explanation:
-          en: Version and AS live in the OPEN body, not the header.
-          zh: 版本与 AS 在 OPEN 正文里，不在头部。
-      - text: {en: 8-octet transaction id, 4-octet length, 1-octet type, zh: 8 字节事务号、4 字节长度、1 字节类型}
+          en: The marker is 16 octets, not 8.
+          zh: marker 是 16 字节，不是 8 字节。
+      - text: {en: "16-octet marker, 1-octet length, 2-octet type", zh: 16 字节 marker、1 字节 length、2 字节 type}
         correct: false
         explanation:
-          en: No transaction id in BGP.
-          zh: BGP 没有事务号。
+          en: Length is 2 octets and type is 1 octet.
+          zh: length 是 2 字节，type 是 1 字节。
   - prompt:
       en: What is the maximum BGP message size?
       zh: BGP 报文的最大长度是多少？
