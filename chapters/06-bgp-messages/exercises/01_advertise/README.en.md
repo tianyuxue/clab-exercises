@@ -10,5 +10,7 @@ Open a second terminal and log into the running routers (`make debug`, or `docke
 - `docker exec -it <r1> vtysh -c 'show bgp summary'` — the neighbor shows `peerState "Policy"` and `pfxSnt 0`.
 - FRR requires a policy for eBGP by default. Allow it on `r1`:
   `docker exec <r1> vtysh -c 'conf t' -c 'router bgp 65001' -c 'no bgp ebgp-requires-policy'`
+- The UPDATE is only sent on a new session, so reset it:
+  `docker exec <r1> vtysh -c 'clear bgp *'`
 
-The change applies immediately. Press Enter to verify; `f` re-injects the fault.
+Press Enter to verify; `f` re-injects the fault.

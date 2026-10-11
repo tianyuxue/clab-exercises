@@ -9,8 +9,8 @@ timeout: 60s
 hints:
   - en: On r1 `show bgp summary` shows peerState "Policy" and pfxSnt 0.
     zh: r1 的 `show bgp summary` 显示 peerState "Policy"、pfxSnt 0。
-  - en: FRR needs `no bgp ebgp-requires-policy` (or an outbound route-map) for eBGP.
-    zh: FRR 的 eBGP 需要 `no bgp ebgp-requires-policy`（或一条出向 route-map）。
+  - en: FRR needs `no bgp ebgp-requires-policy` for eBGP; then `clear bgp *` to re-send.
+    zh: FRR 的 eBGP 需要 `no bgp ebgp-requires-policy`；随后 `clear bgp *` 重发。
 files:
   - source: r1/advertise.sh
     node: r1

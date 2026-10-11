@@ -10,5 +10,7 @@
 - `docker exec -it <r1> vtysh -c 'show bgp summary'` —— 邻居显示 `peerState "Policy"`、`pfxSnt 0`。
 - FRR 的 eBGP 默认要求策略。在 `r1` 上放开它：
   `docker exec <r1> vtysh -c 'conf t' -c 'router bgp 65001' -c 'no bgp ebgp-requires-policy'`
+- UPDATE 只在新会话上发送，因此重置会话：
+  `docker exec <r1> vtysh -c 'clear bgp *'`
 
-改动立即生效。按 Enter 验证；按 `f` 重新注入故障。
+按 Enter 验证；按 `f` 重新注入故障。
