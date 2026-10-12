@@ -3,3 +3,6 @@ arp_responder
 .clablings_state.json
 clab-*/
 clablings.*.clab.yml
+
+# code-implement build artifacts
+chapters/*/exercises/*/bgp-speaker
