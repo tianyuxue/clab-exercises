@@ -66,19 +66,20 @@ int recv_message(int fd, uint8_t *buf, size_t cap, uint8_t *type) {
 size_t build_open(uint8_t *buf, uint16_t my_as, uint16_t hold, const uint8_t rid[4]) {
     /* TODO: 19-byte header (marker all ones, length 29, type 1) followed by
      * version 4, my_as, hold, rid, and a zero optional-parameters length. */
-    (void)my_as; (void)hold; (void)rid;
+    (void)buf; (void)my_as; (void)hold; (void)rid;
     return 0;
 }
 
 size_t build_keepalive(uint8_t *buf) {
     /* TODO: 19-byte header only (marker all ones, length 19, type 4). */
+    (void)buf;
     return 0;
 }
 
 size_t build_update(uint8_t *buf, const uint8_t nexthop[4], uint16_t my_as) {
     /* TODO: header (type 2), withdrawn routes length 0, path attributes
      * ORIGIN + AS_PATH (one 2-byte AS) + NEXT_HOP, then NLRI 192.0.2.0/24. */
-    (void)nexthop; (void)my_as;
+    (void)buf; (void)nexthop; (void)my_as;
     return 0;
 }
 

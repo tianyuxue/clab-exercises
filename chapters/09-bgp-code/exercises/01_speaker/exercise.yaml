@@ -52,8 +52,8 @@ assertions:
     cmd: "vtysh -c 'show bgp ipv4 unicast json'"
     wait: 30s
     match:
-      stdout:
-        contains: "192.0.2.0/24"
+      json: "$.totalRoutes"
+      equals: "1"
     hint:
       en: Send an UPDATE with NEXT_HOP 10.1.12.1 and NLRI 192.0.2.0/24.
       zh: 发送 NEXT_HOP 为 10.1.12.1、NLRI 为 192.0.2.0/24 的 UPDATE。
