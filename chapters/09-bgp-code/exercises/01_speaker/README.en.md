@@ -22,3 +22,10 @@ node. Logs go to `/tmp/bgp.log` on that node:
 
 Remember to delete the `// I AM NOT DONE` line from `src/main.c` when done, then
 press Enter to verify.
+
+## Notes
+
+The layout above is enough here: FRR sends its OPEN right after the TCP connection,
+and you do not need to read inbound messages after Established for this exercise. A
+fuller speaker would validate inbound message types, answer a NOTIFICATION, and use
+the Hold Time negotiated from the peer's OPEN (the smaller of the two).

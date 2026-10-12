@@ -19,3 +19,9 @@
 该节点的 `/tmp/bgp.log`：`docker exec <speaker> cat /tmp/bgp.log`
 
 完成后记得删除 `src/main.c` 里的 `// I AM NOT DONE` 行，然后按 Enter 验证。
+
+## 说明
+
+上述布局在本练习中足够：FRR 会在 TCP 连接后立即发出自己的 OPEN，Established 之后
+你无需再读取入向报文。更完整的实现还会校验入向报文类型、回应 NOTIFICATION，并使用
+对端 OPEN 协商出的 Hold Time（取两者较小值）。
