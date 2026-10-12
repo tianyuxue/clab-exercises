@@ -43,6 +43,6 @@ VLAN/Trunk ✅ → STP/RSTP ✅ → 链路聚合 LACP ✅ → MLAG/EVPN-MH（概
 
 > 完整 EVPN-MH 实验（underlay + iBGP EVPN + ESI + 双归主机 LAG）留作后续。
 
-## BGP 路线（进行中）
+## BGP 路线（已完成）
 
 BGP basics（会话建立/状态机）✅ → 报文格式 ✅ → 路径选择 ✅ → 排错 ✅ → C 实现最小 speaker ✅。
