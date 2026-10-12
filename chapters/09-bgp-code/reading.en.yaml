@@ -1,0 +1,32 @@
+- title: RFC 4271 — Message Header Format
+  section: "Message Header Format"
+  kind: required
+  url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.1
+  intro:
+    en: The 19-octet header your build_open and build_keepalive must emit.
+    zh: 你的 build_open 与 build_keepalive 必须产出的 19 字节头部。
+  question:
+    en: What is the marker, and does Length include the header?
+    zh: marker 是什么？Length 是否包含头部？
+
+- title: RFC 4271 — OPEN Message Format
+  section: "OPEN Message Format"
+  kind: required
+  url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.2
+  intro:
+    en: The exact fields and order of the OPEN you send.
+    zh: 你发出的 OPEN 的精确字段与顺序。
+  question:
+    en: In what order do version, My AS, Hold Time and BGP Identifier appear?
+    zh: version、My AS、Hold Time 与 BGP Identifier 的顺序如何？
+
+- title: RFC 4271 — UPDATE Message Format
+  section: "UPDATE Message Format"
+  kind: required
+  url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.3
+  intro:
+    en: The field layout your build_update must produce.
+    zh: 你的 build_update 必须产出的字段布局。
+  question:
+    en: How are ORIGIN, AS_PATH and NEXT_HOP encoded?
+    zh: ORIGIN、AS_PATH 与 NEXT_HOP 如何编码？
