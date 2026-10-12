@@ -1,0 +1,20 @@
+id: 09-bgp-code
+title:
+  en: Write a minimal BGP speaker in C
+  zh: 用 C 写一个最小 BGP speaker
+difficulty: 5
+tags: [l3, bgp, code, tcp]
+estimated_minutes: 90
+prerequisites: [08-bgp-troubleshoot]
+objectives:
+  en:
+    - Speak enough BGP to form a session with FRR (OPEN and KEEPALIVE)
+    - Implement the byte layout of the BGP message header and OPEN
+    - Advertise a prefix with a hand-built UPDATE
+  zh:
+    - 说足够多的 BGP 协议与 FRR 建立会话（OPEN 与 KEEPALIVE）
+    - 实现 BGP 报文头与 OPEN 的字节布局
+    - 手工构造 UPDATE 通告一个前缀
+topology: topology.clab.yml
+deploy:
+  timeout: 180s
