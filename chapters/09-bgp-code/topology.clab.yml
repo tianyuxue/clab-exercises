@@ -14,10 +14,9 @@ topology:
         - sh -c "until vtysh -c 'show bgp summary' >/dev/null 2>&1; do sleep 1; done; vtysh -c 'conf t' -c 'router bgp 65002' -c 'bgp router-id 10.1.12.2' -c 'no bgp ebgp-requires-policy' -c 'neighbor 10.1.12.1 remote-as 65001' -c 'address-family ipv4 unicast' -c 'neighbor 10.1.12.1 activate' -c 'exit-address-family'"
     speaker:
       kind: linux
-      image: debian:trixie
+      image: nicolaka/netshoot:v0.13
       group: host
       exec:
-        - sh -c "command -v ip >/dev/null 2>&1 || { apt-get update >/dev/null 2>&1; apt-get install -y --no-install-recommends iproute2 >/dev/null 2>&1; }"
         - ip link set eth1 up
         - ip addr add 10.1.12.1/30 dev eth1
         - ip addr add 192.0.2.1/24 dev lo
