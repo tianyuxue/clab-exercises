@@ -8,9 +8,10 @@ a real router. Rather than trust a library, you write the bytes yourself.
 ## Terms
 
 - **Message header**: 16 octets of marker (all ones), a 2-octet length (including the header), and a 1-octet type.
-- **OPEN**: the first message; here version 4, my AS, hold time, and BGP identifier.
+- **OPEN**: the first message; here version 4, my AS, hold time, BGP identifier, and a zero Optional Parameters Length.
 - **KEEPALIVE**: a bare 19-octet header that keeps the session alive.
 - **UPDATE**: withdrawn routes, path attributes (ORIGIN, AS_PATH, NEXT_HOP), then NLRI.
+- **NLRI (Network Layer Reachability Information)**: the prefix(es) an UPDATE advertises.
 - **FSM (finite state machine)**: the states your program walks: after OPEN and KEEPALIVE, Established.
 
 ## Why it hurts
@@ -30,7 +31,7 @@ KEEPALIVEs, and the session is Established. An UPDATE then carries NLRI with its
 path attributes:
 
 ```
-Marker(16) | Length(2) | Type(1) | Withdrawn Routes Length(2) | Path Attributes | NLRI
+Marker(16) | Length(2) | Type(1) | Withdrawn Routes Length(2) | Withdrawn Routes | Total Path Attribute Length(2) | Path Attributes | NLRI
 ```
 
 All multi-octet fields are in network byte order.
@@ -50,6 +51,6 @@ cat /tmp/bgp.log
 
 ## Common questions
 
-- Why must the marker be all ones? The header is fixed-size; the marker is defined as all ones so the length field can locate the next message.
+- Why must the marker be all ones? It is a fixed sentinel required for compatibility; the Length field is what frames the next message.
 - Does Length include the header? Yes, it counts the whole message; KEEPALIVE is 19.
 - Why send KEEPALIVE every hold/3? The negotiated Hold Time expires if nothing arrives; a third of it is the recommended margin.

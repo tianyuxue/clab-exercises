@@ -30,3 +30,14 @@
   question:
     en: How are ORIGIN, AS_PATH and NEXT_HOP encoded?
     zh: ORIGIN、AS_PATH 与 NEXT_HOP 如何编码？
+
+- title: RFC 4271 — KEEPALIVE Message Format
+  section: "KEEPALIVE Message Format"
+  kind: optional
+  url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.4
+  intro:
+    en: The bare 19-octet message that keeps the session alive.
+    zh: 维持会话存活的、仅 19 字节的报文。
+  question:
+    en: How often should KEEPALIVE be sent relative to the Hold Time?
+    zh: 相对于 Hold Time，KEEPALIVE 应多久发送一次？
