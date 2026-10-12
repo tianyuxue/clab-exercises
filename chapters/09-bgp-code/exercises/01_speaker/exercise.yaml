@@ -1,0 +1,72 @@
+id: 01_speaker
+title:
+  en: A minimal BGP speaker
+  zh: 最小 BGP speaker
+brief: {en: "Implement OPEN, KEEPALIVE and UPDATE so FRR becomes Established with your speaker and learns 192.0.2.0/24. See the README for milestones.", zh: "实现 OPEN、KEEPALIVE 与 UPDATE，让 FRR 与你的 speaker 达到 Established 并学到 192.0.2.0/24。里程碑见 README。"}
+type: code-implement
+difficulty: 5
+timeout: 120s
+files:
+  - source: src/main.c
+    node: speaker
+    dest: /root/src/main.c
+build:
+  image: gcc:13
+  command: make
+  output: bgp-speaker
+run:
+  node: speaker
+  dest: /root/bgp-speaker
+  stop: "sh -c 'if [ -f /tmp/bgp.pid ]; then kill $(cat /tmp/bgp.pid) 2>/dev/null; rm -f /tmp/bgp.pid; fi; true'"
+  start: "sh -c 'nohup /root/bgp-speaker 10.1.12.2 >/tmp/bgp.log 2>&1 & echo $! > /tmp/bgp.pid'"
+assertions:
+  - name:
+      en: the sentinel is removed
+      zh: 哨兵已移除
+    type: file
+    layer: control-plane
+    source: src/main.c
+    hint:
+      en: Delete the "I AM NOT DONE" line when your implementation is ready.
+      zh: 实现完成后删除 "I AM NOT DONE" 这一行。
+  - name:
+      en: r1 becomes Established with the speaker
+      zh: r1 与 speaker 达到 Established
+    type: exec
+    layer: control-plane
+    node: r1
+    cmd: "vtysh -c 'show bgp summary json'"
+    wait: 90s
+    match:
+      json: "$.ipv4Unicast.peers.*.state"
+      equals: "Established"
+    hint:
+      en: Exchange OPEN and KEEPALIVE with the peer.
+      zh: 与对端交换 OPEN 与 KEEPALIVE。
+  - name:
+      en: r1 learns 192.0.2.0/24
+      zh: r1 学到 192.0.2.0/24
+    type: exec
+    layer: control-plane
+    node: r1
+    cmd: "vtysh -c 'show bgp ipv4 unicast json'"
+    wait: 30s
+    match:
+      stdout:
+        contains: "192.0.2.0/24"
+    hint:
+      en: Send an UPDATE with NEXT_HOP 10.1.12.1 and NLRI 192.0.2.0/24.
+      zh: 发送 NEXT_HOP 为 10.1.12.1、NLRI 为 192.0.2.0/24 的 UPDATE。
+  - name:
+      en: r1 can ping 192.0.2.1
+      zh: r1 能 ping 通 192.0.2.1
+    type: exec
+    layer: data-plane
+    node: r1
+    cmd: "ping -c 2 -W 2 192.0.2.1"
+    wait: 20s
+    match:
+      exit_code: 0
+    hint:
+      en: The route must be installed; keep the session alive.
+      zh: 路由需被安装；保持会话存活。
