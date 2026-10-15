@@ -1,0 +1,54 @@
+id: 02_trunk
+title:
+  en: Trunks tag frames for many VLANs
+  zh: trunk 为多个 VLAN 打标签
+brief: {en: "h1 (sw1) and h3 (sw2) are both VLAN 10 but cannot reach each other across the trunk. Fix the trunk and watch the tagged frames.", zh: "h1(sw1) 与 h3(sw2) 同属 VLAN10，却无法经 trunk 互通。修好 trunk，并观察带标签的帧。"}
+type: config-fix
+difficulty: 3
+timeout: 40s
+hints:
+  - en: A trunk link carries several VLANs, so each frame must be tagged with its VLAN; the switch only forwards VLANs the trunk is a member of.
+    zh: trunk 链路承载多个 VLAN，每帧必须带 VLAN 标签；交换机只转发 trunk 所属的 VLAN。
+  - en: Add VLAN 10 to the trunk on both switches.
+    zh: 在两台交换机的 trunk 上都放行 VLAN 10。
+files:
+  - source: sw1/sw1.sh
+    node: sw1
+    dest: /root/sw1.sh
+  - source: sw2/sw2.sh
+    node: sw2
+    dest: /root/sw2.sh
+reload:
+  - node: sw1
+    cmd: "pkill -x tcpdump 2>/dev/null; rm -f /tmp/cap.pcap; setsid tcpdump -U -i eth3 -w /tmp/cap.pcap >/dev/null 2>&1 </dev/null &"
+  - node: sw1
+    cmd: "sh /root/sw1.sh"
+  - node: sw2
+    cmd: "sh /root/sw2.sh"
+assertions:
+  - name:
+      en: h1 can ping h3 across the trunk
+      zh: h1 能经 trunk ping 通 h3
+    type: exec
+    layer: data-plane
+    node: h1
+    cmd: "ping -c 3 -W 2 10.0.10.3"
+    wait: 20s
+    match:
+      exit_code: 0
+    hint:
+      en: The trunk must carry VLAN 10 on both ends.
+      zh: trunk 两端都要放行 VLAN 10。
+  - name:
+      en: the trunk carries VLAN 10 tagged
+      zh: trunk 上 VLAN10 的帧带标签
+    type: exec
+    layer: data-plane
+    node: sw1
+    cmd: "sh -c \"tcpdump -r /tmp/cap.pcap -e -nn 2>/dev/null | grep -q 'vlan 10'\""
+    wait: 20s
+    match:
+      exit_code: 0
+    hint:
+      en: On a trunk the tag identifies the VLAN; the captured frame shows vlan 10.
+      zh: trunk 上标签标识 VLAN；抓到的帧显示 vlan 10。
