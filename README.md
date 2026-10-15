@@ -27,7 +27,7 @@ go run ./cmd/clablings test --all --root ../clab-exercises
 
 | 章节 | 题型 | 触发方式 | 说明 |
 |---|---|---|---|
-| 01-vlan-trunk | quiz + 文件驱动 config-fix | 哨兵 + Enter | 理解 VLAN/802.1Q，修复 Linux bridge 两端 access VLAN 不一致 |
+| 01-vlan-trunk | quiz + 运行态 config-fix（含抓包） | Enter | 从"为什么"理解 access/trunk/native VLAN 的收发包行为，观察无标签/带标签帧（Linux bridge） |
 | 02-stp | quiz + 文件驱动 config-fix | 哨兵 + Enter | 理解 STP 根桥选举与环路防护，调整优先级让核心交换机成为根 |
 | 03-lacp | quiz + 文件驱动 config-fix | 哨兵 + Enter | 理解链路聚合与 LACP 协商，修复 active/passive 让 LAG 起来（SR Linux） |
 | 04-mlag | quiz（概念章，无实验） | 答题推进 | 理解 MLAG/vPC、脑裂与 EVPN 多归，对比堆叠 |
