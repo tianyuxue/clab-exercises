@@ -10,13 +10,13 @@ trunk 放行的 VLAN，否则交换机丢弃。
 
 ## 观察
 
-在 clab-tui 里对 trunk（sw1 eth3）抓包、同时 `h1` ping `h4`。帧本身就带 `vlan 10`，
-由主机发出。
+在 clab-tui 里对 trunk（sw1 eth3）抓包、同时 `h1` ping `h4`。修复后帧带 `vlan 10`，
+由主机发出（故障态下 h4 的 VLAN30 帧根本到不了 trunk）。
 
 ## 修复
 
 把 `h4` 的子接口设为 VLAN 10：
 `docker exec <h4> ip link del eth1.30; docker exec <h4> ip link add link eth1 name eth1.10 type vlan id 10`
-再加地址并 up（见 `h4/h4.sh`）。
+再加地址并 up：`docker exec <h4> ip addr add 10.0.10.4/24 dev eth1.10; docker exec <h4> ip link set eth1.10 up`
 
 按 Enter 验证；按 `f` 重新注入故障。
