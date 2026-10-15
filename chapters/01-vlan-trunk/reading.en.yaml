@@ -3,19 +3,19 @@
   kind: required
   url: https://docs.kernel.org/networking/bridge.html#introduction
   intro:
-    en: Defines what a bridge is and how it connects several network segments into one logical Ethernet network — the reason a flat network is a single broadcast domain.
-    zh: 说明什么是网桥、它如何把多段网络连成一个逻辑以太网——这正是扁平网络只有一个广播域的原因。
+    en: What a bridge is and how it merges segments into one logical Ethernet — the reason a flat network is one broadcast domain.
+    zh: 什么是网桥、它如何把网段并成一个逻辑以太网——扁平网络只有一个广播域的原因。
   question:
-    en: What does a bridge connect, and at which layer does it forward frames?
-    zh: 网桥连接的是什么？它在哪一层转发帧？
+    en: What does a bridge connect, and at which layer does it forward?
+    zh: 网桥连接的是什么？它在哪一层转发？
 
 - title: Linux bridge — VLAN
   section: "VLAN"
   kind: required
   url: https://docs.kernel.org/networking/bridge.html#vlan
   intro:
-    en: How the Linux bridge implements 802.1Q VLAN filtering; "pvid untagged" is how you configure an access port.
-    zh: Linux 网桥如何实现 802.1Q VLAN filtering；"pvid untagged" 就是配置 access 端口的写法。
+    en: How the bridge implements 802.1Q filtering; "pvid untagged" is the access/native port, a plain "vid" is the trunk.
+    zh: 网桥如何实现 802.1Q filtering；"pvid untagged" 即 access/native 口，单独的 "vid" 即 trunk。
   question:
     en: What do pvid and untagged each control for incoming and outgoing frames?
-    zh: pvid 与 untagged 分别控制入向和出向帧的什么行为？
+    zh: pvid 与 untagged 分别控制入向与出向帧的什么？

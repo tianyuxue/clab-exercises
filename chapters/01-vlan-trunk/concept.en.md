@@ -2,94 +2,76 @@
 
 ## Scenario
 
-A small office runs a single switch. Twenty-four computers plug into it, all on
-the same IP subnet, `10.0.1.0/24`. When one machine sends an ARP request, every
-other machine hears it — that is how a switch works, and at this size it is
-perfectly fine.
-
-Then the office adds a noisy test lab to the same switch. Its broadcast traffic
-now reaches the office machines too, and the whole network starts to feel slow.
+A small office runs one switch: twenty-four machines, one subnet, one broadcast
+domain. Then a noisy test lab joins the same switch, its broadcasts reach every
+machine, and the network slows down.
 
 ## Terms
 
-- **Broadcast domain**: the set of ports a broadcast frame reaches. A switch
-  floods a broadcast — and any frame whose destination MAC it has not learned —
-  to every port in the same broadcast domain.
-- **Flat network**: a network where all devices share one broadcast domain. When
-  we say "the network grew", we always mean "the broadcast domain grew".
-- **VLAN**: a *logical* broadcast domain. Two ports in different VLANs never see
-  each other's broadcasts, even though they sit on the same physical switch.
-- **802.1Q tag**: a 4-byte field a switch inserts between the source MAC and the
-  EtherType. It carries a 12-bit **VLAN ID** (VID, 1–4094) and a 3-bit
-  **priority** (PCP).
-- **Access port**: a port that belongs to a single VLAN and sends frames
-  untagged. Its **PVID** (port VLAN ID) is the VLAN that incoming untagged frames
-  are dropped into.
-- **Trunk port**: a port that carries several VLANs and sends frames tagged. Its
-  **native VLAN** handles untagged frames on the trunk; both ends must agree on
-  it.
+- **Broadcast domain**: the set of ports a broadcast frame reaches; a switch floods broadcasts and unknown-unicast to every port in it.
+- **VLAN**: a logical broadcast domain; two ports in different VLANs never see each other's broadcasts.
+- **802.1Q tag**: a 4-byte field inserted between the source MAC and the EtherType; it carries a 12-bit VLAN ID.
+- **PVID**: the VLAN a port assigns to frames that arrive without a tag.
+- **Access port**: a port that puts one VLAN on one cable, untagged.
+- **Trunk port**: a port that carries several VLANs between devices, tagged.
+- **Native VLAN**: the one VLAN on a trunk whose frames travel untagged.
 
 ## Why it hurts
 
-A flat network has exactly one broadcast domain by definition, so every broadcast
-and every unknown-unicast frame is flooded to all devices — the noisy lab
-included. The switch offers no knob to keep two groups apart while they share the
-same physical hardware.
+A flat network is a single broadcast domain, so every broadcast and unknown-unicast
+frame floods to every device, the noisy lab included. The switch has no knob to keep
+groups apart while they share hardware.
 
 ## Why the naive fix fails
 
-The obvious move is to buy a second switch and move the lab onto it. If the two
-switches are connected, that link becomes part of the *same* broadcast domain, so
-the problem comes right back. Adding a second link between the switches for
-redundancy only makes it worse: the two links form a Layer-2 loop, and STP
-resolves it by blocking one link — so you paid for a link you cannot use.
+Buying a second switch and linking it just extends the same broadcast domain, so the
+problem returns; a second link for redundancy only creates a Layer-2 loop.
 
 ## The mechanism
 
-A **VLAN** splits one physical switch into several independent broadcast domains.
-Instead of isolating groups by buying hardware, you assign ports to VLANs:
+A switch only sees bytes, so it must decide which broadcast domain each frame belongs
+to. The three rules follow from where that decision has to happen.
 
-- an **access port** puts a single VLAN on a single cable, untagged;
-- a **trunk port** carries many VLANs between switches, tagged with the **802.1Q
-  tag** so the far end knows which VLAN each frame belongs to.
+**Why access ports are untagged, with a PVID.** A host NIC does not speak 802.1Q: it
+neither adds nor strips tags, and it would drop a tagged frame as an unknown
+EtherType. So on a host link the switch keeps frames untagged. But then the switch
+must still place a bare frame into a VLAN — that is the port's PVID. This link
+carries one VLAN, so a tag would carry no information anyway.
 
-Because the tag — not the cable — identifies the VLAN, one cable can carry many
-logical networks, and the loop/blocking problem disappears: you separate groups
-logically rather than physically.
+**Why trunks tag.** One cable between two switches must carry several VLANs. If the
+frames were untagged, the far switch could not tell VLAN 10 from VLAN 20, and
+isolation would collapse. So a trunk tags every frame with its 802.1Q VLAN ID: on a
+shared link the tag is the frame's only identity.
 
-On a real rack, this gives the two port types their familiar roles. An access
-port is the **downlink** facing an end device — a server, workstation, or
-printer; a trunk port is the **uplink** facing another network device — a switch,
-AP, router, or hypervisor host. The names describe the port's role and the
-direction of traffic, not a different kind of Ethernet; a server that tags its
-own frames can sit on a trunk just as well.
+**Why native VLAN exists.** Some devices and links do not tag. To let them use a
+trunk, one VLAN is designated native: its frames travel untagged, as if the trunk
+were an access port for that VLAN. The price is that an untagged frame has no
+identity of its own — the receiving port's PVID is the only thing that assigns its
+VLAN. If the two ends disagree, the same frame lands in different VLANs and fails
+silently.
 
 ## Configure and inspect
-
-On a Linux bridge, VLAN filtering must be enabled on the bridge before per-port
-VLANs mean anything:
 
 ```sh
 ip link add br0 type bridge vlan_filtering 1 && ip link set br0 up
 ip link set eth1 master br0 && ip link set eth2 master br0
 
-# access ports: one VLAN, untagged
-bridge vlan add dev eth1 vid 10 pvid untagged
-bridge vlan add dev eth2 vid 10 pvid untagged
+bridge vlan add dev eth1 vid 10 pvid untagged      # access: one VLAN, untagged
+bridge vlan add dev eth3 vid 10                    # trunk: VLAN 10 tagged
+bridge vlan add dev eth3 vid 20 pvid untagged      # trunk native VLAN 20
 
-# a trunk port: several VLANs, tagged
-bridge vlan add dev eth3 vid 10
-bridge vlan add dev eth3 vid 20
+bridge vlan show                                    # PVID and egress tagging per port
+```
 
-bridge vlan show          # inspect PVID and egress tagging per port
+On the wire, an access link shows no tag; a trunk shows `vlan 10`:
+```sh
+tcpdump -i eth1 -e -nn     # access: no "vlan"
+tcpdump -i eth3 -e -nn     # trunk: "vlan 10"
 ```
 
 ## Common questions
 
-- **Same subnet, different PVID**: two hosts can share an IP subnet yet sit on
-  access ports with different PVIDs; the VLAN isolates their ARP, so they cannot
-  reach each other. This is the fault the lab injects.
-- **Native VLAN mismatch**: if a trunk's native VLAN differs at the two ends,
-  untagged frames land in different VLANs and fail silently.
-- **PVID is per port**: changing it moves *all* untagged traffic on that port, not
-  just one host.
+- Same subnet but no connectivity? The two access ports' PVIDs differ; a host's untagged frames land in different VLANs even on one subnet.
+- Same VLAN across two switches but no connectivity? The trunk is not a member of that VLAN, so frames are dropped.
+- Native VLAN mismatch? Untagged frames are placed by the receiving PVID; a mismatch moves them to another VLAN, silently.
+- Can a host sit on a trunk? Yes, if it tags its own frames with a VLAN subinterface and uses a VLAN the trunk carries.
