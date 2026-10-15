@@ -1,0 +1,54 @@
+id: 01_access
+title:
+  en: Access ports carry untagged frames
+  zh: access 口承载无标签帧
+brief: {en: "h1 and h2 are in the same subnet (10.0.10.0/24) but cannot reach each other. Fix the access VLANs so they can, then watch the frames on the wire.", zh: "h1 与 h2 同网段（10.0.10.0/24）却互不相通。修复 access VLAN 让它们互通，并在链路上看这些帧。"}
+type: config-fix
+difficulty: 2
+timeout: 40s
+hints:
+  - en: A host NIC does not speak 802.1Q, so the switch must place its untagged frames into a VLAN using the port's PVID.
+    zh: 主机网卡不懂 802.1Q，交换机必须用端口 PVID 把它的无标签帧放进某个 VLAN。
+  - en: Check both ports' PVID with `bridge vlan show`; they must match.
+    zh: 用 `bridge vlan show` 查看两个端口的 PVID，必须一致。
+files:
+  - source: h2/h2.sh
+    node: h2
+    dest: /root/h2.sh
+  - source: sw1/access.sh
+    node: sw1
+    dest: /root/access.sh
+reload:
+  - node: h2
+    cmd: "sh /root/h2.sh"
+  - node: sw1
+    cmd: "pkill -x tcpdump 2>/dev/null; rm -f /tmp/cap.pcap; setsid tcpdump -U -i eth1 -w /tmp/cap.pcap >/dev/null 2>&1 </dev/null &"
+  - node: sw1
+    cmd: "sh /root/access.sh"
+assertions:
+  - name:
+      en: h1 can ping h2
+      zh: h1 能 ping 通 h2
+    type: exec
+    layer: data-plane
+    node: h1
+    cmd: "ping -c 3 -W 2 10.0.10.2"
+    wait: 20s
+    match:
+      exit_code: 0
+    hint:
+      en: Both access ports must use the same PVID.
+      zh: 两个 access 口必须使用相同的 PVID。
+  - name:
+      en: the access link carries untagged frames
+      zh: access 链路承载无标签帧
+    type: exec
+    layer: control-plane
+    node: sw1
+    cmd: "sh -c \"timeout 3 tcpdump -r /tmp/cap.pcap -e -nn 2>/dev/null | grep -q vlan && exit 1 || exit 0\""
+    wait: 20s
+    match:
+      exit_code: 0
+    hint:
+      en: On an access port the switch adds/strips the tag, so the host link shows no VLAN tag.
+      zh: 在 access 口交换机负责加/去标签，因此主机链路看不到 VLAN 标签。
