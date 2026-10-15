@@ -1,0 +1,64 @@
+id: 03_native
+title:
+  en: Native VLAN crosses untagged
+  zh: native VLAN 无标签穿越
+brief: {en: "VLAN 20 is the trunk's native VLAN. h2 (sw1) and h4 (sw2) are both VLAN 20 but cannot reach each other. Fix the native VLAN and watch untagged frames cross.", zh: "VLAN20 是 trunk 的 native VLAN。h2(sw1) 与 h4(sw2) 同属 VLAN20 却互不相通。修复 native VLAN，并观察无标签帧穿越。"}
+type: config-fix
+difficulty: 3
+timeout: 40s
+hints:
+  - en: The native VLAN's frames are sent untagged on the trunk, so the receiving port's PVID decides their VLAN — both ends must agree.
+    zh: native VLAN 的帧在 trunk 上不带标签，接收端 PVID 决定其归属——两端必须一致。
+  - en: Make the trunk's native VLAN 20 on sw2 too.
+    zh: 让 sw2 的 trunk 也把 native VLAN 设为 20。
+files:
+  - source: h2/h2.sh
+    node: h2
+    dest: /root/h2.sh
+  - source: h4/h4.sh
+    node: h4
+    dest: /root/h4.sh
+  - source: sw1/sw1.sh
+    node: sw1
+    dest: /root/sw1.sh
+  - source: sw2/sw2.sh
+    node: sw2
+    dest: /root/sw2.sh
+reload:
+  - node: sw1
+    cmd: "pkill -x tcpdump 2>/dev/null; rm -f /tmp/cap.pcap; setsid tcpdump -U -i eth3 -w /tmp/cap.pcap >/dev/null 2>&1 </dev/null &"
+  - node: h2
+    cmd: "sh /root/h2.sh"
+  - node: h4
+    cmd: "sh /root/h4.sh"
+  - node: sw1
+    cmd: "sh /root/sw1.sh"
+  - node: sw2
+    cmd: "sh /root/sw2.sh"
+assertions:
+  - name:
+      en: h2 can ping h4 across the trunk
+      zh: h2 能经 trunk ping 通 h4
+    type: exec
+    layer: data-plane
+    node: h2
+    cmd: "ping -c 3 -W 2 10.0.20.1"
+    wait: 20s
+    match:
+      exit_code: 0
+    hint:
+      en: Set the native VLAN to 20 on both ends of the trunk.
+      zh: 把 trunk 两端的 native VLAN 都设为 20。
+  - name:
+      en: native VLAN frames cross untagged
+      zh: native VLAN 的帧无标签穿越
+    type: exec
+    layer: data-plane
+    node: sw1
+    cmd: "sh -c \"timeout 3 tcpdump -r /tmp/cap.pcap -e -nn 2>/dev/null | grep -E '10.0.20.' | grep -q vlan && exit 1 || exit 0\""
+    wait: 20s
+    match:
+      exit_code: 0
+    hint:
+      en: Native VLAN frames are untagged; only other VLANs show a tag.
+      zh: native VLAN 的帧无标签；只有其它 VLAN 才显示标签。
