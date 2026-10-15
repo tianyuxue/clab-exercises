@@ -1,0 +1,59 @@
+id: 04_tagged_host
+title:
+  en: A host that tags its own frames
+  zh: 自己打标签的主机
+brief: {en: "h4 tags its own frames and plugs into a trunk port, but cannot reach h1. Fix the tag so it matches the trunk.", zh: "h4 自己给帧打标签并接在 trunk 口上，却无法到达 h1。修正标签，使其与 trunk 匹配。"}
+type: config-fix
+difficulty: 4
+timeout: 40s
+hints:
+  - en: A trunk can face a host that tags its own frames (a VLAN subinterface), not only another switch.
+    zh: trunk 不只朝向交换机，也可以朝向自己打标签的主机（VLAN 子接口）。
+  - en: The host's VLAN ID must be a VLAN the trunk carries.
+    zh: 主机的 VLAN ID 必须是 trunk 放行的 VLAN。
+files:
+  - source: h4/h4.sh
+    node: h4
+    dest: /root/h4.sh
+  - source: sw1/sw1.sh
+    node: sw1
+    dest: /root/sw1.sh
+  - source: sw2/sw2.sh
+    node: sw2
+    dest: /root/sw2.sh
+reload:
+  - node: sw1
+    cmd: "pkill -x tcpdump 2>/dev/null; rm -f /tmp/cap.pcap; setsid tcpdump -U -i eth3 -w /tmp/cap.pcap >/dev/null 2>&1 </dev/null &"
+  - node: h4
+    cmd: "sh /root/h4.sh"
+  - node: sw1
+    cmd: "sh /root/sw1.sh"
+  - node: sw2
+    cmd: "sh /root/sw2.sh"
+assertions:
+  - name:
+      en: h1 can ping h4
+      zh: h1 能 ping 通 h4
+    type: exec
+    layer: data-plane
+    node: h1
+    cmd: "ping -c 3 -W 2 10.0.10.4"
+    wait: 20s
+    match:
+      exit_code: 0
+    hint:
+      en: Align h4's VLAN ID with a VLAN the trunk carries (10).
+      zh: 把 h4 的 VLAN ID 对齐到 trunk 放行的 VLAN（10）。
+  - name:
+      en: h4's frames cross the trunk tagged with VLAN 10
+      zh: h4 的帧带 VLAN10 标签穿越 trunk
+    type: exec
+    layer: data-plane
+    node: sw1
+    cmd: "sh -c \"tcpdump -r /tmp/cap.pcap -e -nn 2>/dev/null | grep '10.0.10.4' | grep -q 'vlan 10'\""
+    wait: 20s
+    match:
+      exit_code: 0
+    hint:
+      en: A tagged host emits frames that already carry the VLAN tag.
+      zh: 自标签主机发出的帧本身就带 VLAN 标签。
