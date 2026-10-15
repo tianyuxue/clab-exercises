@@ -3,18 +3,18 @@ title:
   en: VLAN and Trunk
   zh: VLAN 与 Trunk
 difficulty: 2
-tags: [l2, vlan, switching]
-estimated_minutes: 40
+tags: [l2, vlan, trunk, switching]
+estimated_minutes: 60
 prerequisites: []
 objectives:
   en:
-    - Explain how VLANs isolate broadcast domains
-    - Read an 802.1Q tag and tell access ports from trunk ports
-    - Configure Linux bridge VLAN filtering to restore host connectivity
+    - Explain why a switch needs a VLAN identity per frame, and how PVID provides it on host links
+    - Explain why a shared switch-to-switch link must tag frames, and what native VLAN is for
+    - Observe untagged vs tagged frames on access and trunk links, and fix VLAN misconfigurations
   zh:
-    - 解释 VLAN 如何隔离广播域
-    - 读懂 802.1Q 标签，区分 access 与 trunk 端口
-    - 配置 Linux bridge 的 VLAN filtering 恢复主机连通性
+    - 解释交换机为何需要"每帧的 VLAN 身份"，以及 PVID 如何在主机侧提供它
+    - 解释交换机之间的共享链路为何必须打标签，以及 native VLAN 是做什么的
+    - 在 access 与 trunk 链路上观察无标签/带标签帧，并修复 VLAN 配置错误
 topology: topology.clab.yml
 deploy:
-  timeout: 180s
+  timeout: 120s
