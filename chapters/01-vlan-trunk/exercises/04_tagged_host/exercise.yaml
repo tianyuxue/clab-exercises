@@ -50,7 +50,7 @@ assertions:
     type: exec
     layer: data-plane
     node: sw1
-    cmd: "sh -c \"tcpdump -r /tmp/cap.pcap -e -nn 2>/dev/null | grep '10.0.10.4' | grep -q 'vlan 10'\""
+    cmd: "sh -c \"tcpdump -r /tmp/cap.pcap -e -nn 2>/dev/null | grep '10.0.10.4 >' | grep -q 'vlan 10'\""
     wait: 20s
     match:
       exit_code: 0
