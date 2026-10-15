@@ -17,7 +17,8 @@ tag** — the switch keeps the host link untagged.
 ## Fix
 
 - `docker exec <sw1> bridge vlan show` — compare the PVID of eth1 and eth2.
-- Put both in VLAN 10:
-  `docker exec <sw1> bridge vlan add dev eth2 vid 10 pvid untagged` (and remove its old VLAN).
+- Move eth2 from VLAN 20 to VLAN 10:
+  `docker exec <sw1> bridge vlan del dev eth2 vid 20`
+  `docker exec <sw1> bridge vlan add dev eth2 vid 10 pvid untagged`
 
 Press Enter to verify; `f` re-injects the fault.

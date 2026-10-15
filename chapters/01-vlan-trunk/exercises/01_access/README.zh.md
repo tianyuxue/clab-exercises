@@ -16,7 +16,8 @@
 ## 修复
 
 - `docker exec <sw1> bridge vlan show` —— 对比 eth1 与 eth2 的 PVID。
-- 把两者都放入 VLAN 10：
-  `docker exec <sw1> bridge vlan add dev eth2 vid 10 pvid untagged`（并移除它的旧 VLAN）。
+- 把 eth2 从 VLAN20 改到 VLAN10：
+  `docker exec <sw1> bridge vlan del dev eth2 vid 20`
+  `docker exec <sw1> bridge vlan add dev eth2 vid 10 pvid untagged`
 
 按 Enter 验证；按 `f` 重新注入故障。
