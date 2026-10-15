@@ -40,15 +40,15 @@ assertions:
       en: Both access ports must use the same PVID.
       zh: 两个 access 口必须使用相同的 PVID。
   - name:
-      en: the access link carries untagged frames
-      zh: access 链路承载无标签帧
+      en: the access link carries host traffic untagged
+      zh: access 链路承载无标签的主机流量
     type: exec
-    layer: control-plane
+    layer: data-plane
     node: sw1
-    cmd: "sh -c \"timeout 3 tcpdump -r /tmp/cap.pcap -e -nn 2>/dev/null | grep -q vlan && exit 1 || exit 0\""
-    wait: 20s
+    cmd: "sh -c \"tcpdump -r /tmp/cap.pcap -e -nn 2>/dev/null > /tmp/c.txt; grep -q '10.0.10' /tmp/c.txt && ! grep -q vlan /tmp/c.txt\""
+    wait: 10s
     match:
       exit_code: 0
     hint:
-      en: On an access port the switch adds/strips the tag, so the host link shows no VLAN tag.
-      zh: 在 access 口交换机负责加/去标签，因此主机链路看不到 VLAN 标签。
+      en: On an access port the switch adds/strips the tag, so the host link shows the host's traffic with no VLAN tag.
+      zh: 在 access 口交换机负责加/去标签，因此主机链路上看到的主机流量没有 VLAN 标签。
