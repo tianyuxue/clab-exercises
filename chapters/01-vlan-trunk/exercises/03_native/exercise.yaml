@@ -55,7 +55,7 @@ assertions:
     type: exec
     layer: data-plane
     node: sw1
-    cmd: "sh -c \"timeout 3 tcpdump -r /tmp/cap.pcap -e -nn 2>/dev/null | grep -E '10.0.20.' | grep -q vlan && exit 1 || exit 0\""
+    cmd: "sh -c \"tcpdump -r /tmp/cap.pcap -e -nn 2>/dev/null > /tmp/c.txt; grep -q '10.0.20.2' /tmp/c.txt && ! grep '10.0.20.2' /tmp/c.txt | grep -q vlan\""
     wait: 20s
     match:
       exit_code: 0

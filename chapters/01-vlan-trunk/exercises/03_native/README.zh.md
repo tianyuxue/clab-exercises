@@ -10,12 +10,12 @@ trunk 指定一个 VLAN，其帧**不带标签**传输，以便不打标签的�
 
 ## 观察
 
-在 clab-tui 里对 trunk（sw1 eth3）抓包、同时 `h2` ping `h4`。VLAN20 的帧**无标签**，
-而 VLAN10 的帧仍带 `vlan 10`。
+在 clab-tui 里对 trunk（sw1 eth3）抓包、同时 `h2` ping `h4`。VLAN20 的帧**无标签**
+（若同时产生 VLAN10 流量，则仍带 `vlan 10`）。
 
 ## 修复
 
-在两端把 VLAN20 设为 native：
+sw1 已是 native；把 sw2 的 trunk 设为 native：
 `docker exec <sw2> bridge vlan add dev eth1 vid 20 pvid untagged`
 
 按 Enter 验证；按 `f` 重新注入故障。

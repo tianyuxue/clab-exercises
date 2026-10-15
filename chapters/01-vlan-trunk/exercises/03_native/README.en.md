@@ -14,11 +14,11 @@ VLANs — and it fails silently, with no error.
 ## Observe it
 
 In clab-tui, capture on the trunk (sw1 eth3) while `h2` pings `h4`. VLAN-20
-frames show **no tag**, while VLAN-10 frames still show `vlan 10`.
+frames show **no tag** (when you also generate VLAN-10 traffic it still shows `vlan 10`).
 
 ## Fix
 
-Make VLAN 20 native on both ends:
+sw1 is already native; make VLAN 20 native on sw2's trunk:
 `docker exec <sw2> bridge vlan add dev eth1 vid 20 pvid untagged`
 
 Press Enter to verify; `f` re-injects the fault.
