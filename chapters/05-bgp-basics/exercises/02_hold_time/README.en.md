@@ -1,17 +1,33 @@
 # 02_hold_time
 
-The session between `r1` and `r2` is established with the default timers. Make
-`r1` propose a **9-second hold time** (keepalive 3s) so its next OPEN carries
-`hold_time = 9`.
+The session is up with default timers. r1's OPEN currently proposes a 180-second Hold Time; make it propose 9 seconds with a 3-second KEEPALIVE.
 
-## How to fix
+## Cause
 
-- Set the neighbor timers on `r1` (FRR order is keepalive then hold time):
-  `docker exec <r1> vtysh -c 'conf t' -c 'router bgp 65001' -c 'neighbor 10.1.12.2 timers 3 9'`
-- Timers only take effect on a new session, so reset it:
-  `docker exec <r1> vtysh -c 'clear bgp *'`
+Hold Time and the KEEPALIVE interval are negotiated in the OPEN; defaults are 180 and 60 seconds. To detect a dead r1 within 9 seconds, r1 must propose Hold Time 9 and KEEPALIVE 3. Timers apply only to a new session, so a config change needs a reset.
 
-The sniffer node captures BGP on the wire. Inspect it yourself with:
-`docker exec <sniff> tshark -r /tmp/bgp.pcap -Y 'bgp.type==1 && ip.src==10.1.12.1' -T fields -e bgp.open.holdtime`
+## Observe
+
+`sniff` captures continuously to `/tmp/bgp.pcap`. Read r1's OPEN:
+
+```sh
+docker exec <sniff> tshark -r /tmp/bgp.pcap -Y 'bgp.type==1 && ip.src==10.1.12.1' -T fields -e bgp.open.holdtime
+```
+
+The last line is 180 before the fix and 9 after the session is reset.
+
+## Fix
+
+Set the neighbor timers on r1 (FRR order: KEEPALIVE then Hold Time):
+
+```sh
+docker exec <r1> vtysh -c 'conf t' -c 'router bgp 65001' -c 'neighbor 10.1.12.2 timers 3 9'
+```
+
+Reset the session so the new timers are negotiated:
+
+```sh
+docker exec <r1> vtysh -c 'clear bgp *'
+```
 
 Press Enter to verify; `f` re-injects the fault.

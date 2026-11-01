@@ -4,10 +4,10 @@
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-8
   intro:
     en: The exact states and the events that move a session between them — the backbone of this chapter.
-    zh: 会话的状态定义与状态之间的触发事件，是本章的主干。
+    zh: 会话有哪些状态、什么事件把会话从一个状态推到下一个，是本章的主线。
   question:
     en: Which event moves the session from OpenSent to OpenConfirm?
-    zh: 哪个事件让会话从 OpenSent 转到 OpenConfirm？
+    zh: 哪个事件让会话从 OpenSent 走到 OpenConfirm？
 
 - title: RFC 4271 — OPEN Message Format
   section: "OPEN Message Format"
@@ -15,10 +15,10 @@
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.2
   intro:
     en: The field layout of the OPEN you read on the wire in this chapter.
-    zh: 本章在线路上读到的 OPEN 的字段布局。
+    zh: 本章在链路上抓到的 OPEN，字段就按这个顺序排。
   question:
     en: What does the Hold Time field propose, and how is it negotiated?
-    zh: Hold Time 字段提议了什么？它是如何协商的？
+    zh: Hold Time 字段提议了什么？两端怎么把它谈定？
 
 - title: RFC 4271 — BGP Timers
   section: "BGP Timers"
@@ -26,7 +26,7 @@
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-10
   intro:
     en: How Hold Time and Keepalive relate, and why a dead peer is detected within one Hold Time.
-    zh: Hold Time 与 Keepalive 的关系，以及为何在一个 Hold Time 内就能发现对端失效。
+    zh: Hold Time 与 KEEPALIVE 的关系，以及为什么一个 Hold Time 内就能发现对端失联。
   question:
     en: What is the recommended relationship between Keepalive and Hold Time?
-    zh: Keepalive 与 Hold Time 之间的推荐关系是什么？
+    zh: RFC 建议 KEEPALIVE 与 Hold Time 保持什么比例？

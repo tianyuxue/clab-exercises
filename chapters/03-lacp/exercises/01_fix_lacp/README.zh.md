@@ -1,15 +1,29 @@
 # 01_fix_lacp
 
-`srl1` 与 `srl2` 之间用两条链路捆绑为 `lag1`，使用 LACP。但聚合起不来：两台交换机的
-LACP 都是 **PASSIVE**，没有任何一侧主动发送 LACPDU。
+先看现象：`srl1` 和 `srl2` 之间拉了两条线，捆成 `lag1`，跑 LACP。可 `show lag` 里 `lag1` 是 down，两个成员都没进转发集合，`10.0.0.1/30` 也 ping 不通 `10.0.0.2`。
 
-## 修复步骤
+## 问题在哪
 
-先查看聚合，然后直接修复正在运行的 `srl1`：
+看 `oper-down-reason`，写的是 `no-active-links`。两台交换机的 `lacp-mode` 都是 PASSIVE，谁也不主动发 LACPDU，都在等对方先开口。链路物理上 up，协议上一直没谈成。
 
-- `docker exec <srl1> sr_cli -d "show lag"`（看 `oper-down-reason`）
-- 把 srl1 的 `lacp-mode` 改为 `ACTIVE`，例如
-  `docker exec <srl1> sr_cli -d "enter candidate; set / interface lag1 lag lacp lacp-mode ACTIVE; commit now"`
+## 抓包或观察
 
-改动立即生效；按 Enter 验证。只要一侧是 ACTIVE 即可，srl2 保持 PASSIVE 没问题。
-按 `f`（fast reset）会重新注入故障，方便从头再来。
+先确认故障点，别急着改：
+
+```sh
+docker exec <srl1> sr_cli -d "show lag"
+```
+
+盯三样：`lag1` 的状态、每个成员的 `oper-state`、还有 `oper-down-reason`。原因指向 `no-active-links`，就说明缺一个主动方。
+
+## 动手修
+
+把 `srl1` 改成 ACTIVE，让它在链路上先发 LACPDU：
+
+```sh
+docker exec <srl1> sr_cli -d "enter candidate; set / interface lag1 lag lacp lacp-mode ACTIVE; commit now"
+```
+
+`commit now` 之后马上生效，不用重启。再跑一次 `show lag`，`lag1` 应该变成 up，两个成员都进组。`srl2` 保持 PASSIVE 没问题，LACP 只要求一侧主动。
+
+按 Enter 验证；按 `f` 重新注入故障。

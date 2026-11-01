@@ -2,12 +2,12 @@ id: 00_why_vlan
 title:
   en: Why VLANs?
   zh: 为什么需要 VLAN？
-brief: {en: "Answer the question to continue: what does a VLAN isolate, and what does an 802.1Q tag carry?", zh: "继续前请回答问题：VLAN 隔离的是什么？802.1Q 标签携带哪些内容？"}
+brief: {en: "Answer the question to continue: what does a VLAN isolate, and what does an 802.1Q tag carry?", zh: "先回答两个问题再往下走：VLAN 到底隔离了什么？802.1Q 标签里又带了哪些信息？"}
 type: quiz
 difficulty: 1
 hints:
   - en: Think about what a switch does with an unknown destination MAC.
-    zh: 想想交换机收到目的未知的 MAC 时会做什么。
+    zh: 想想看：交换机收到一个目的 MAC 不认识的帧，会怎么处理？
 questions:
   - prompt:
       en: What does a VLAN primarily isolate?
@@ -18,39 +18,39 @@ questions:
         correct: true
         explanation:
           en: A VLAN bounds how far broadcasts and unknown unicast are flooded.
-          zh: VLAN 限定了广播与未知单播的泛洪范围。
+          zh: VLAN 管的是广播和未知单播能泛洪到多远。
       - text: {en: The collision domain, zh: 冲突域}
         correct: false
         explanation:
           en: Collision domains are bounded by bridges/ports, not VLANs.
-          zh: 冲突域由网桥/端口界定，不是 VLAN。
+          zh: 冲突域是网桥和端口划出来的，跟 VLAN 没关系。
       - text: {en: The routing table, zh: 路由表}
         correct: false
         explanation:
           en: Routing between VLANs is a separate (L3) concern.
-          zh: VLAN 间路由是独立的三层问题。
+          zh: VLAN 间路由是三层的事。
   - prompt:
       en: Which statements about the 802.1Q tag are true?
-      zh: 关于 802.1Q 标签，哪些说法正确？
+      zh: 关于 802.1Q 标签，下列哪些说法正确？
     multiple: true
     options:
-      - text: {en: It carries a 12-bit VLAN ID, zh: 它携带 12 位 VLAN ID}
+      - text: {en: It carries a 12-bit VLAN ID, zh: 标签中包含 12 位 VLAN ID}
         correct: true
         explanation:
           en: The VID is 12 bits, so 0-4095.
-          zh: VID 为 12 位，取值 0–4095。
-      - text: {en: It carries a 3-bit priority (PCP), zh: 它携带 3 位优先级（PCP）}
+          zh: VID 占 12 位，所以范围是 0–4095。
+      - text: {en: It carries a 3-bit priority (PCP), zh: 标签中包含 3 位优先级（PCP）}
         correct: true
         explanation:
           en: PCP enables L2 prioritisation.
-          zh: PCP 用于二层优先级。
-      - text: {en: Access ports tag every outgoing frame, zh: access 端口对每个出帧都打标签}
+          zh: PCP 用来做二层优先级。
+      - text: {en: Access ports tag every outgoing frame, zh: Access 端口会对每个出帧打标签}
         correct: false
         explanation:
           en: Access ports send untagged frames; trunks tag them.
-          zh: access 口出帧不带标签；trunk 才打标签。
-      - text: {en: It is inserted after the source MAC, zh: 它插在源 MAC 之后}
+          zh: Access 口发出去的帧不带标签；打标签的是 Trunk 口。
+      - text: {en: It is inserted after the source MAC, zh: 标签插在源 MAC 之后}
         correct: true
         explanation:
           en: The tag sits between the source MAC and the EtherType.
-          zh: 标签位于源 MAC 与 EtherType 之间。
+          zh: 标签就夹在源 MAC 和 EtherType 之间。

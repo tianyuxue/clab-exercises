@@ -1,16 +1,16 @@
 id: 01_stuck_active
 title:
   en: The neighbor that never comes up
-  zh: 起不来的邻居
-brief: {en: "edge has an eBGP neighbor stuck in Active. Make the session reach Established.", zh: "edge 的一个 eBGP 邻居卡在 Active。让会话达到 Established。"}
+  zh: 邻居为什么一直停在 Active
+brief: {en: "edge has an eBGP neighbor stuck in Active. Make the session reach Established.", zh: "edge 的 eBGP 邻居一直停在 Active，会话到不了 Established。先看清是地址问题，再把邻居修好。"}
 type: config-fix
 difficulty: 3
 timeout: 60s
 hints:
   - en: "`show bgp summary` shows the neighbor in the Active/Connect column."
-    zh: "`show bgp summary` 显示邻居处于 Active/Connect 列。"
+    zh: "`show bgp summary` 里，这个邻居待在 Active/Connect 一列，前缀数一直是 0。"
   - en: Check the configured neighbor address against the link subnet.
-    zh: 对照链路网段检查配置的邻居地址。
+    zh: 拿配置里的邻居地址和链路网段 `10.1.12.0/30` 对一下。
 files:
   - source: edge/edge.sh
     node: edge
@@ -31,7 +31,7 @@ reload:
 assertions:
   - name:
       en: edge sees the eBGP peer as Established
-      zh: edge 看到 eBGP 邻居为 Established
+      zh: edge 的 eBGP 邻居进入 Established
     type: exec
     layer: control-plane
     node: edge
@@ -42,10 +42,10 @@ assertions:
       equals: "Established"
     hint:
       en: Correct the neighbor address to 10.1.12.2, then clear the session.
-      zh: 把邻居地址改正为 10.1.12.2，然后重置会话。
+      zh: 把邻居地址改成 10.1.12.2，再重置会话。
   - name:
       en: edge has two peers configured
-      zh: edge 配置了两个邻居
+      zh: edge 上保留两个邻居
     type: exec
     layer: control-plane
     node: edge
@@ -56,4 +56,4 @@ assertions:
       equals: "2"
     hint:
       en: Remove the wrong neighbor and add 10.1.12.2; do not just delete it.
-      zh: 删掉错误邻居并加上 10.1.12.2，不要只是删除。
+      zh: 删掉错误邻居后，别忘了补上 10.1.12.2；只删不补过不了。

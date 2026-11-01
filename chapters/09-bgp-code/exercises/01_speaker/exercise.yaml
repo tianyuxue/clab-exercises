@@ -1,8 +1,8 @@
 id: 01_speaker
 title:
   en: A minimal BGP speaker
-  zh: 最小 BGP speaker
-brief: {en: "Implement OPEN, KEEPALIVE and UPDATE so FRR becomes Established with your speaker and learns 192.0.2.0/24. See the README for milestones.", zh: "实现 OPEN、KEEPALIVE 与 UPDATE，让 FRR 与你的 speaker 达到 Established 并学到 192.0.2.0/24。里程碑见 README。"}
+  zh: 让 FRR 认下你的 BGP speaker
+brief: {en: "Implement OPEN, KEEPALIVE and UPDATE so FRR becomes Established with your speaker and learns 192.0.2.0/24. See the README for milestones.", zh: "补上三个 build_* 函数和 main 的时序，让 r1（AS 65002）跟你的 speaker 走到 Established，并学到 192.0.2.0/24。三个里程碑写在 README 里。"}
 type: code-implement
 difficulty: 5
 timeout: 120s
@@ -22,16 +22,16 @@ run:
 assertions:
   - name:
       en: the sentinel is removed
-      zh: 哨兵已移除
+      zh: 占位行已删除
     type: file
     layer: control-plane
     source: src/main.c
     hint:
       en: Delete the "I AM NOT DONE" line when your implementation is ready.
-      zh: 实现完成后删除 "I AM NOT DONE" 这一行。
+      zh: 写完后把 src/main.c 第一行的 "// I AM NOT DONE" 删掉。
   - name:
       en: r1 becomes Established with the speaker
-      zh: r1 与 speaker 达到 Established
+      zh: r1 和 speaker 进入 Established
     type: exec
     layer: control-plane
     node: r1
@@ -42,7 +42,7 @@ assertions:
       equals: "Established"
     hint:
       en: Exchange OPEN and KEEPALIVE with the peer.
-      zh: 与对端交换 OPEN 与 KEEPALIVE。
+      zh: 自己发 OPEN，读掉对端的 OPEN，再把 KEEPALIVE 发出去。
   - name:
       en: r1 learns 192.0.2.0/24
       zh: r1 学到 192.0.2.0/24
@@ -56,7 +56,7 @@ assertions:
       equals: "1"
     hint:
       en: Send an UPDATE with NEXT_HOP 10.1.12.1 and NLRI 192.0.2.0/24.
-      zh: 发送 NEXT_HOP 为 10.1.12.1、NLRI 为 192.0.2.0/24 的 UPDATE。
+      zh: UPDATE 里 NEXT_HOP 填 10.1.12.1，NLRI 填 192.0.2.0/24。
   - name:
       en: r1 can ping 192.0.2.1
       zh: r1 能 ping 通 192.0.2.1
@@ -69,4 +69,4 @@ assertions:
       exit_code: 0
     hint:
       en: The route must be installed; keep the session alive.
-      zh: 路由需被安装；保持会话存活。
+      zh: 路由得进内核转发表：会话活着，下一跳可达。

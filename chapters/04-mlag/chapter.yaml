@@ -12,6 +12,6 @@ objectives:
     - Describe how MLAG/vPC presents two switches as a single LACP partner
     - Contrast stacking, MLAG/vPC and EVPN multi-homing
   zh:
-    - 解释把主机双归到两台独立交换机为何会破坏 LACP
-    - 描述 MLAG/vPC 如何把两台交换机表现为同一个 LACP 伙伴
-    - 对比堆叠、MLAG/vPC 与 EVPN 多归
+    - 说清楚主机双归到两台独立交换机时，LACP 为什么凑不出一个捆绑
+    - 讲明白 MLAG/vPC 怎么让两台交换机在主机眼里变成同一个 LACP 伙伴
+    - 对比堆叠、MLAG/vPC 和 EVPN 多归，各自换来什么、又放弃什么

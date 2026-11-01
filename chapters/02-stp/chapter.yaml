@@ -1,7 +1,7 @@
 id: 02-stp
 title:
   en: STP/RSTP
-  zh: STP/RSTP
+  zh: STP/RSTP 与根桥选举
 difficulty: 3
 tags: [l2, stp, loop-prevention]
 estimated_minutes: 45
@@ -12,9 +12,9 @@ objectives:
     - Predict the root bridge from bridge IDs
     - Restore a loop-free topology by tuning STP priority
   zh:
-    - 解释二层环路为何会瘫痪以太网
-    - 根据桥 ID 预测根桥
-    - 通过调整 STP 优先级恢复无环拓扑
+    - 说清楚二层环路为什么能把以太网打瘫
+    - 看到桥 ID 就能判断哪台交换机会当选根桥
+    - 调整 STP 优先级，让根桥落在该在的位置，同时保持无环
 topology: topology.clab.yml
 deploy:
   timeout: 180s

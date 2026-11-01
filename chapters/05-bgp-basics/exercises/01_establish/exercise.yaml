@@ -1,16 +1,16 @@
 id: 01_establish
 title:
   en: Bring up the eBGP session
-  zh: 让 eBGP 会话起来
-brief: {en: "r1 and r2 are in AS 65001 and 65002 but the session never reaches Established. Find and fix it.", zh: "r1、r2 分属 AS 65001 与 65002，但会话一直起不来。找出并修复它。"}
+  zh: 把 eBGP 会话拉到 Established
+brief: {en: "r1 and r2 are in AS 65001 and 65002 but the session never reaches Established. Find and fix it.", zh: "r1 在 AS 65001，r2 在 AS 65002，两边地址都配好了，会话却始终到不了 Established。先找出谁拒绝了谁，再修。"}
 type: config-fix
 difficulty: 2
 timeout: 60s
 hints:
   - en: Compare `show bgp summary` on both routers; look at the expected remote AS.
-    zh: 对比两端 `show bgp summary`，看期望的 remote AS。
+    zh: 在两台路由器上各跑一次 `show bgp summary`，重点看邻居后面期望的 AS 号。
   - en: On r2 the neighbor's remote-as does not match r1's actual AS (65001).
-    zh: r2 上该邻居的 remote-as 与 r1 实际 AS（65001）不符。
+    zh: r2 给这个邻居配的 remote-as 是 65099，可 r1 实际在 AS 65001。
 files:
   - source: r1/establish.sh
     node: r1
@@ -26,7 +26,7 @@ reload:
 assertions:
   - name:
       en: r1 sees the peer as Established
-      zh: r1 看到邻居为 Established
+      zh: r1 上邻居状态为 Established
     type: exec
     layer: control-plane
     node: r1
@@ -37,4 +37,4 @@ assertions:
       equals: "Established"
     hint:
       en: Fix r2's remote-as to 65001 so the OPEN is accepted.
-      zh: 把 r2 的 remote-as 改成 65001，让对端 OPEN 被接受。
+      zh: 把 r2 的 remote-as 改成 65001，r1 的 OPEN 才会被接受。

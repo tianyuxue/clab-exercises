@@ -12,9 +12,9 @@ objectives:
     - Explain why a shared switch-to-switch link must tag frames, and what native VLAN is for
     - Observe untagged vs tagged frames on access and trunk links, and fix VLAN misconfigurations
   zh:
-    - 解释交换机为何需要"每帧的 VLAN 身份"，以及 PVID 如何在主机侧提供它
-    - 解释交换机之间的共享链路为何必须打标签，以及 native VLAN 是做什么的
-    - 在 access 与 trunk 链路上观察无标签/带标签帧，并修复 VLAN 配置错误
+    - 搞清楚交换机为什么非得知道每一帧是哪个 VLAN 的，以及 PVID 在主机侧怎么补上这一步
+    - 搞清楚交换机之间的共享链路为什么必须打标签，native VLAN 又是干什么的
+    - 在 access 和 trunk 链路上看看无标签/带标签帧，动手修好 VLAN 配置
 topology: topology.clab.yml
 deploy:
   timeout: 120s

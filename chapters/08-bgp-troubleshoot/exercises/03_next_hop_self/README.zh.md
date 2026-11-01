@@ -1,15 +1,29 @@
 # 03_next_hop_self
 
-`core` 从 `edge` 经 iBGP 学到了 `192.0.2.0/24`，却没有安装：其 NEXT_HOP 是外部对端
-的地址，`core` 无法到达。
+先看现象：`core` 的 BGP 表里有 `192.0.2.0/24`，路由表里却没有。`ping 192.0.2.1` 不通，`ip route get` 也找不到这条前缀。
 
-## 修复步骤
+## 问题在哪
 
-在本章目录另开一个终端，登录路由器（`make debug` 或 `docker exec`）：
+这条前缀从 `ext` 经 eBGP 进入 `edge`，下一跳是 `10.1.12.2`。`edge` 再通过 iBGP 通告给 `core` 时，默认保留这个下一跳。
 
-- 在 `core`：`docker exec <core> vtysh -c 'show bgp ipv4 unicast 192.0.2.0/24'` ——
-  该路径无效，因为 NEXT_HOP 不可达。
-- 在 `edge`：让 iBGP 通告使用 `edge` 自己的地址：
-  `docker exec <edge> vtysh -c 'conf t' -c 'router bgp 65001' -c 'neighbor 10.1.1.2 next-hop-self' -c 'end' -c 'clear bgp *'`
+`core` 只有 `10.1.1.0/30` 的直连路由，到不了 `10.1.12.2`。BGP 认为路径无效，于是不把它装进路由表。
 
-按 Enter 验证；按 `f` 重新注入故障。
+## 抓包或观察
+
+在 `core` 上看这条前缀：
+
+```sh
+docker exec <core> vtysh -c 'show bgp ipv4 unicast 192.0.2.0/24'
+```
+
+输出里 NEXT_HOP 是 `10.1.12.2`，路径会标成无效（inaccessible）。再看 `ip route get 192.0.2.1`，没有可用的下一跳。
+
+## 动手修
+
+在 `edge` 上给 iBGP 邻居打开 `next-hop-self`，让它通告时把下一跳改成自己的 `10.1.1.1`，然后重置会话：
+
+```sh
+docker exec <edge> vtysh -c 'conf t' -c 'router bgp 65001' -c 'neighbor 10.1.1.2 next-hop-self' -c 'end' -c 'clear bgp *'
+```
+
+按 Enter 验证。想重新注入故障，按 `f`。

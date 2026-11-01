@@ -4,10 +4,10 @@
   url: https://www.rfc-editor.org/rfc/rfc7432#section-8.1
   intro:
     en: Defines the Ethernet Segment Identifier (ESI) and how switches advertise that they multi-home the same segment.
-    zh: 定义 Ethernet Segment Identifier（ESI），以及交换机如何通告"它们共同对同一段做多归"。
+    zh: 讲清 Ethernet Segment Identifier（ESI）是什么，以及两台交换机怎么通告“我们在共同多归同一段接入网络”。
   question:
     en: What does the ESI identify, and how do two switches learn they share a segment?
-    zh: ESI 标识的是什么？两台交换机如何得知它们共享同一段接入网络？
+    zh: ESI 到底标识什么？两台交换机又怎么知道彼此接的是同一段接入网络？
 
 - title: RFC 8365 — Multihoming NVEs (EVPN over NVO)
   section: "8.1.1 Multihomed ES Auto-Discovery"
@@ -15,7 +15,7 @@
   url: https://www.rfc-editor.org/rfc/rfc8365#section-8.1.1
   intro:
     en: How EVPN multi-homing works when the access switch is the NVE (overlay edge), including all-active multi-homing.
-    zh: 当接入交换机充当 NVE（overlay 边缘）时 EVPN 多归如何工作，包括 all-active 多归。
+    zh: 接入交换机自己充当 NVE（overlay 边缘）时，EVPN 多归怎么跑，all-active 多归又是什么样。
   question:
     en: In all-active multi-homing, who forwards BUM traffic for a given VLAN, and why?
-    zh: 在 all-active 多归中，某个 VLAN 的 BUM 流量由谁转发？为什么？
+    zh: all-active 多归里，某个 VLAN 的 BUM 流量交给谁转发？为什么？

@@ -1,56 +1,56 @@
 id: 00_root_election
 title:
   en: Root bridge election
-  zh: 根桥选举
-brief: {en: "Answer the question to continue: which bridge becomes root, and what do the STP port states mean?", zh: "继续前请回答问题：哪台网桥成为根？STP 端口状态分别意味着什么？"}
+  zh: 根桥选举：谁的桥 ID 最小
+brief: {en: "Answer before you continue: which bridge wins the root election, and what does a blocked port actually do?", zh: "先回答两个问题再往下走：三角拓扑里哪台交换机能当根桥？被阻塞的端口又是什么状态？"}
 type: quiz
 difficulty: 2
 hints:
   - en: Compare the full bridge ID, not just the MAC.
-    zh: 比较完整的桥 ID，而不只是 MAC。
+    zh: 桥 ID 是优先级加 MAC，别只盯着 MAC 比。
 questions:
   - prompt:
       en: Which bridge becomes the STP root?
-      zh: 哪台网桥会成为 STP 根桥？
+      zh: 三角拓扑里，哪台网桥会成为 STP 根桥？
     multiple: false
     options:
       - text: {en: The one with the lowest bridge ID, zh: 桥 ID 最小的那台}
         correct: true
         explanation:
           en: "Bridge ID = priority + MAC; the lowest wins."
-          zh: 桥 ID = 优先级 + MAC，最小者胜出。
+          zh: 桥 ID 由优先级和 MAC 拼成，整串数值最小的那台当选。
       - text: {en: The one with the highest priority, zh: 优先级最大的那台}
         correct: false
         explanation:
           en: Lower priority is better; default is 32768.
-          zh: 优先级越小越优，默认 32768。
+          zh: 优先级越小越优，默认值是 32768。
       - text: {en: The one with the most ports, zh: 端口最多的那台}
         correct: false
         explanation:
           en: Port count is irrelevant to root election.
-          zh: 端口数量与根选举无关。
+          zh: 端口数量不参与根选举。
   - prompt:
       en: Which statements about STP are true?
-      zh: 关于 STP，哪些说法正确？
+      zh: 关于 STP，下面哪些说法是对的？
     multiple: true
     options:
-      - text: {en: A blocked port stays physically up, zh: 被阻塞的端口物理上仍处于 up}
+      - text: {en: A blocked port stays physically up, zh: 被阻塞的端口物理链路仍然是 up}
         correct: true
         explanation:
           en: Blocking is logical; the link can take over on failure.
-          zh: 阻塞是逻辑状态，链路可在故障时接管。
+          zh: 阻塞只是逻辑上不转发，链路断了它随时能接管。
       - text: {en: RSTP converges faster than STP, zh: RSTP 收敛比 STP 快}
         correct: true
         explanation:
           en: 802.1w adds proposal/agreement for sub-second convergence.
-          zh: 802.1w 通过 proposal/agreement 实现亚秒级收敛。
+          zh: 802.1w 用 proposal/agreement 把收敛压到亚秒级。
       - text: {en: STP prevents broadcast storms, zh: STP 能防止广播风暴}
         correct: true
         explanation:
           en: By blocking redundant ports it removes the loop.
-          zh: 通过阻塞冗余端口消除环路。
-      - text: {en: Disabling STP is safe if the topology has redundancy, zh: 有冗余时关闭 STP 是安全的}
+          zh: 它阻塞冗余端口，把环拆掉，风暴就起不来。
+      - text: {en: Disabling STP is safe if the topology has redundancy, zh: 有冗余链路时，关掉 STP 也没关系}
         correct: false
         explanation:
           en: Redundancy without STP is exactly when storms happen.
-          zh: 冗余但无 STP，正是广播风暴的温床。
+          zh: 冗余加上没有 STP，正是广播风暴出现的条件。

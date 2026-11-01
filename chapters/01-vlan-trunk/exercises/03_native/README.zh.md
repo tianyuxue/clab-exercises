@@ -1,21 +1,25 @@
 # 03_native
 
-VLAN20 是 trunk 的 **native VLAN**。`h2`(sw1) 与 `h4`(sw2) 同属 VLAN20，却互不相通。
+先看现象：VLAN 20 是 trunk 的 **native VLAN**。`h2` 在 sw1，`h4` 在 sw2，两边都在 VLAN 20，却互相不通。
 
-## 为什么
+## 问题在哪
 
-trunk 指定一个 VLAN，其帧**不带标签**传输，以便不打标签的设备/链路也能工作。但
-无标签帧没有 VLAN 身份：唯一决定它归属的是**接收端 PVID**。两端不一致时，同一裸帧被
-放进不同 VLAN——而且是**静默失败**，不报错。
+Native VLAN 的帧在 trunk 上不打标签，这是为了兼容不会打标签的设备和链路。
 
-## 观察
+可裸帧自己不带 VLAN 信息，到了对端只能按接收口的 **PVID** 来分。两端 Native VLAN 一旦对不上，同一帧就会被分到不同 VLAN，最后被悄悄丢掉，也不会报什么错。
 
-在 clab-tui 里对 trunk（sw1 eth3）抓包、同时 `h2` ping `h4`。VLAN20 的帧**无标签**
-（若同时产生 VLAN10 流量，则仍带 `vlan 10`）。
+## 抓包看什么
 
-## 修复
+在 clab-tui 里对 trunk（`sw1 eth3`）抓包，同时让 `h2` ping `h4`。
 
-sw1 已是 native；把 sw2 的 trunk 设为 native：
-`docker exec <sw2> bridge vlan add dev eth1 vid 20 pvid untagged`
+VLAN 20 的帧不带标签；要是链路上还有 VLAN 10 流量，那部分仍然会显示 `vlan 10`。
+
+## 动手修
+
+`sw1` 这边已经对了，只要把 `sw2` 的 trunk 也设成 native VLAN 20：
+
+```sh
+docker exec <sw2> bridge vlan add dev eth1 vid 20 pvid untagged
+```
 
 按 Enter 验证；按 `f` 重新注入故障。

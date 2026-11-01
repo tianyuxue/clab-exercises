@@ -4,10 +4,10 @@
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-8
   intro:
     en: The states behind the symptoms you debug (Active, OpenSent).
-    zh: 你所排错的症状背后的状态（Active、OpenSent）。
+    zh: 排错时看到的 Active、OpenSent，分别落在状态机的哪一步。
   question:
     en: Stuck in Active - what does it usually point to (operationally)?
-    zh: 停在 Active 通常指向什么（运维经验）？
+    zh: 邻居卡在 Active，通常能推出什么（按运维经验）？
 
 - title: RFC 4271 — OPEN Message Error Handling
   section: "OPEN Message Error Handling"
@@ -15,10 +15,10 @@
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-6.2
   intro:
     en: Why an AS mismatch produces NOTIFICATION Bad Peer AS.
-    zh: 为什么 AS 不匹配会产生 NOTIFICATION Bad Peer AS。
+    zh: AS 号对不上时，为什么对端会发 NOTIFICATION Bad Peer AS。
   question:
     en: Which subcode is used for an unacceptable AS number?
-    zh: AS 号不被接受时使用哪个子码？
+    zh: AS 号不被接受时，对端用哪个子码拒绝？
 
 - title: RFC 4271 — NEXT_HOP
   section: "NEXT_HOP"
@@ -26,7 +26,7 @@
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-5.1.3
   intro:
     en: How NEXT_HOP is set, and why iBGP keeps it unchanged (hence next-hop-self).
-    zh: NEXT_HOP 如何设置，以及为什么 iBGP 保留不变（所以需要 next-hop-self）。
+    zh: NEXT_HOP 怎么设置，iBGP 为什么原样保留，以及 next-hop-self 补上了什么。
   question:
     en: What must the receiver be able to do with the NEXT_HOP?
-    zh: 接收方必须能对 NEXT_HOP 做什么？
+    zh: 收到 NEXT_HOP 后，接收方必须能拿它做什么？

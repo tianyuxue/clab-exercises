@@ -1,24 +1,26 @@
 # 01_access
 
-`h1` and `h2` sit in the same subnet on `sw1`, but cannot reach each other.
+`h1` and `h2` share a subnet on `sw1` but cannot ping each other.
 
-## Why
+## Cause
 
-A host NIC does not understand 802.1Q, so it sends untagged frames. A switch
-must decide which broadcast domain those untagged frames belong to — it uses the
-port's **PVID**. If the two access ports disagree, the hosts end up in different
-VLANs and never see each other's ARP, even on the same subnet.
+Host NICs send untagged frames. The switch assigns each incoming frame to a VLAN by
+the port's **PVID**. If the two access ports use different PVIDs, the hosts land in
+different VLANs and cannot resolve each other's ARP, even on the same subnet.
 
-## Observe it
+## Observe
 
-In clab-tui, capture on `sw1`'s port facing `h1` (eth1). You will see **no VLAN
-tag** — the switch keeps the host link untagged.
+Capture on `sw1`'s `eth1` (towards `h1`) in clab-tui: frames carry **no VLAN tag**.
+The switch keeps host links untagged and classifies frames internally.
 
 ## Fix
 
-- `docker exec <sw1> bridge vlan show` — compare the PVID of eth1 and eth2.
-- Move eth2 from VLAN 20 to VLAN 10:
-  `docker exec <sw1> bridge vlan del dev eth2 vid 20`
-  `docker exec <sw1> bridge vlan add dev eth2 vid 10 pvid untagged`
+- Compare the PVIDs with `docker exec <sw1> bridge vlan show`.
+- Move `eth2` from VLAN 20 to VLAN 10:
+
+  ```sh
+  docker exec <sw1> bridge vlan del dev eth2 vid 20
+  docker exec <sw1> bridge vlan add dev eth2 vid 10 pvid untagged
+  ```
 
 Press Enter to verify; `f` re-injects the fault.

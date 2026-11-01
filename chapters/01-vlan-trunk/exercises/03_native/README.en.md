@@ -1,24 +1,26 @@
 # 03_native
 
-VLAN 20 is the trunk's **native VLAN**. `h2` (sw1) and `h4` (sw2) are both in
-VLAN 20 but cannot reach each other.
+VLAN 20 is the trunk's **native VLAN**. `h2` (sw1) and `h4` (sw2) are both VLAN 20
+but cannot reach each other.
 
-## Why
+## Cause
 
-A trunk designates one VLAN whose frames travel **untagged**, so devices/links
-that do not tag still work. But an untagged frame carries no VLAN identity: the
-receiving port's **PVID** is the only thing that decides which VLAN it belongs
-to. If the two ends disagree, the same untagged frame is placed in different
-VLANs — and it fails silently, with no error.
+Native VLAN frames cross the trunk **untagged** for compatibility with devices and
+links that do not tag. An untagged frame carries no VLAN identity, so the receiving
+port classifies it by its local **PVID**. If the two ends disagree, the frame lands
+in a different VLAN and is silently dropped.
 
-## Observe it
+## Observe
 
-In clab-tui, capture on the trunk (sw1 eth3) while `h2` pings `h4`. VLAN-20
-frames show **no tag** (when you also generate VLAN-10 traffic it still shows `vlan 10`).
+Capture on the trunk (`sw1 eth3`) while `h2` pings `h4`. VLAN 20 frames are
+**untagged**; VLAN 10 traffic, if present, still shows `vlan 10`.
 
 ## Fix
 
-sw1 is already native; make VLAN 20 native on sw2's trunk:
-`docker exec <sw2> bridge vlan add dev eth1 vid 20 pvid untagged`
+`sw1` is already correct; make VLAN 20 native on `sw2`'s trunk as well:
+
+```sh
+docker exec <sw2> bridge vlan add dev eth1 vid 20 pvid untagged
+```
 
 Press Enter to verify; `f` re-injects the fault.

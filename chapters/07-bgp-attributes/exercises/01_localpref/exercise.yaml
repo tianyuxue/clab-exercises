@@ -1,16 +1,16 @@
 id: 01_localpref
 title:
   en: Prefer a path with LOCAL_PREF
-  zh: 用 LOCAL_PREF 选择路径
-brief: {en: "r1 reaches 10.2.2.0/24 via r3. Make it prefer the path via r2 by setting LOCAL_PREF on r2's routes.", zh: "r1 当前经 r3 到达 10.2.2.0/24。给 r2 的入向路由设 LOCAL_PREF，让 r1 改走 r2。"}
+  zh: 用 LOCAL_PREF 把流量拉回 r2
+brief: {en: "r1 reaches 10.2.2.0/24 via r3. Make it prefer the path via r2 by setting LOCAL_PREF on r2's routes.", zh: "r1 从 r2 和 r3 都学到 10.2.2.0/24，现在走 r3。给从 r2 学来的路由设一个更高的 LOCAL_PREF，让 r1 改走 r2。"}
 type: config-fix
 difficulty: 3
 timeout: 60s
 hints:
   - en: Check r1's choice with `ip route get 10.2.2.100`.
-    zh: 用 `ip route get 10.2.2.100` 看 r1 的选择。
+    zh: 先在 r1 上用 `ip route get 10.2.2.100` 看它现在选谁。
   - en: LOCAL_PREF is set on inbound routes, e.g. a route-map with `set local-preference 200`.
-    zh: LOCAL_PREF 设在入向路由上，例如 route-map 里 `set local-preference 200`。
+    zh: LOCAL_PREF 设在入向：用 route-map 匹配邻居 10.1.12.2，再 `set local-preference 200`。
 files:
   - source: r1/r1.sh
     node: r1
@@ -31,7 +31,7 @@ reload:
 assertions:
   - name:
       en: r1 selects the path via r2
-      zh: r1 选择经 r2 的路径
+      zh: r1 改走经 r2 的路径
     type: exec
     layer: control-plane
     node: r1
@@ -42,10 +42,10 @@ assertions:
         contains: "10.1.12.2"
     hint:
       en: Set LOCAL_PREF 200 on routes learned from 10.1.12.2.
-      zh: 对从 10.1.12.2 学到的路由设置 LOCAL_PREF 200。
+      zh: 对从 10.1.12.2 学到的路由设 LOCAL_PREF 200。
   - name:
       en: h1 can reach h2
-      zh: h1 能到达 h2
+      zh: h1 能 ping 通 h2
     type: exec
     layer: data-plane
     node: h1
@@ -53,4 +53,4 @@ assertions:
     wait: 20s
     match:
       exit_code: 0
-    hint: {en: Ensure forwarding works and the path is up., zh: 确保转发生效、路径可达。}
+    hint: {en: Ensure forwarding works and the path is up., zh: 确认转发正常，路径已经起来。}

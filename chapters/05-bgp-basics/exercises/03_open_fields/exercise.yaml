@@ -1,81 +1,81 @@
 id: 03_open_fields
 title:
   en: What the OPEN message carries
-  zh: OPEN 报文携带什么
-brief: {en: "Answer the question to continue: which fields does a BGP OPEN carry?", zh: "继续前请回答问题：BGP OPEN 携带哪些字段？"}
+  zh: OPEN 报文里到底有什么
+brief: {en: "Answer the question to continue: which fields does a BGP OPEN carry?", zh: "先回答几个问题：一条 BGP OPEN 会带哪些字段，BGP Identifier 又是什么？"}
 type: quiz
 difficulty: 1
 hints:
   - en: The OPEN carries version, the sender's AS number, hold time and BGP Identifier, plus capabilities.
-    zh: OPEN 携带版本、发送方 AS 号、hold time 与 BGP Identifier，以及能力。
+    zh: OPEN 里有版本、发送方 AS 号、Hold Time、BGP Identifier，后面还跟着 Capabilities。
 questions:
   - prompt:
       en: Which of the following fields does a BGP OPEN carry?
-      zh: 下列哪些字段由 BGP OPEN 携带？
+      zh: 一条 BGP OPEN 会带下面哪些字段？
     multiple: true
     options:
-      - text: {en: Version (currently 4), zh: 版本（当前为 4）}
+      - text: {en: Version (currently 4), zh: 版本号（当前是 4）}
         correct: true
         explanation:
           en: The version field carries the BGP version, 4 for BGP-4.
-          zh: 版本字段携带 BGP 版本，BGP-4 为 4。
+          zh: 版本字段写 BGP 版本，BGP-4 就是 4。
       - text: {en: My Autonomous System, zh: 本端自治系统号}
         correct: true
         explanation:
           en: The sender's 2-octet AS number (4 octets via a capability).
-          zh: 发送方的 2 字节 AS 号（经能力协商可为 4 字节）。
+          zh: 发送方的 AS 号写在 My AS 字段里，占 2 字节；更大的 AS 号要靠 4 字节 AS 能力来补。
       - text: {en: Hold Time, zh: Hold Time}
         correct: true
         explanation:
           en: The proposed Hold Time; the peers use the smaller value.
-          zh: 提议的 Hold Time；双方取较小值。
+          zh: 提议的 Hold Time；两端取较小的那个。
       - text: {en: BGP Identifier, zh: BGP Identifier}
         correct: true
         explanation:
           en: A 4-octet value (usually the router-id) that identifies the sender.
-          zh: 用于标识发送方的 4 字节值（通常取 router-id）。
+          zh: 4 字节，用来标识发送方，通常取 router-id。
       - text: {en: NLRI (advertised prefixes), zh: NLRI（通告的前缀）}
         correct: false
         explanation:
           en: NLRI is carried in UPDATE, not OPEN.
-          zh: NLRI 由 UPDATE 携带，不在 OPEN 中。
+          zh: NLRI 放在 UPDATE 里，OPEN 不带路由。
   - prompt:
       en: What is the BGP Identifier in the OPEN?
-      zh: OPEN 中的 BGP Identifier 是什么？
+      zh: OPEN 里的 BGP Identifier 是什么？
     multiple: false
     options:
-      - text: {en: "A 32-bit value, usually the router-id", zh: 一个 32 位值，通常取 router-id}
+      - text: {en: "A 32-bit value, usually the router-id", zh: 一个 32 位值，通常就是 router-id}
         correct: true
         explanation:
           en: It is a 32-bit value used for tie-breaking; commonly a loopback address.
-          zh: 它是用于打破平局的 32 位值，常取一个 loopback 地址。
+          zh: 冲突检测和选路打平时会用到这个 32 位值，通常取 router-id（常是 loopback 地址）。
       - text: {en: The TCP source port, zh: TCP 源端口}
         correct: false
         explanation:
           en: TCP details are not in the BGP Identifier.
-          zh: TCP 信息不在 BGP Identifier 里。
+          zh: BGP Identifier 和 TCP 端口是两回事。
       - text: {en: The peer's MAC address, zh: 对端 MAC 地址}
         correct: false
         explanation:
           en: BGP is an L3/L4 protocol; MAC addresses are irrelevant.
-          zh: BGP 是三层/四层协议，与 MAC 无关。
+          zh: BGP 跑在三层和四层，不看 MAC。
   - prompt:
       en: Two peers propose Hold Times of 180 and 9. Which value is used?
-      zh: 两端提议的 Hold Time 分别为 180 与 9，最终采用哪个？
+      zh: 两端提议的 Hold Time 分别是 180 和 9，最后用哪个？
     multiple: false
     options:
       - text: {en: "180", zh: "180"}
         correct: false
         explanation:
           en: The smaller value is used to detect dead peers sooner.
-          zh: 采用较小值，以便更快发现对端失效。
+          zh: 协商取小值，180 留不下来。
       - text: {en: "9", zh: "9"}
         correct: true
         explanation:
           en: The negotiated Hold Time is the minimum of the two.
-          zh: 协商后的 Hold Time 取两者中的最小值。
+          zh: 两边取最小值，所以结果是 9。
       - text: {en: "0", zh: "0"}
         correct: false
         explanation:
           en: 0 disables keepalives; since the negotiated value is the minimum, a single peer proposing 0 makes it 0.
-          zh: 0 表示不发送 keepalive；由于协商值取最小值，只要一方提议 0，结果就是 0。
+          zh: 0 表示不发 KEEPALIVE。协商取最小值，只要有一方提议 0，结果才会是 0。

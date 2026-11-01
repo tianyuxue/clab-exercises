@@ -1,16 +1,16 @@
 id: 02_aspath
 title:
   en: Read the AS_PATH on the wire
-  zh: 在线上读 AS_PATH
-brief: {en: "Make r1 prepend its AS number twice on the outbound UPDATE, so the captured AS_PATH shows 65001,65001,65001.", zh: "让 r1 在出向 UPDATE 上把本 AS 号 prepend 两次，使抓到的 AS_PATH 为 65001,65001,65001。"}
+  zh: 在链路上读 AS_PATH
+brief: {en: "Make r1 prepend its AS number twice on the outbound UPDATE, so the captured AS_PATH shows 65001,65001,65001.", zh: "让 r1 在出向 UPDATE 上把本 AS 号 prepend 两次，使抓到的 AS_PATH 变成 65001,65001,65001。"}
 type: config-fix
 difficulty: 3
 timeout: 60s
 hints:
   - en: Use a route-map named `PREPEND` with `set as-path prepend 65001 65001`, applied outbound.
-    zh: 用名为 `PREPEND` 的 route-map，`set as-path prepend 65001 65001`，应用为出向。
+    zh: 建一条名为 `PREPEND` 的 route-map，写 `set as-path prepend 65001 65001`，应用在出向。
   - en: Reset the session so the new UPDATE is sent (`clear bgp *`).
-    zh: 重置会话以重发 UPDATE（`clear bgp *`）。
+    zh: 改完重置会话，让新的 UPDATE 发出去（`clear bgp *`）。
 files:
   - source: sniff/recapture.sh
     node: sniff
@@ -31,7 +31,7 @@ reload:
 assertions:
   - name:
       en: the session is Established
-      zh: 会话已 Established
+      zh: 会话已经 Established
     type: exec
     layer: control-plane
     node: r1
@@ -40,10 +40,10 @@ assertions:
     match:
       json: "$.ipv4Unicast.peers.*.state"
       equals: "Established"
-    hint: {en: The session must be up before its UPDATE can be observed., zh: 必须先建立会话，才能观察到它的 UPDATE。}
+    hint: {en: The session must be up before its UPDATE can be observed., zh: 先让会话起来，才谈得上观察它的 UPDATE。}
   - name:
       en: the captured UPDATE carries a repeated AS_PATH
-      zh: 抓到的 UPDATE 携带重复的 AS_PATH
+      zh: 抓到的 UPDATE 带着重复的 AS_PATH
     type: exec
     layer: control-plane
     node: sniff

@@ -12,9 +12,9 @@ objectives:
     - Implement the byte layout of the BGP message header and OPEN
     - Advertise a prefix with a hand-built UPDATE
   zh:
-    - 说足够多的 BGP 协议与 FRR 建立会话（OPEN 与 KEEPALIVE）
-    - 实现 BGP 报文头与 OPEN 的字节布局
-    - 手工构造 UPDATE 通告一个前缀
+    - 用 OPEN 和 KEEPALIVE 把会话拉到 Established，让 FRR 认下这个邻居
+    - 按字节布局拼出 BGP 报文头和 OPEN，长度与字节序都不能偏
+    - 手工构造一条 UPDATE，把 192.0.2.0/24 通告给 r1
 topology: topology.clab.yml
 deploy:
   timeout: 180s

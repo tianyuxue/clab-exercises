@@ -1,16 +1,16 @@
 id: 01_fix_lacp
 title:
   en: Bring the LAG up
-  zh: 让 LAG 起来
-brief: {en: "lag1 is down because both sides are LACP PASSIVE. Bring it up.", zh: "lag1 因两侧都是 LACP PASSIVE 而 down。让它起来。"}
+  zh: 把 LAG 拉起来
+brief: {en: "lag1 is down because both sides are LACP PASSIVE. Bring it up.", zh: "lag1 起不来，因为两端都停在 LACP PASSIVE。把它拉起来。"}
 type: config-fix
 difficulty: 3
 timeout: 60s
 hints:
   - en: Check `sr_cli show lag` for oper-down-reason.
-    zh: 用 `sr_cli show lag` 查看 oper-down-reason。
+    zh: 先看 `sr_cli show lag` 里的 oper-down-reason，原因会直接告诉你缺什么。
   - en: Two PASSIVE sides never send LACP frames; make one side ACTIVE.
-    zh: 两侧都 PASSIVE 不会发 LACP 帧；把一侧改为 ACTIVE。
+    zh: 两侧都 PASSIVE，就没人发 LACP 帧；把一侧改成 ACTIVE。
 files:
   - source: srl1/lag.sh
     node: srl1
@@ -26,7 +26,7 @@ reload:
 assertions:
   - name:
       en: lag1 is up with both members
-      zh: lag1 起来且两个成员都在
+      zh: lag1 起来，两个成员都在组里
     type: exec
     layer: control-plane
     node: srl1
@@ -37,10 +37,10 @@ assertions:
         contains: "lag1 is up"
     hint:
       en: LACP must negotiate; make srl1 active.
-      zh: 需要 LACP 协商成功；把 srl1 改为 active。
+      zh: LACP 得先谈成；把 srl1 改成 active。
   - name:
       en: can ping the peer over the LAG
-      zh: 可经 LAG ping 通对端
+      zh: 能经 LAG ping 通对端
     type: exec
     layer: data-plane
     node: srl1
@@ -50,4 +50,4 @@ assertions:
       exit_code: 0
     hint:
       en: Verify the LAG is up and in the default network-instance first.
-      zh: 先确认 LAG 起来并加入了 default network-instance。
+      zh: 先确认 LAG 已经起来，并且接进了 default network-instance。

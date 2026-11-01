@@ -1,16 +1,16 @@
 id: 02_aspath
 title:
   en: Steer with AS_PATH prepending
-  zh: 用 AS_PATH prepending 改选路径
-brief: {en: "r1 currently prefers the path via r2. Prepend r2's AS number on its outbound UPDATE so r1 switches to r3.", zh: "r1 当前偏好经 r2 的路径。在 r2 的出向 UPDATE 上 prepend 本 AS 号，使 r1 切换到 r3。"}
+  zh: 用 AS_PATH prepending 让 r2 的路径变长
+brief: {en: "r1 currently prefers the path via r2. Prepend r2's AS number on its outbound UPDATE so r1 switches to r3.", zh: "r1 现在走 r2。在 r2 发往 r1 的出向 UPDATE 上 prepend 本 AS 号，把这条路径拉长，让 r1 改走 r3。"}
 type: config-fix
 difficulty: 3
 timeout: 60s
 hints:
   - en: A longer AS_PATH is less preferred.
-    zh: AS_PATH 越长越不被优先。
+    zh: AS_PATH 越长，越不容易被选中。
   - en: Prepend on r2's outbound with a route-map named `PAD_65002` (`set as-path prepend 65002 65002`), then `clear bgp *`.
-    zh: 用名为 `PAD_65002` 的 route-map 在 r2 出向 prepend（`set as-path prepend 65002 65002`），然后 `clear bgp *`。
+    zh: 在 r2 上用名为 `PAD_65002` 的 route-map 做 `set as-path prepend 65002 65002`，应用在出向，然后 `clear bgp *`。
 files:
   - source: r1/r1.sh
     node: r1
@@ -31,7 +31,7 @@ reload:
 assertions:
   - name:
       en: r1 selects the path via r3
-      zh: r1 选择经 r3 的路径
+      zh: r1 改走经 r3 的路径
     type: exec
     layer: control-plane
     node: r1
@@ -42,10 +42,10 @@ assertions:
         contains: "10.1.13.2"
     hint:
       en: Prepend on r2's outbound, then reset the session.
-      zh: 在 r2 出向 prepend，然后重置会话。
+      zh: 在 r2 的出向 prepend，然后重置会话。
   - name:
       en: h1 can reach h2
-      zh: h1 能到达 h2
+      zh: h1 能 ping 通 h2
     type: exec
     layer: data-plane
     node: h1
@@ -53,4 +53,4 @@ assertions:
     wait: 20s
     match:
       exit_code: 0
-    hint: {en: Ensure forwarding works and the path is up., zh: 确保转发生效、路径可达。}
+    hint: {en: Ensure forwarding works and the path is up., zh: 确认转发正常，路径已经起来。}

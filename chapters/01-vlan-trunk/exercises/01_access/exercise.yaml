@@ -1,16 +1,16 @@
 id: 01_access
 title:
   en: Access ports carry untagged frames
-  zh: access 口承载无标签帧
-brief: {en: "h1 and h2 are in the same subnet (10.0.10.0/24) but cannot reach each other. Fix the access VLANs so they can, then watch the frames on the wire.", zh: "h1 与 h2 同网段（10.0.10.0/24）却互不相通。修复 access VLAN 让它们互通，并在链路上看这些帧。"}
+  zh: Access 端口承载无标签帧
+brief: {en: "h1 and h2 are in the same subnet (10.0.10.0/24) but cannot reach each other. Fix the access VLANs so they can, then watch the frames on the wire.", zh: "h1 和 h2 在同一个网段（10.0.10.0/24），却互相 ping 不通。把两个 access 口的 VLAN 配成一样，再抓包看看帧上有没有标签。"}
 type: config-fix
 difficulty: 2
 timeout: 40s
 hints:
   - en: A host NIC does not speak 802.1Q, so the switch must place its untagged frames into a VLAN using the port's PVID.
-    zh: 主机网卡不懂 802.1Q，交换机必须用端口 PVID 把它的无标签帧放进某个 VLAN。
+    zh: 主机网卡不认识 802.1Q，进来的裸帧只能靠端口 PVID 分 VLAN。
   - en: Check both ports' PVID with `bridge vlan show`; they must match.
-    zh: 用 `bridge vlan show` 查看两个端口的 PVID，必须一致。
+    zh: 用 `bridge vlan show` 看看两个口的 PVID，得一样。
 files:
   - source: h2/h2.sh
     node: h2
@@ -38,10 +38,10 @@ assertions:
       exit_code: 0
     hint:
       en: Both access ports must use the same PVID.
-      zh: 两个 access 口必须使用相同的 PVID。
+      zh: 两个 access 口的 PVID 得一样。
   - name:
       en: the access link carries host traffic untagged
-      zh: access 链路承载无标签的主机流量
+      zh: access 链路上看不到 VLAN 标签
     type: exec
     layer: data-plane
     node: sw1
@@ -51,4 +51,4 @@ assertions:
       exit_code: 0
     hint:
       en: On an access port the switch adds/strips the tag, so the host link shows the host's traffic with no VLAN tag.
-      zh: 在 access 口交换机负责加/去标签，因此主机链路上看到的主机流量没有 VLAN 标签。
+      zh: Access 口的标签由交换机负责加和去，主机这边看到的就是不带标签的原始帧。

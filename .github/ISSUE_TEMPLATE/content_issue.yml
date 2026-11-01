@@ -1,0 +1,73 @@
+name: Content issue
+description: Report a problem with an exercise, concept, translation, or topology
+title: "content: "
+labels: ["content"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the exercises. Please include the chapter and
+        exercise ID if you can. Do not paste secrets or private lab data.
+  - type: input
+    id: chapter
+    attributes:
+      label: Chapter / exercise
+      description: For example `02-stp/01_fix_root`, or `05-bgp-basics` for a concept issue.
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of issue is it?
+      options:
+        - Technical error (explanation, command, topology, assertion)
+        - Translation / wording
+        - Unclear or missing explanation
+        - Broken lab or image requirement
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: language
+    attributes:
+      label: Which version?
+      options:
+        - 中文 (concept.zh.md / README.zh.md / zh fields)
+        - English summary (concept.en.md / README.en.md)
+        - Both
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should it say or do?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What does it currently say or do?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: For lab or assertion problems, include the commands and the observed result.
+      render: shell
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: clablings version / commit
+      description: Output of `clablings version`, or the content commit.
+    validations:
+      required: false
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, containerlab version, Docker version, image tags.
+    validations:
+      required: false

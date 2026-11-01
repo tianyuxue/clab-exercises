@@ -1,54 +1,54 @@
 id: 00_msg_types
 title:
   en: BGP message types and header
-  zh: BGP 报文类型与头部
-brief: {en: "Answer the question to continue: which messages does BGP use, and what is in the header?", zh: "继续前请回答问题：BGP 用哪些报文？头部里有什么？"}
+  zh: BGP 报文类型与 19 字节头部
+brief: {en: "Answer the questions to continue: which messages does BGP use, and what sits in the header?", zh: "先答几个问题再往下走：BGP 靠哪些报文干活？每条报文开头的 19 字节又装了什么？"}
 type: quiz
 difficulty: 2
 hints:
   - en: KEEPALIVE is the bare 19-octet header; UPDATE carries routes.
-    zh: KEEPALIVE 只有 19 字节头部；UPDATE 承载路由。
+    zh: KEEPALIVE 只有 19 字节头部，不带路由；路由在 UPDATE 里。
 questions:
   - prompt:
       en: Which are BGP message types?
-      zh: 下列哪些是 BGP 报文类型？
+      zh: 下列哪些是 BGP 的报文类型？
     multiple: true
     options:
       - text: {en: OPEN, zh: OPEN}
         correct: true
         explanation:
           en: Type 1; negotiates parameters.
-          zh: 类型 1，协商参数。
+          zh: 类型 1，会话建立时先谈参数。
       - text: {en: UPDATE, zh: UPDATE}
         correct: true
         explanation:
           en: Type 2; advertises and withdraws routes.
-          zh: 类型 2，通告与撤销路由。
+          zh: 类型 2，通告新路由，也用来撤销路由。
       - text: {en: NOTIFICATION, zh: NOTIFICATION}
         correct: true
         explanation:
           en: Type 3; reports an error and closes the session.
-          zh: 类型 3，报告错误并关闭会话。
+          zh: 类型 3，出错时通知对端并关闭会话。
       - text: {en: KEEPALIVE, zh: KEEPALIVE}
         correct: true
         explanation:
           en: Type 4; confirms the session is alive.
-          zh: 类型 4，确认会话存活。
+          zh: 类型 4，只证明会话还活着。
       - text: {en: HELLO, zh: HELLO}
         correct: false
         explanation:
           en: BGP has no HELLO message; KEEPALIVE plays that role.
-          zh: BGP 没有 HELLO 报文；由 KEEPALIVE 承担该角色。
+          zh: BGP 没有 HELLO 报文，保活由 KEEPALIVE 负责。
   - prompt:
       en: Which fields make up the 19-octet BGP message header?
-      zh: 19 字节的 BGP 报文头部由哪些字段组成？
+      zh: 19 字节的 BGP 报文头部由哪几段组成？
     multiple: false
     options:
       - text: {en: "16-octet marker, 2-octet length, 1-octet type", zh: 16 字节 marker、2 字节 length、1 字节 type}
         correct: true
         explanation:
           en: Marker is all ones; length includes the header; type is the message code.
-          zh: marker 全为 1；length 含头部；type 是报文类型码。
+          zh: marker 全是 1；length 把头部算在内；type 是报文类型码。
       - text: {en: "8-octet marker, 10-octet length, 1-octet type", zh: 8 字节 marker、10 字节 length、1 字节 type}
         correct: false
         explanation:
@@ -58,27 +58,27 @@ questions:
         correct: false
         explanation:
           en: Length is 2 octets and type is 1 octet.
-          zh: length 是 2 字节，type 是 1 字节。
+          zh: length 占 2 字节，type 占 1 字节。
   - prompt:
       en: What is the maximum BGP message size?
-      zh: BGP 报文的最大长度是多少？
+      zh: 一条 BGP 报文最长能到多少？
     multiple: false
     options:
       - text: {en: "4096 octets", zh: "4096 字节"}
         correct: true
         explanation:
           en: The header length field must be 19..4096.
-          zh: 头部 length 必须为 19..4096。
+          zh: 头部 length 的合法范围是 19 到 4096。
       - text: {en: "1500 octets", zh: "1500 字节"}
         correct: false
         explanation:
           en: That is an Ethernet MTU, unrelated to the BGP message size.
-          zh: 那是以太网 MTU，与 BGP 报文长度无关。
+          zh: 1500 是以太网 MTU，跟 BGP 报文长度不是一回事。
       - text: {en: "65535 octets", zh: "65535 字节"}
         correct: false
         explanation:
           en: Although the length field is 2 octets, the protocol caps messages at 4096.
-          zh: 虽然 length 是 2 字节，协议把报文上限设为 4096。
+          zh: length 字段虽然占 2 字节，协议仍把上限压在 4096。
   - prompt:
       en: How long is a KEEPALIVE message?
       zh: KEEPALIVE 报文有多长？
@@ -88,7 +88,7 @@ questions:
         correct: true
         explanation:
           en: KEEPALIVE has no body.
-          zh: KEEPALIVE 没有正文。
+          zh: 没有正文，只有头部。
       - text: {en: "29 octets", zh: "29 字节"}
         correct: false
         explanation:

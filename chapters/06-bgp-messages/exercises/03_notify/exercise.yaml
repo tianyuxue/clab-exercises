@@ -2,12 +2,12 @@ id: 03_notify
 title:
   en: NOTIFICATION error codes
   zh: NOTIFICATION 错误码
-brief: {en: "Answer the question to continue: what do the NOTIFICATION error codes mean?", zh: "继续前请回答问题：NOTIFICATION 的错误码分别代表什么？"}
+brief: {en: "Answer the questions to continue: what do the NOTIFICATION error codes mean?", zh: "先答几个问题再往下走：NOTIFICATION 里的错误码分别表示什么？"}
 type: quiz
 difficulty: 2
 hints:
   - en: A remote-AS mismatch is an OPEN Message Error; clearing a session is Cease.
-    zh: remote AS 不匹配是 OPEN Message Error；重置会话是 Cease。
+    zh: 对端 AS 不匹配会在 OPEN 阶段报错；主动重置会话发的是 Cease。
 questions:
   - prompt:
       en: Which are valid NOTIFICATION error codes?
@@ -18,52 +18,52 @@ questions:
         correct: true
         explanation:
           en: Code 1; e.g. a bad marker or bad length.
-          zh: 错误码 1；如 marker 或 length 错误。
+          zh: 码 1；marker 不对或 length 越界。
       - text: {en: "2 OPEN Message Error", zh: "2 OPEN 报文错误"}
         correct: true
         explanation:
           en: Code 2; e.g. Bad Peer AS, Unsupported Version.
-          zh: 错误码 2；如 Bad Peer AS、Unsupported Version。
+          zh: 码 2；比如 Bad Peer AS、Unsupported Version。
       - text: {en: "3 UPDATE Message Error", zh: "3 UPDATE 报文错误"}
         correct: true
         explanation:
           en: Code 3; malformed path attributes or NLRI.
-          zh: 错误码 3；路径属性或 NLRI 格式错误。
+          zh: 码 3；路径属性或 NLRI 格式不对。
       - text: {en: "4 Hold Timer Expired", zh: "4 Hold Timer 到期"}
         correct: true
         explanation:
           en: Code 4; no KEEPALIVE/UPDATE within the Hold Time.
-          zh: 错误码 4；Hold Time 内未收到 KEEPALIVE/UPDATE。
+          zh: 码 4；Hold Time 内没收到 KEEPALIVE 或 UPDATE。
       - text: {en: "5 FSM Error", zh: "5 状态机错误"}
         correct: true
         explanation:
           en: Code 5; the FSM received an unexpected event.
-          zh: 错误码 5；状态机收到意外事件。
+          zh: 码 5；状态机收到了不该出现的事件。
       - text: {en: "6 Cease", zh: "6 Cease"}
         correct: true
         explanation:
           en: Code 6; the session is being torn down deliberately.
-          zh: 错误码 6；会话被主动关闭。
+          zh: 码 6；会话被主动关闭。
       - text: {en: "7 Route Withdrawn", zh: "7 路由撤销"}
         correct: false
         explanation:
           en: There is no such code; withdrawals travel in UPDATE.
-          zh: 没有该错误码；撤销路由由 UPDATE 承载。
+          zh: 没有这个错误码，撤销路由由 UPDATE 承载。
   - prompt:
       en: r2 expects its neighbor in AS 65099 but the peer is AS 65001. What does r2 send?
-      zh: r2 期望邻居属于 AS 65099，但对端实际是 AS 65001。r2 会发送什么？
+      zh: r2 期望邻居在 AS 65099，实际对端是 AS 65001。r2 会发什么？
     multiple: false
     options:
-      - text: {en: "OPEN Message Error, subcode Bad Peer AS", zh: "OPEN Message Error，子码 Bad Peer AS"}
+      - text: {en: "OPEN Message Error, subcode Bad Peer AS", zh: "OPEN 报文错误，子码 Bad Peer AS"}
         correct: true
         explanation:
           en: The AS check fails while processing the OPEN (code 2, subcode 2).
-          zh: 处理 OPEN 时 AS 校验失败（码 2，子码 2）。
-      - text: {en: UPDATE Message Error, zh: UPDATE Message Error}
+          zh: 处理 OPEN 时 AS 校验失败，报码 2、子码 2。
+      - text: {en: UPDATE Message Error, zh: UPDATE 报文错误}
         correct: false
         explanation:
           en: The error happens at OPEN time, before any UPDATE.
-          zh: 错误发生在 OPEN 阶段，早于任何 UPDATE。
+          zh: 错误出在 OPEN 阶段，还没走到 UPDATE。
       - text: {en: Cease, zh: Cease}
         correct: false
         explanation:
@@ -71,21 +71,21 @@ questions:
           zh: Cease 是管理性关闭，不是 AS 不匹配。
   - prompt:
       en: You run `clear bgp *` on an established session. Which NOTIFICATION is sent?
-      zh: 你对一个已建立的会话执行 `clear bgp *`。会发送哪条 NOTIFICATION？
+      zh: 对一个已经建立的会话执行 `clear bgp *`，会发出哪条 NOTIFICATION？
     multiple: false
     options:
       - text: {en: Cease (code 6), zh: Cease（码 6）}
         correct: true
         explanation:
           en: FRR sends Cease when a session is reset, before closing.
-          zh: FRR 在重置会话、关闭前发送 Cease。
+          zh: FRR 重置会话时先发 Cease，再关连接。
       - text: {en: Hold Timer Expired (code 4), zh: Hold Timer 到期（码 4）}
         correct: false
         explanation:
           en: That fires only when KEEPALIVEs stop.
-          zh: 只有在 KEEPALIVE 停止时才会触发。
+          zh: 只有 KEEPALIVE 停了才会触发这一条。
       - text: {en: No NOTIFICATION is sent, zh: 不发送 NOTIFICATION}
         correct: false
         explanation:
           en: FRR sends a NOTIFICATION Cease on a deliberate teardown (RFC 4271 permits this).
-          zh: FRR 在主动拆链时发送 NOTIFICATION Cease（RFC 4271 允许这样做）。
+          zh: FRR 主动拆链会发 NOTIFICATION Cease，RFC 4271 允许这种做法。

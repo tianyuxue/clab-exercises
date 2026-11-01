@@ -1,26 +1,29 @@
 # 04_tagged_host
 
-`h4` tags its own frames (a VLAN subinterface) and plugs into a trunk port on
-`sw2`, but cannot reach `h1`.
+`h4` tags its own frames through a VLAN subinterface and connects to `sw2`'s trunk
+port, but cannot reach `h1`.
 
-## Why
+## Cause
 
-A trunk port does not require the other end to be a switch. Any device that
-speaks 802.1Q — a server or hypervisor host with a VLAN subinterface — can sit
-on a trunk and send frames that already carry the tag. What matters is that the
-device's VLAN ID is a VLAN the trunk carries; otherwise the switch drops it.
+A trunk port can face any 802.1Q-capable device, including a server or hypervisor
+with a VLAN subinterface. The device tags its own frames, but its VLAN ID must be in
+the trunk's allowed list; otherwise the switch drops the frames.
 
-## Observe it
+## Observe
 
-In clab-tui, capture on the trunk (sw1 eth3) while `h1` pings `h4`. After the
-fix the frames show `vlan 10`, emitted by the host itself (in the fault state h4's
-VLAN-30 frames never reach the trunk).
+Capture on the trunk (`sw1 eth3`) while `h1` pings `h4`. After the fix, `h4`'s frames
+show `vlan 10`; in the faulty state `h4` uses VLAN 30 and its frames never reach the
+trunk.
 
 ## Fix
 
-Set `h4`'s subinterface to VLAN 10:
-`docker exec <h4> ip link del eth1.30; docker exec <h4> ip link add link eth1 name eth1.10 type vlan id 10`
-then add its address and bring it up:
-`docker exec <h4> ip addr add 10.0.10.4/24 dev eth1.10; docker exec <h4> ip link set eth1.10 up`
+Move `h4`'s subinterface to VLAN 10:
+
+```sh
+docker exec <h4> ip link del eth1.30
+docker exec <h4> ip link add link eth1 name eth1.10 type vlan id 10
+docker exec <h4> ip addr add 10.0.10.4/24 dev eth1.10
+docker exec <h4> ip link set eth1.10 up
+```
 
 Press Enter to verify; `f` re-injects the fault.

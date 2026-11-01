@@ -1,61 +1,53 @@
-# Link aggregation (LACP)
+# Link aggregation with LACP
 
-## Scenario
+## The symptom
 
-A server needs more bandwidth than one 1 Gbit/s link can give, and it must keep
-running when a cable or switch port fails. Its OS can bundle several links into
-one with LACP. You run two cables from the server to a switch and configure a
-bundle at both ends.
+A server uplinks at 1 Gbit/s and saturates at peak. A second cable to the same
+switch lights up but adds no bandwidth and triggers a loop alarm. After bundling
+both links into `lag1` with LACP at both ends, `show lag` still reports `lag1`
+down with `no-active-links`, though both ports are up.
+
+## Why the obvious options fail
+
+- Two cables without aggregation form a Layer-2 loop; STP blocks one, so
+  throughput stays at 1 Gbit/s.
+- A static bond comes up even when the far end is wrong, and a half-broken
+  member keeps forwarding and dropping traffic.
+- One cable per switch gives two independent LACP partners with different System
+  IDs, so the host sees two one-link bundles. That needs MLAG or EVPN-MH.
 
 ## Terms
 
-- **LAG** (link aggregation group, also PortChannel or bond): one *logical*
-  interface built from several physical **member** links.
-- **Member**: a physical link that belongs to a LAG.
-- **Flow hashing**: for each traffic flow, the switch hashes header fields to pick
-  one member. A flow therefore uses one member (per direction).
-- **LACP** (802.1AX): the protocol the two ends use to agree on which links are
-  members and whether they are healthy.
-- **Active / passive**: an **active** participant sends LACP frames (`LACPDUs`);
-  a **passive** one only replies. At least one side must be active.
-- **admin-key**: an identifier that members must agree on to join the same LAG.
-- **min-links**: the minimum number of up members needed for the LAG to stay up.
+- **LAG** (bond, PortChannel): one logical interface over physical members;
+  addresses and routes sit on the LAG.
+- **Member**: a physical link referenced by the LAG.
+- **Flow hashing**: header fields pick one member per flow, per direction.
+- **LACP** (802.1AX): both ends exchange LACPDUs to agree which links belong to
+  the bundle and whether they are healthy.
+- **active / passive**: active sends LACPDUs, passive only replies; at least one
+  side must be active.
+- **admin-key**: members must agree on it to join the same bundle.
+- **min-links**: minimum usable members for the LAG to stay up.
 
-## Why it hurts
+## Mechanism
 
-A single link gives neither redundancy nor more than its own speed. Adding a
-second link *without* aggregation makes STP block it, so you still use only one.
-And if you connect the server's two links to **two independent switches**, its
-LACP now faces two different partners and cannot form one bundle at all.
+The switch hashes source/destination MAC, IP, and ports, picks a member, and sends
+the frame there. Aggregate bandwidth is the sum of the members across many flows;
+one flow never exceeds one member.
 
-## Why the naive fix fails
+LACP keeps the bundle honest: both ends send LACPDUs with System ID, port,
+admin-key, and member state. A member joins only when both ends put it in the
+LAG, the admin-keys match, the link is healthy, and min-links is met. A failed
+member leaves and traffic rehashes onto the rest; if min-links is no longer met,
+the LAG goes down on purpose instead of forwarding over a degraded bundle.
 
-- **Static bond (no LACP)**: the link comes up even when the far end is
-  misconfigured, and a half-broken member keeps carrying — and dropping —
-  traffic, because nothing negotiates health.
-- **Two independent switches**: each switch is a separate LACP partner with its
-  own System ID, so the server sees two one-link bundles instead of one two-link
-  bundle. Making this work takes MLAG/EVPN-MH (next chapter).
+## Configure
 
-## The mechanism
-
-A **LAG** presents the member links as one logical interface, so a single IP
-configuration and route cover all of them. Flow hashing spreads traffic across
-the members, delivering aggregate bandwidth and resilience to member failure.
-
-**LACP** keeps the bundle honest: both ends exchange LACP frames listing the
-members they consider part of the bundle and their state. A member joins only when
-both ends agree (same LAG, compatible **admin-key**) and the link is healthy. If a
-member fails, it leaves the bundle and traffic rehashes onto the remaining members
-— as long as **min-links** is still satisfied.
-
-## Configure and inspect
-
-On SR Linux, configure the LAG (members reference it by id; the LAG is a routed
-interface) and inspect it with `show lag`:
+Point the physical ports at the LAG, then configure the LAG itself; addresses go
+on its subinterface.
 
 ```sh
-# as a shell script on the switch: pipe CLI commands into sr_cli
+# run on the switch: feed CLI commands to sr_cli
 sr_cli -d <<'EOF'
 enter candidate
 set / interface ethernet-1/1 ethernet aggregate-id lag1
@@ -66,20 +58,26 @@ set / interface lag1 subinterface 0 ipv4 address 10.0.0.1/30
 set / network-instance default interface lag1.0
 commit now
 EOF
+```
 
-sr_cli -d "show lag"                       # lag up? members up? oper-down-reason?
+On the peer use `10.0.0.2/30`; `lacp-mode` can stay `PASSIVE`, since one active
+side is enough.
+
+## Verify
+
+```sh
+sr_cli -d "show lag"                       # is lag1 up? are members up? what is oper-down-reason?
 sr_cli -d "ping -c 2 10.0.0.2 network-instance default"
 ```
 
-The key output is `show lag`: whether `lag1` is **up**, each member's
-`oper-state`, and the `oper-down-reason` when it is not.
+Watch the `lag1` state, each member's `oper-state`, and `oper-down-reason`. The
+usual causes here are `no-active-links` and `lacp-down`. A ping only proves the
+data plane; check both.
 
-## Common questions
+## Traps
 
-- **Both sides passive**: neither end sends LACP frames, so the bundle stays down
-  with reason `no-active-links` — this is the fault the lab injects.
-- **admin-key mismatch**: members stay out of the bundle with reason `lacp-down`.
-- **One flow, one member**: a single flow never exceeds one member's speed;
-  aggregation helps many flows, not one.
-- **min-links**: if too few members are up, the LAG is intentionally kept down to
-  avoid a degraded bundle.
+- **Both passive**: nobody sends LACPDUs, so make one side active.
+- **admin-key mismatch**: members stay out with `lacp-down`; use the same key.
+- **One flow, one member**: use several concurrent flows to fill the bundle.
+- **min-links**: below the threshold the LAG goes down and routes withdraw, so
+  traffic takes another path.

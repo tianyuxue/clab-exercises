@@ -1,16 +1,16 @@
 id: 02_hold_time
 title:
   en: Negotiate a 9-second hold time
-  zh: 协商 9 秒 hold time
-brief: {en: "The session is up with default timers. Set r1's hold time to 9s (keepalive 3s) and renegotiate, so the OPEN carries hold_time 9.", zh: "会话当前用默认计时器建立。把 r1 的 hold time 设为 9 秒（keepalive 3 秒）并重新协商，使 OPEN 携带 hold_time 9。"}
+  zh: 把 Hold Time 谈成 9 秒
+brief: {en: "The session is up with default timers. Set r1's hold time to 9s (keepalive 3s) and renegotiate, so the OPEN carries hold_time 9.", zh: "会话现在用默认计时器，OPEN 里写的是 180 秒。把 r1 的 Hold Time 改成 9 秒、KEEPALIVE 改成 3 秒，再重建会话，让抓到的 OPEN 带上 hold_time 9。"}
 type: config-fix
 difficulty: 2
 timeout: 60s
 hints:
   - en: "The neighbor timers are set under `router bgp` (keepalive then hold time): `neighbor <ip> timers 3 9`."
-    zh: "邻居计时器配在 `router bgp` 下（先 keepalive 后 hold time）：`neighbor <ip> timers 3 9`。"
+    zh: "邻居计时器配在 `router bgp` 下，顺序是先 KEEPALIVE 后 Hold Time：`neighbor <ip> timers 3 9`。"
   - en: Timers apply to a new session; reset it with `clear bgp *`.
-    zh: 计时器对新会话生效；用 `clear bgp *` 重置会话。
+    zh: 计时器只对新会话生效；改完用 `clear bgp *` 把会话重置。
 files:
   - source: sniff/recapture.sh
     node: sniff
@@ -31,7 +31,7 @@ reload:
 assertions:
   - name:
       en: r1 session is Established
-      zh: r1 会话已 Established
+      zh: r1 的会话已经 Established
     type: exec
     layer: control-plane
     node: r1
@@ -40,10 +40,10 @@ assertions:
     match:
       json: "$.ipv4Unicast.peers.*.state"
       equals: "Established"
-    hint: {en: The session must be up before its OPEN can be observed., zh: 必须先建立会话，才能观察到它的 OPEN。}
+    hint: {en: The session must be up before its OPEN can be observed., zh: 会话先起来，才抓得到它的 OPEN。}
   - name:
       en: r1 proposes an OPEN with the configured hold time
-      zh: r1 发出的 OPEN 携带所配置的 hold time
+      zh: r1 发出的 OPEN 带着配置的 Hold Time
     type: exec
     layer: control-plane
     node: sniff
@@ -54,4 +54,4 @@ assertions:
         equals: "9"
     hint:
       en: Set `neighbor 10.1.12.2 timers 3 9` on r1 (keepalive 3, hold 9), then reset the session.
-      zh: 在 r1 上设置 `neighbor 10.1.12.2 timers 3 9`（keepalive 3、hold 9），然后重置会话。
+      zh: 在 r1 上配 `neighbor 10.1.12.2 timers 3 9`（KEEPALIVE 3、Hold Time 9），然后重置会话。

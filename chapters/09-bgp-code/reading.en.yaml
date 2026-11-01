@@ -4,10 +4,10 @@
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.1
   intro:
     en: The 19-octet header your build_open and build_keepalive must emit.
-    zh: 你的 build_open 与 build_keepalive 必须产出的 19 字节头部。
+    zh: build_open 和 build_keepalive 发出去的头 19 个字节，格式就在这里。
   question:
     en: What is the marker, and does Length include the header?
-    zh: marker 是什么？Length 是否包含头部？
+    zh: marker 填什么？Length 算不算头部？
 
 - title: RFC 4271 — OPEN Message Format
   section: "OPEN Message Format"
@@ -15,10 +15,10 @@
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.2
   intro:
     en: The exact fields and order of the OPEN you send.
-    zh: 你发出的 OPEN 的精确字段与顺序。
+    zh: 你发出的 OPEN 有哪些字段，顺序怎么排。
   question:
     en: In what order do version, My AS, Hold Time and BGP Identifier appear?
-    zh: version、My AS、Hold Time 与 BGP Identifier 的顺序如何？
+    zh: version、My AS、Hold Time、BGP Identifier 依次怎么排？
 
 - title: RFC 4271 — UPDATE Message Format
   section: "UPDATE Message Format"
@@ -26,10 +26,10 @@
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.3
   intro:
     en: The field layout your build_update must produce.
-    zh: 你的 build_update 必须产出的字段布局。
+    zh: build_update 要拼出的字段顺序。
   question:
     en: How are ORIGIN, AS_PATH and NEXT_HOP encoded?
-    zh: ORIGIN、AS_PATH 与 NEXT_HOP 如何编码？
+    zh: ORIGIN、AS_PATH、NEXT_HOP 各自怎么编码？
 
 - title: RFC 4271 — KEEPALIVE Message Format
   section: "KEEPALIVE Message Format"
@@ -37,7 +37,7 @@
   url: https://www.rfc-editor.org/rfc/rfc4271.html#section-4.4
   intro:
     en: The bare 19-octet message that keeps the session alive.
-    zh: 维持会话存活的、仅 19 字节的报文。
+    zh: 维持会话的 KEEPALIVE，整条报文只有 19 字节。
   question:
     en: How often should KEEPALIVE be sent relative to the Hold Time?
-    zh: 相对于 Hold Time，KEEPALIVE 应多久发送一次？
+    zh: Hold Time 是 90 秒时，KEEPALIVE 该多久发一次？

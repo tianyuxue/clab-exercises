@@ -2,55 +2,55 @@ id: 00_why_mlag
 title:
   en: Why MLAG?
   zh: 为什么需要 MLAG？
-brief: {en: "Answer the question to continue: why does dual-homing to two independent switches break LACP?", zh: "继续前请回答问题：双归到两台独立交换机为何会破坏 LACP？"}
+brief: {en: "Answer the question to continue: why does dual-homing to two independent switches break LACP?", zh: "先回答一个问题：主机双归到两台独立交换机，LACP 为什么起不来？"}
 type: quiz
 difficulty: 3
 hints:
   - en: Think about what the server's LACP bond sees on each uplink.
-    zh: 想想服务器的 LACP bond 在每条上行链路上看到什么。
+    zh: 想想服务器的 LACP bond 在每根上行线上分别看到了什么。
 questions:
   - prompt:
       en: A server with an LACP bond is connected to two independent switches. What happens?
-      zh: 一台带 LACP bond 的服务器分别接到两台独立交换机，会怎样？
+      zh: 服务器起了 LACP bond，两根线分别接到两台独立交换机。会发生什么？
     multiple: false
     options:
-      - text: {en: "The bond cannot form one bundle, because each switch is a different LACP partner", zh: bond 无法形成单一捆绑，因为每台交换机是不同的 LACP 伙伴}
+      - text: {en: "The bond cannot form one bundle, because each switch is a different LACP partner", zh: bond 凑不成一个捆绑，因为两台交换机是两个不同的 LACP 伙伴}
         correct: true
         explanation:
           en: LACP aggregates with one System ID; two switches present two of them.
-          zh: LACP 与单一 System ID 聚合；两台交换机给出两个不同的 System ID。
-      - text: {en: "It works out of the box, giving twice the bandwidth", zh: 开箱即用，带宽翻倍}
+          zh: LACP 只跟一个 System ID 聚合，而两台交换机各报一个。
+      - text: {en: "It works out of the box, giving twice the bandwidth", zh: 插上就能用，带宽直接翻倍}
         correct: false
         explanation:
           en: Without MLAG/EVPN-MH the two switches do not coordinate the bundle.
-          zh: 没有 MLAG/EVPN-MH，两台交换机不会协同这个捆绑。
-      - text: {en: STP automatically makes it active/active, zh: STP 会自动让它 active/active}
+          zh: 没有 MLAG 或 EVPN-MH，两台交换机根本不会一起协商这个捆绑。
+      - text: {en: STP automatically makes it active/active, zh: STP 会自动把它变成 active/active}
         correct: false
         explanation:
           en: STP removes loops by blocking a link, i.e. half the bandwidth.
-          zh: STP 通过阻塞一条链路消除环路，即浪费一半带宽。
+          zh: STP 靠阻塞一条链路消除环路，代价是浪费一半带宽。
   - prompt:
       en: Which statements about MLAG/EVPN-MH are true?
-      zh: 关于 MLAG/EVPN-MH，哪些说法正确？
+      zh: 下面关于 MLAG 和 EVPN-MH 的说法，哪些是对的？
     multiple: true
     options:
-      - text: {en: MLAG needs a peer-link between the two switches, zh: MLAG 需要两台交换机之间的 peer-link}
+      - text: {en: MLAG needs a peer-link between the two switches, zh: MLAG 需要两台交换机之间有一条 peer-link}
         correct: true
         explanation:
           en: The peer-link carries L2 and keeps both peers in sync.
-          zh: peer-link 承载二层并保持两台 peer 同步。
-      - text: {en: Split-brain can happen if the peer-link fails while uplinks stay up, zh: peer-link 断而上行仍在时会发生脑裂}
+          zh: peer-link 转发二层流量，也让两台 peer 的认知保持同步。
+      - text: {en: Split-brain can happen if the peer-link fails while uplinks stay up, zh: peer-link 断了、两条上行还在时，可能发生脑裂}
         correct: true
         explanation:
           en: Both peers may believe they own the LAG without a tie-breaker.
-          zh: 没有裁决机制时，两台 peer 都可能认为自己在拥有该 LAG。
-      - text: {en: EVPN-MH uses an ESI and BGP EVPN to coordinate, zh: EVPN-MH 用 ESI 与 BGP EVPN 协同}
+          zh: 没有裁决机制，两台 peer 都可能以为 LAG 归自己管。
+      - text: {en: EVPN-MH uses an ESI and BGP EVPN to coordinate, zh: EVPN-MH 靠 ESI 和 BGP EVPN 协同}
         correct: true
         explanation:
           en: It is the open-standard alternative to vendor MLAG.
-          zh: 它是厂商 MLAG 的开放标准替代。
-      - text: {en: Stacking keeps two independent control planes, zh: 堆叠保留两个独立的控制面}
+          zh: 它是厂商 MLAG 的开放标准替代方案。
+      - text: {en: Stacking keeps two independent control planes, zh: 堆叠会保留两个独立的控制面}
         correct: false
         explanation:
           en: Stacking fuses them into one control plane and one failure domain.
-          zh: 堆叠把它们融合为一个控制面、一个故障域。
+          zh: 堆叠会把它们并成一个控制面、一个故障域。

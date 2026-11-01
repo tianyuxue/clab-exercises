@@ -1,16 +1,16 @@
 id: 02_bad_peer_as
 title:
   en: The rejected OPEN
-  zh: 被拒绝的 OPEN
-brief: {en: "edge's eBGP session never establishes. The peer rejects it with NOTIFICATION Bad Peer AS. Fix the peer.", zh: "edge 的 eBGP 会话始终建立不起来。对端以 NOTIFICATION Bad Peer AS 拒绝。修复对端。"}
+  zh: OPEN 被拒：Bad Peer AS
+brief: {en: "edge's eBGP session never establishes. The peer rejects it with NOTIFICATION Bad Peer AS. Fix the peer.", zh: "edge 的 eBGP 会话始终建不起来。对端用 NOTIFICATION Bad Peer AS 拒绝了它的 OPEN。先抓包确认错误码，再改对端的 remote-as。"}
 type: config-fix
 difficulty: 3
 timeout: 60s
 hints:
   - en: Capture the reset with tshark and read the NOTIFICATION error code.
-    zh: 用 tshark 抓重置过程，读出 NOTIFICATION 错误码。
+    zh: 在 sniff 上抓 TCP 179，重点看 NOTIFICATION 的 major 和 minor 子码。
   - en: On ext the neighbor's remote-as is wrong; it should be edge's real AS (65001).
-    zh: ext 上该邻居的 remote-as 配错了；应为 edge 的真实 AS（65001）。
+    zh: ext 上这个邻居的 remote-as 写成了 65099，edge 的真实 AS 是 65001。
 files:
   - source: sniff/recapture.sh
     node: sniff
@@ -36,7 +36,7 @@ reload:
 assertions:
   - name:
       en: edge sees the eBGP peer as Established
-      zh: edge 看到 eBGP 邻居为 Established
+      zh: edge 的 eBGP 邻居进入 Established
     type: exec
     layer: control-plane
     node: edge
@@ -47,10 +47,10 @@ assertions:
       equals: "Established"
     hint:
       en: On ext, set neighbor 10.1.12.1 remote-as 65001, then clear the session.
-      zh: 在 ext 上把 neighbor 10.1.12.1 remote-as 改为 65001，然后重置会话。
+      zh: 在 ext 上把 neighbor 10.1.12.1 remote-as 改成 65001，再重置会话。
   - name:
       en: edge has two peers configured
-      zh: edge 配置了两个邻居
+      zh: edge 上保留两个邻居
     type: exec
     layer: control-plane
     node: edge
@@ -61,4 +61,4 @@ assertions:
       equals: "2"
     hint:
       en: Fix ext's remote-as; do not merely delete the neighbor.
-      zh: 修正 ext 的 remote-as；不要只是删除邻居。
+      zh: 改 ext 的 remote-as，不要用删邻居来绕过检查。

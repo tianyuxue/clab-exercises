@@ -1,7 +1,7 @@
 id: 05-bgp-basics
 title:
   en: BGP basics — session establishment
-  zh: BGP 入门——会话建立
+  zh: "BGP 入门：一条会话是怎么建起来的"
 difficulty: 2
 tags: [l3, bgp, routing, fsm]
 estimated_minutes: 45
@@ -12,9 +12,9 @@ objectives:
     - Read the OPEN message fields that two peers negotiate
     - Bring an eBGP session up by fixing the neighbor configuration
   zh:
-    - 解释 BGP 有限状态机，以及会话如何达到 Established
-    - 读懂两个对等体协商的 OPEN 报文字段
-    - 通过修复邻居配置让 eBGP 会话起来
+    - 搞清楚 BGP 会话要经过哪些状态，怎样才算走到 Established
+    - 读懂两端在 OPEN 里交换的字段，尤其是 AS 号和 Hold Time
+    - 修好邻居配置，让一条 eBGP 会话真正起来
 topology: topology.clab.yml
 deploy:
   timeout: 180s

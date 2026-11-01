@@ -4,10 +4,10 @@
   url: https://docs.kernel.org/networking/bonding.html#configuring-lacp-for-802-3ad-mode-in-a-more-secure-way
   intro:
     en: How 802.3ad/LACP mode works and what both ends must agree on; the mechanism is the same as on a switch LAG.
-    zh: 802.3ad/LACP 模式如何工作、两端必须一致什么；其机制与交换机上的 LAG 相同。
+    zh: 讲 802.3ad/LACP 模式怎么跑，两端要对上哪些参数。交换机上的 LAG 是同一套逻辑。
   question:
     en: Which parameters must match between the two ends for a link to join the bundle?
-    zh: 两端哪些参数必须一致，链路才能加入捆绑？
+    zh: 两端有哪些参数必须对上，一条链路才能进捆绑？
 
 - title: Linux bonding — Querying Bonding Configuration
   section: "4 Querying Bonding Configuration"
@@ -15,7 +15,7 @@
   url: https://docs.kernel.org/networking/bonding.html#querying-bonding-configuration
   intro:
     en: How to read the live state of a bundle and its members from the kernel (the Linux analogue of `show lag`).
-    zh: 如何从内核读取捆绑及其成员的实时状态（相当于 Linux 版的 `show lag`）。
+    zh: 从内核里读出捆绑和成员的实时状态，相当于 Linux 版的 `show lag`。
   question:
     en: Where do you look to see whether a member is actually part of the bundle?
-    zh: 从哪里可以看出某个成员是否真的加入了捆绑？
+    zh: 在哪里能看出一个成员到底进没进捆绑？

@@ -2,55 +2,55 @@ id: 00_why_lacp
 title:
   en: Why LACP?
   zh: 为什么需要 LACP？
-brief: {en: "Answer the question to continue: what does aggregation buy, and what must match for LACP?", zh: "继续前请回答问题：聚合带来什么收益？LACP 需要哪些参数一致？"}
+brief: {en: "Answer before you continue: what does aggregation buy, and what must match for LACP to work?", zh: "往下做之前先想清楚：聚合到底带来了什么？LACP 又要求哪些参数对上？"}
 type: quiz
 difficulty: 2
 hints:
   - en: Compare with how STP treats redundant links.
-    zh: 对比 STP 如何处理冗余链路。
+    zh: 回想一下 STP 碰到冗余链路会怎么处理。
 questions:
   - prompt:
       en: What does link aggregation give you that STP-blocked redundancy does not?
-      zh: 相比被 STP 阻塞的冗余链路，链路聚合多了什么？
+      zh: 跟被 STP 挡住一条的冗余链路比，链路聚合多给了什么？
     multiple: false
     options:
-      - text: {en: Active use of all member links, zh: 所有成员链路都能被使用}
+      - text: {en: All member links carry traffic, zh: 几条成员链路一起转发}
         correct: true
         explanation:
           en: Traffic is hashed across members instead of one link being blocked.
-          zh: 流量按哈希分摊到各成员，而不是只留一条。
-      - text: {en: A higher speed for a single flow, zh: 单条流也能获得更高带宽}
+          zh: 流量按哈希分到各个成员，不会被 STP 挡掉其中一条。
+      - text: {en: A single flow gets more bandwidth, zh: 单条流也能跑得更快}
         correct: false
         explanation:
           en: A single flow is hashed to one member, so it stays at one link's rate.
-          zh: 单条流只哈希到一个成员，速率仍受单链路限制。
-      - text: {en: Automatic VLAN configuration, zh: 自动配置 VLAN}
+          zh: 一条流只落到一个成员上，速率还是单链路的上限。
+      - text: {en: VLANs are configured automatically, zh: VLAN 会自动配好}
         correct: false
         explanation:
           en: VLANs are independent of aggregation.
-          zh: VLAN 与聚合无关。
+          zh: VLAN 和聚合是两件独立的事。
   - prompt:
       en: Which statements about LACP are true?
-      zh: 关于 LACP，哪些说法正确？
+      zh: 下面关于 LACP 的说法，哪些对？
     multiple: true
     options:
-      - text: {en: At least one side must be active, zh: 至少一侧必须是 active}
+      - text: {en: At least one side must be active, zh: 至少要有一侧是 active}
         correct: true
         explanation:
           en: Passive peers never initiate LACPDUs.
-          zh: passive 一侧不会主动发送 LACPDU。
-      - text: {en: Members must agree on the LACP admin-key, zh: 成员的 LACP admin-key 必须一致}
+          zh: passive 一侧只应答，不会主动发 LACPDU。
+      - text: {en: Members must agree on the LACP admin-key, zh: 成员的 admin-key 必须一致}
         correct: true
         explanation:
           en: Mismatched keys keep members out of the bundle.
-          zh: key 不一致成员无法加入聚合。
-      - text: {en: min-links keeps the LAG down if too few members are up, zh: min-links 在成员不足时保持 LAG down}
+          zh: key 对不上，成员就进不了同一个组。
+      - text: {en: min-links keeps the LAG down if too few members are up, zh: 可用成员少于 min-links 时，LAG 会保持 down}
         correct: true
         explanation:
           en: It prevents a degraded bundle from carrying traffic.
-          zh: 避免降级的聚合组继续转发。
-      - text: {en: One flow is spread across all members, zh: 单条流会分散到所有成员}
+          zh: 这样降级的聚合组不会继续转发流量。
+      - text: {en: One flow is spread across all members, zh: 一条流会同时走所有成员}
         correct: false
         explanation:
           en: Hashing picks one member per flow (per direction).
-          zh: 哈希为每条流（每方向）选择单一成员。
+          zh: 哈希给每条流（每个方向）只挑一个成员。

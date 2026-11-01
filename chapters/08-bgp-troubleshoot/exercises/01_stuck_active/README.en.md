@@ -1,14 +1,29 @@
 # 01_stuck_active
 
-`edge` has an eBGP neighbor that never leaves Active, so no session forms.
+## Task
 
-## How to fix
+Bring `edge`'s eBGP neighbor to Established.
 
-Open a second terminal and log into `edge` (`make debug`, or `docker exec`):
+## Cause
 
-- `docker exec <edge> vtysh -c 'show bgp summary'` — the neighbor is in the Active/Connect column.
-- Compare the configured neighbor address with the link subnet (`10.1.12.0/30`).
-  Remove the wrong one and add `10.1.12.2`:
-  `docker exec <edge> vtysh -c 'conf t' -c 'router bgp 65001' -c 'no neighbor 10.1.12.9 remote-as 65002' -c 'neighbor 10.1.12.2 remote-as 65002' -c 'end' -c 'clear bgp *'`
+`edge` is `10.1.12.1/30`, `ext` is `10.1.12.2/30`, but `edge` configures neighbor
+`10.1.12.9`. That address is off-link and unreachable, so TCP 179 never opens and
+the FSM stays in Active.
+
+## Observe
+
+```sh
+docker exec <edge> vtysh -c 'show bgp summary'
+```
+
+The neighbor sits in the Active/Connect column.
+
+## Fix
+
+Remove the wrong neighbor, add `10.1.12.2`, and clear the session:
+
+```sh
+docker exec <edge> vtysh -c 'conf t' -c 'router bgp 65001' -c 'no neighbor 10.1.12.9 remote-as 65002' -c 'neighbor 10.1.12.2 remote-as 65002' -c 'end' -c 'clear bgp *'
+```
 
 Press Enter to verify; `f` re-injects the fault.

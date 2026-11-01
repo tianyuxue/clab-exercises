@@ -4,10 +4,10 @@
   url: https://docs.kernel.org/networking/bridge.html#stp
   intro:
     en: How the Linux bridge runs STP, including enabling it and the timers that control convergence.
-    zh: Linux 网桥如何运行 STP，包括如何启用以及控制收敛的定时器。
+    zh: Linux 网桥怎么跑 STP：怎么开启，以及控制收敛的几个定时器。
   question:
     en: What has to be enabled on the bridge before ports can take part in the spanning tree?
-    zh: 端口要参与生成树，必须先对网桥开启什么？
+    zh: 端口要参与生成树，得先在网桥上打开什么？
 
 - title: Linux bridge — Root Bridge and Convergence
   section: "Root Bridge and Convergence"
@@ -15,10 +15,10 @@
   url: https://docs.kernel.org/networking/bridge.html#root-bridge-and-convergence
   intro:
     en: How the root is selected and how the tree reconverges; this is exactly the election the lab tunes by priority.
-    zh: 根桥如何选出、树如何重新收敛——本题正是通过优先级来影响这个选举。
+    zh: 根桥怎么选出、树怎么重新收敛。实验里调的优先级，影响的就是这一步。
   question:
     en: Which fields decide the election, and which bridge becomes the root?
-    zh: 哪些字段决定选举结果？哪台网桥会成为根？
+    zh: 哪些字段决定选举结果？最后哪台网桥当根？
 
 - title: Linux bridge — Bridge Ports and STP States
   section: "Bridge Ports and STP States"
@@ -26,7 +26,7 @@
   url: https://docs.kernel.org/networking/bridge.html#bridge-ports-and-stp-states
   intro:
     en: The port states (forwarding/blocking/…) that `bridge -j link show` reports.
-    zh: '`bridge -j link show` 里报告的端口状态（forwarding/blocking 等）。'
+    zh: '`bridge -j link show` 报出的端口状态，forwarding、blocking 分别是什么意思。'
   question:
     en: What does a blocked port do, and why keep it up?
     zh: 被阻塞的端口在做什么？为什么还要让它保持 up？

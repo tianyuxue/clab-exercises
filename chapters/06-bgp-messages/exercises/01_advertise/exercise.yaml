@@ -1,16 +1,16 @@
 id: 01_advertise
 title:
   en: Advertise the prefix
-  zh: 通告这个前缀
-brief: {en: "r1 has a network statement for 192.0.2.0/24 but r2 never receives it. Make r2 learn the prefix.", zh: "r1 配了 192.0.2.0/24 的 network 语句，但 r2 始终收不到。让 r2 学到该前缀。"}
+  zh: 把前缀通告出去
+brief: {en: "r1 has a network statement for 192.0.2.0/24 but r2 never receives it. Make r2 learn the prefix.", zh: "r1 上写了 192.0.2.0/24 的 network 语句，r2 却一直收不到。让这条前缀真正出现在 r2 的路由表里。"}
 type: config-fix
 difficulty: 3
 timeout: 60s
 hints:
   - en: On r1 `show bgp summary` shows peerState "Policy" and pfxSnt 0.
-    zh: r1 的 `show bgp summary` 显示 peerState "Policy"、pfxSnt 0。
+    zh: 在 r1 上看 `show bgp summary`：邻居的 peerState 是 Policy，pfxSnt 停在 0。
   - en: FRR needs `no bgp ebgp-requires-policy` for eBGP; then `clear bgp *` to re-send.
-    zh: FRR 的 eBGP 需要 `no bgp ebgp-requires-policy`；随后 `clear bgp *` 重发。
+    zh: FRR 的 eBGP 默认要求策略；先 `no bgp ebgp-requires-policy`，再 `clear bgp *` 让 UPDATE 重发。
 files:
   - source: r1/advertise.sh
     node: r1
@@ -26,7 +26,7 @@ reload:
 assertions:
   - name:
       en: r2 learns 192.0.2.0/24
-      zh: r2 学到 192.0.2.0/24
+      zh: r2 能学到 192.0.2.0/24
     type: exec
     layer: control-plane
     node: r2
@@ -37,4 +37,4 @@ assertions:
       equals: "1"
     hint:
       en: Enable eBGP advertisement on r1 with `no bgp ebgp-requires-policy`.
-      zh: 在 r1 上用 `no bgp ebgp-requires-policy` 允许 eBGP 通告。
+      zh: 在 r1 上执行 `no bgp ebgp-requires-policy`，放开 eBGP 通告。

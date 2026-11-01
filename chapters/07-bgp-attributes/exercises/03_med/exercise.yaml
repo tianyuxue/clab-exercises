@@ -1,51 +1,51 @@
 id: 03_med
 title:
   en: MED scope
-  zh: MED 的作用域
-brief: {en: "Answer the question to continue: when is MED compared?", zh: "继续前请回答问题：MED 什么时候才会被比较？"}
+  zh: MED 到底在多大范围内比较？
+brief: {en: "Answer the question to continue: when is MED compared?", zh: "先回答两个问题：MED 什么时候才会参与比较？跨 AS 调低 MED 有用吗？"}
 type: quiz
 difficulty: 3
 hints:
   - en: MED is optional non-transitive and only compares within one neighbor AS.
-    zh: MED 是 optional non-transitive，只在一个邻居 AS 内比较。
+    zh: MED 是 optional non-transitive，默认只在同一个邻居 AS 的路径之间比较。
 questions:
   - prompt:
       en: When does BGP compare MED?
-      zh: BGP 什么时候比较 MED？
+      zh: BGP 在什么范围内比较 MED？
     multiple: false
     options:
       - text: {en: "Only between paths learned from the same neighbor AS", zh: 只在来自同一邻居 AS 的路径之间}
         correct: true
         explanation:
           en: By default MED is compared only when the first AS in AS_PATH is the same.
-          zh: 默认只在 AS_PATH 首个 AS 相同时比较 MED。
-      - text: {en: "Between any two paths, after AS_PATH", zh: 任意两条路径之间，在 AS_PATH 之后}
+          zh: 默认只有 AS_PATH 里第一个 AS 相同，才比较 MED。
+      - text: {en: "Between any two paths, after AS_PATH", zh: 任意两条路径之间，排在 AS_PATH 后面}
         correct: false
         explanation:
           en: That would be MED across ASes, which needs `bgp always-compare-med`.
-          zh: 那是跨 AS 比较 MED，需要 `bgp always-compare-med`。
+          zh: 那是跨 AS 比较 MED，要开 `bgp always-compare-med`。
       - text: {en: "Before LOCAL_PREF", zh: 在 LOCAL_PREF 之前}
         correct: false
         explanation:
           en: MED is compared much later than LOCAL_PREF.
-          zh: MED 远在 LOCAL_PREF 之后比较。
+          zh: MED 排在 LOCAL_PREF 后面很远，轮不到它先说话。
   - prompt:
       en: Here r1 learns 10.2.2.0/24 from AS65002 and AS65003. Can r2 lower its MED to win?
-      zh: 本章中 r1 分别从 AS65002 与 AS65003 学到 10.2.2.0/24。r2 调低 MED 能赢得选路吗？
+      zh: 本章里 r1 分别从 AS65002 和 AS65003 学到 10.2.2.0/24。r2 把 MED 调低，能赢吗？
     multiple: false
     options:
-      - text: {en: "No; MED is not compared across different ASes", zh: 不能；MED 不在不同 AS 之间比较}
+      - text: {en: "No; MED is not compared across different ASes", zh: 不能；MED 不跨不同的 AS 比较}
         correct: true
         explanation:
           en: Different neighbor ASes, so MED is not compared by default.
-          zh: 邻居 AS 不同，默认不比较 MED。
+          zh: 邻居 AS 不同，默认根本不比较 MED。
       - text: {en: "Yes; a lower MED always wins", zh: 能；MED 越低越优先}
         correct: false
         explanation:
           en: Only within the same neighbor AS by default.
-          zh: 默认只在同一邻居 AS 内适用。
+          zh: 只有同一个邻居 AS 内，低 MED 才优先。
       - text: {en: "Yes, if MED is lower than LOCAL_PREF", zh: 能，只要 MED 低于 LOCAL_PREF}
         correct: false
         explanation:
           en: MED and LOCAL_PREF are different attributes compared at different steps.
-          zh: MED 与 LOCAL_PREF 是不同属性，在不同步骤比较。
+          zh: MED 和 LOCAL_PREF 是两个属性，比较的步骤也不同。

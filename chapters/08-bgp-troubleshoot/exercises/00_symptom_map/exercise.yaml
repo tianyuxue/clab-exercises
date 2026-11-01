@@ -2,70 +2,70 @@ id: 00_symptom_map
 title:
   en: Symptoms, states and error codes
   zh: 症状、状态与错误码
-brief: {en: "Answer the question to continue: what do BGP symptoms tell you?", zh: "继续前请回答问题：BGP 的症状说明了什么？"}
+brief: {en: "Answer the question to continue: what do BGP symptoms tell you?", zh: "先回答三个问题：邻居卡在 Active 说明什么？Bad Peer AS 该查哪里？iBGP 路由学到了却不安装，又该怎么修？"}
 type: quiz
 difficulty: 3
 hints:
   - en: "\"Active\" means the neighbor is unreachable, not \"working\"."
-    zh: “Active”表示邻居不可达，而不是“正常”。
+    zh: “Active”不是“正常”，它表示会话还在重试，TCP 没建起来。
 questions:
   - prompt:
       en: A neighbor is stuck in Active. What does that usually mean?
       zh: 邻居一直停在 Active，通常说明什么？
     multiple: false
     options:
-      - text: {en: The peer is unreachable (routing or address problem), zh: 对端不可达（路由或地址问题）}
+      - text: {en: The peer is unreachable (routing or address problem), zh: 对端不可达，或者邻居地址配错了}
         correct: true
         explanation:
           en: Active is a retry/backoff state; the TCP connection to the peer fails.
-          zh: Active 是重试/退避状态；到对端的 TCP 连接失败。
-      - text: {en: The session is up and passing routes, zh: 会话已建立并在传路由}
+          zh: Active 是重试和退避的状态；到对端的 TCP 连接没有建起来。
+      - text: {en: The session is up and passing routes, zh: 会话已经建立，正在传路由}
         correct: false
         explanation:
           en: Up and passing routes is Established.
-          zh: 已建立并在传路由是 Established。
+          zh: 会话建立并传路由，那是 Established。
       - text: {en: The peer rejected our AS number, zh: 对端拒绝了我们的 AS 号}
         correct: false
         explanation:
           en: An AS mismatch shows as OpenSent then resets, with a NOTIFICATION Bad Peer AS.
-          zh: AS 不匹配会表现为 OpenSent 后重置，并发出 NOTIFICATION Bad Peer AS。
+          zh: AS 不匹配时，会话通常走到 OpenSent 后重置，并带 NOTIFICATION Bad Peer AS。
   - prompt:
       en: The neighbor never reaches Established and logs a NOTIFICATION "Bad Peer AS". What is wrong?
-      zh: 邻居始终建立不起来，并记录 NOTIFICATION “Bad Peer AS”。哪里不对？
+      zh: 邻居始终到不了 Established，日志里出现 NOTIFICATION “Bad Peer AS”。问题在哪？
     multiple: false
     options:
-      - text: {en: "The configured remote-as does not match the peer's real AS", zh: 配置的 remote-as 与对端真实 AS 不符}
+      - text: {en: "The configured remote-as does not match the peer's real AS", zh: 配置的 remote-as 和对端真实 AS 不一致}
         correct: true
         explanation:
           en: OPEN Message Error subcode 2; fix the remote-as.
-          zh: OPEN Message Error 子码 2；修正 remote-as。
+          zh: OPEN Message Error 子码 2。把 remote-as 改成对端真实 AS。
       - text: {en: The hold timer expired, zh: Hold Timer 超时}
         correct: false
         explanation:
           en: That is error code 4, a different NOTIFICATION.
-          zh: 那是错误码 4，不同的 NOTIFICATION。
+          zh: Hold Timer 超时是错误码 4，会发另一种 NOTIFICATION。
       - text: {en: The peer's router-id collided, zh: 对端 router-id 冲突}
         correct: false
         explanation:
           en: That is a different OPEN error subcode.
-          zh: 那是另一个 OPEN 错误子码。
+          zh: 那是另一个 OPEN 错误子码，和 AS 号无关。
   - prompt:
       en: An iBGP router learned a route but did not install it; the NEXT_HOP is the eBGP peer's address it cannot reach. What fixes it?
-      zh: 一台 iBGP 路由器学到了路由却没有安装；下一跳是无法到达的 eBGP 对端地址。怎么修？
+      zh: 一台 iBGP 路由器学到了路由，却没有安装；下一跳是无法到达的 eBGP 对端地址。怎么修？
     multiple: false
     options:
       - text: {en: "On the edge router, set `neighbor ... next-hop-self`", zh: 在边界路由器上设置 `neighbor ... next-hop-self`}
         correct: true
         explanation:
           en: next-hop-self rewrites the next-hop to the advertising iBGP peer, which the internal router can resolve.
-          zh: next-hop-self 把下一跳改写为通告它的 iBGP 对等体，内部路由器即可解析。
+          zh: next-hop-self 把下一跳改成通告路由的 iBGP 对等体地址，内部路由器就能解析。
       - text: {en: Raise LOCAL_PREF on the internal router, zh: 在内部路由器上提高 LOCAL_PREF}
         correct: false
         explanation:
           en: That affects selection, not next-hop resolvability.
-          zh: 那影响选路，不影响下一跳可解析性。
+          zh: LOCAL_PREF 影响选路，不能让不可达的下一跳变得可达。
       - text: {en: Clear the BGP session, zh: 重置 BGP 会话}
         correct: false
         explanation:
           en: The problem recurs; the next-hop rewrite is a standard fix.
-          zh: 问题会复现；改写下一跳是标准做法。
+          zh: 同样的下一跳还会回来，问题会复现。先改下一跳。

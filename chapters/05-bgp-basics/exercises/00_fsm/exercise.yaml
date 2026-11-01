@@ -1,101 +1,101 @@
 id: 00_fsm
 title:
   en: The BGP finite state machine
-  zh: BGP 有限状态机
-brief: {en: "Answer the question to continue: how does a BGP session reach Established?", zh: "继续前请回答问题：BGP 会话如何达到 Established？"}
+  zh: BGP 会话要走过哪些状态
+brief: {en: "Answer the question to continue: how does a BGP session reach Established?", zh: "先回答几个问题再往下走：一条 BGP 会话要经过哪些状态，最后又靠什么信号才算真正建立？"}
 type: quiz
 difficulty: 1
 hints:
   - en: TCP is established first; OPEN and KEEPALIVE come after.
-    zh: 先建立 TCP；OPEN 与 KEEPALIVE 在其后。
+    zh: 先有 TCP，才有 OPEN 和 KEEPALIVE。
 questions:
   - prompt:
       en: The TCP connection is up and this side has just sent its OPEN. Which state is the session in?
-      zh: TCP 已建立且本端刚发出 OPEN。此时会话处于哪个状态？
+      zh: TCP 已经建好，本端刚把 OPEN 发出去。这时会话停在哪个状态？
     multiple: false
     options:
       - text: {en: Idle, zh: Idle}
         correct: false
         explanation:
           en: Idle is the initial state; no resources are allocated.
-          zh: Idle 是初始状态，尚未分配资源。
+          zh: Idle 是起点，还没分配资源，也没开始连 TCP。
       - text: {en: Connect, zh: Connect}
         correct: false
         explanation:
           en: Connect is the state while trying to establish TCP, before OPEN is sent.
-          zh: Connect 是尝试建立 TCP、尚未发出 OPEN 的状态。
+          zh: Connect 是正在发 TCP 连接、还没发 OPEN 的阶段。
       - text: {en: OpenSent, zh: OpenSent}
         correct: true
         explanation:
           en: After the TCP connection is established the OPEN is sent and the peer waits in OpenSent.
-          zh: TCP 建立后发出 OPEN，等待对端 OPEN，处于 OpenSent。
+          zh: TCP 通了，OPEN 已经发出，接下来等对端的 OPEN，所以停在 OpenSent。
       - text: {en: Established, zh: Established}
         correct: false
         explanation:
           en: Established requires KEEPALIVE exchange after the OPEN.
-          zh: Established 需要双方交换 OPEN 之后再做 KEEPALIVE 交换。
+          zh: 还要再交换一轮 KEEPALIVE，才会进入 Established。
   - prompt:
       en: What makes the session reach Established?
-      zh: 会话达到 Established 需要什么？
+      zh: 会话要靠什么动作才能进入 Established？
     multiple: false
     options:
-      - text: {en: Exchanging OPEN messages is enough, zh: 交换 OPEN 报文就够了}
+      - text: {en: Exchanging OPEN messages is enough, zh: 只交换 OPEN 报文就够了}
         correct: false
         explanation:
           en: OPEN only negotiates parameters; a KEEPALIVE must follow to confirm.
-          zh: OPEN 只协商参数；之后必须用 KEEPALIVE 确认。
+          zh: OPEN 只谈参数，谈完还得用 KEEPALIVE 确认。
       - text: {en: "Receiving the peer OPEN, then sending KEEPALIVE and receiving the peer KEEPALIVE", zh: 收到对端 OPEN 后发出 KEEPALIVE 并收到对端 KEEPALIVE}
         correct: true
         explanation:
           en: OpenConfirm waits for the peer KEEPALIVE; on receipt the session is Established.
-          zh: OpenConfirm 等待对端 KEEPALIVE；收到后进入 Established。
+          zh: OpenConfirm 就在等对端 KEEPALIVE；收到后会话进入 Established。
       - text: {en: The peer negotiating a BGP Identifier, zh: 对端协商出 BGP Identifier}
         correct: false
         explanation:
           en: The BGP Identifier is a 4-octet OPEN field, not an FSM trigger.
-          zh: BGP Identifier 是 OPEN 中的 4 字节字段，不是状态机触发条件。
+          zh: BGP Identifier 只是 OPEN 里的 4 字节字段，不触发状态迁移。
   - prompt:
       en: Which statements about Idle and Active are correct?
-      zh: 关于 Idle 与 Active，哪些说法正确？
+      zh: 关于 Idle 和 Active，下面哪些说法对？
     multiple: true
     options:
-      - text: {en: "Idle is the initial state, waiting for a Start event", zh: Idle 是初始状态，等待 Start 事件}
+      - text: {en: "Idle is the initial state, waiting for a Start event", zh: Idle 是初始状态，等 Start 事件才动}
         correct: true
         explanation:
           en: In Idle the BGP process holds no resources until told to start.
-          zh: Idle 下 BGP 进程不占资源，直到被通知启动。
+          zh: Idle 下 BGP 进程不占资源，收到 Start 事件才开始建会话。
       - text: {en: Active means the session is usable, zh: Active 表示会话已经可用}
         correct: false
         explanation:
           en: Active means listening for and accepting an inbound TCP connection, not a working session.
-          zh: Active 表示在监听并接受入向 TCP 连接，并不意味着会话可用。
-      - text: {en: In Active the peer waits for an inbound TCP connection, zh: Active 下等待对端主动发起的 TCP 连接}
+          zh: Active 只是被动等对端发起 TCP，会话还差得远。
+      - text: {en: In Active the peer waits for an inbound TCP connection, zh: Active 下等对端主动发起 TCP 连接}
         correct: true
         explanation:
           en: Active is the passive listening state; Connect actively retries.
-          zh: Active 是被动监听状态；Connect 才主动重试。
+          zh: Active 是被动监听；主动重试发生在 Connect。
       - text: {en: "When the ConnectRetry timer expires in Active, the FSM starts a new TCP connection and moves to Connect", zh: Active 下 ConnectRetry 计时器到期时，会发起新的 TCP 连接并转入 Connect}
         correct: true
         explanation:
           en: Active retries on the ConnectRetry timer; the retry enters Connect, which initiates the TCP connection.
-          zh: Active 依靠 ConnectRetry 计时器重试；重试进入 Connect，由 Connect 发起 TCP 连接。
+          zh: ConnectRetry 到期后，FSM 再试一次 TCP，这次从 Connect 开始。
   - prompt:
       en: What happens when the Hold Timer expires (no KEEPALIVE/UPDATE within Hold Time)?
-      zh: Hold Timer 到期（Hold Time 内未收到 KEEPALIVE/UPDATE）会怎样？
+      zh: Hold Time 内没收到 KEEPALIVE 或 UPDATE，会怎样？
     multiple: false
     options:
       - text: {en: Nothing happens, zh: 什么都不做}
         correct: false
         explanation:
           en: The dead-peer detection depends on the Hold Timer firing.
-          zh: 对端失效检测正是靠 Hold Timer 触发。
-      - text: {en: Send a NOTIFICATION and return to Idle, zh: 发送 NOTIFICATION 并回到 Idle}
+          zh: 对端失效检测就靠 Hold Timer 到期，不可能没动作。
+      - text: {en: Send a NOTIFICATION and return to Idle, zh: 发 NOTIFICATION，然后回到 Idle}
         correct: true
         explanation:
           en: The Hold Timer Expired error (code 4) tears the session down to Idle.
-          zh: 发送 Hold Timer Expired（错误码 4）通知，会话回到 Idle。
+          zh: Hold Timer Expired（错误码 4）发出后，会话拆掉，回到 Idle。
       - text: {en: Resend the last OPEN, zh: 重发上一条 OPEN}
         correct: false
         explanation:
           en: OPEN is not retransmitted; the session is torn down.
-          zh: OPEN 不会重传；会话直接拆除。
+          zh: OPEN 不重传；超时直接拆会话。

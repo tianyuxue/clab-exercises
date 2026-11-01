@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: clablings runner
+    url: https://github.com/tianyuxue/clablings/issues
+    about: Report CLI, engine, release, or installation problems here.
+  - name: containerlab documentation
+    url: https://containerlab.dev
+    about: Installation and topology file reference for containerlab itself.
+  - name: Security report
+    url: https://github.com/tianyuxue/clablings/security/advisories/new
+    about: Please report vulnerabilities privately.

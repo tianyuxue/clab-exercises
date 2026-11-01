@@ -1,55 +1,68 @@
-# BGP troubleshooting
+# BGP troubleshooting: read the state before fixing
 
-## Scenario
+## Scene
 
-A BGP session that used to work is down, or a route is missing. The operator has
-minutes to find the cause among several that look similar.
+`edge` peers with `ext` over eBGP and with `core` over iBGP. `ext` announces
+`192.0.2.0/24`, which `edge` should pass to `core`.
+
+Three failures appear in this lab:
+
+- `edge`'s eBGP neighbor stays in Active.
+- The session reaches OpenSent, then NOTIFICATION resets it.
+- `core` sees the prefix in its BGP table but not in its routing table.
+
+Clearing the session or rebooting repeats the same input.
 
 ## Terms
 
-- **iBGP**: a BGP session between two routers in the same AS.
-- **eBGP**: a BGP session between two routers in different ASes.
-- **FSM**: the fixed set of states a BGP session moves through (see chapter 05).
-- **OpenSent**: the FSM state after the TCP connection is up and this side has sent its OPEN.
-- **Active**: the FSM state where the router keeps (re)attempting to reach the peer; typically the TCP connection is not completing, e.g. a wrong neighbor address or no route to it.
-- **Bad Peer AS**: an OPEN Message Error (code 2, subcode 2) sent when the peer's AS number is not the one configured.
-- **NEXT_HOP**: the address an UPDATE tells the receiver to forward through; iBGP keeps the eBGP next-hop unless rewritten.
-- **next-hop-self**: an iBGP setting that rewrites NEXT_HOP to the advertising router's own address.
-- **NOTIFICATION**: the message that reports an error and closes the session.
+- **iBGP / eBGP**: BGP within one AS / between ASes. `edge`-`core` is iBGP (65001);
+  `edge`-`ext` is eBGP (65001/65002).
+- **FSM / OPEN**: Idle, Connect, Active, OpenSent, OpenConfirm, Established. OPEN is
+  the first message, sent after TCP is up. **Active** means TCP 179 is not up;
+  **OpenSent** means the local OPEN has been sent.
+- **UPDATE / NEXT_HOP**: an UPDATE carries prefixes; NEXT_HOP is the address used to
+  reach them and must resolve. **next-hop-self** rewrites it to the advertising
+  iBGP router's address.
+- **NOTIFICATION / Bad Peer AS**: an error report that closes the session; Bad Peer
+  AS is OPEN Message Error 2/2, an AS mismatch against `remote-as`.
 
-## Why it hurts
+## Three failures
 
-"Sessions are down" and "routes are missing" are not diagnoses. Each maps to a
-different state or attribute, and the fix for one does nothing for another.
+**Active.** `edge` is `10.1.12.1/30`, `ext` is `10.1.12.2/30`, but `edge` configures
+neighbor `10.1.12.9`. That address is off-link, so TCP never opens. Check the
+neighbor address and the route to it.
 
-## Why the naive fix fails
+**OpenSent, then Bad Peer AS.** `ext` expects `remote-as 65099`; `edge` is AS 65001.
+`ext` rejects the OPEN with NOTIFICATION 2/2 and closes the session. Capture TCP
+179, read the major/minor codes, then align both AS numbers.
 
-Clearing the session or rebooting does not help if the neighbor address, the
-remote AS, or the next-hop reachability is wrong; the same failure returns.
+**Established, no installed route.** `edge` learns `192.0.2.0/24` from `ext` with
+NEXT_HOP `10.1.12.2`, and iBGP keeps that next hop toward `core`. `core` only has
+`10.1.1.0/30` connected, so the path is invalid. Use `next-hop-self` on `edge`'s
+iBGP neighbor, or make the next hop reachable.
 
-## The mechanism
+## Inspect
 
-Read the FSM state first: stuck `Active` typically means the peer is unreachable
-(address or routing); reaching `OpenSent` then resetting with a NOTIFICATION
-`Bad Peer AS` means the remote AS does not match. A route that is learned but not
-installed is usually an unresolvable `NEXT_HOP`, often fixed with
-`next-hop-self` on the iBGP edge (or by making the next-hop reachable).
-
-## Configure and inspect
-
-On a router:
-```
+```sh
 vtysh -c 'show bgp summary'
 vtysh -c 'show bgp ipv4 unicast'
 ```
 
-On the sniffer, read a NOTIFICATION:
-```
+`show bgp summary` gives neighbor state and prefix count; `show bgp ipv4 unicast`
+shows paths, NEXT_HOP, and validity.
+
+```sh
 tshark -r /tmp/bgp.pcap -Y 'bgp.type==3' -T fields -e bgp.notify.major_error -e bgp.notify.minor_error_open
 ```
 
-## Common questions
+Major 2, minor 2 means OPEN Message Error / Bad Peer AS.
 
-- The neighbor sits in Active. What do you check first? The neighbor address and whether there is a route to it.
-- The peer resets right after OpenSent. Why? Its remote-as does not match our AS; look for NOTIFICATION Bad Peer AS.
-- An iBGP route is learned but not installed. Why? Its NEXT_HOP is unreachable; set `next-hop-self` on the edge router.
+## Triage order
+
+1. Check neighbor state. Active: check address and route. OpenSent and reset: read
+   NOTIFICATION.
+2. For a rejected OPEN, compare both `remote-as` values.
+3. For a learned but uninstalled route, check NEXT_HOP; use `next-hop-self` or add
+   a route to the next hop.
+4. Fix the configuration, then run `clear bgp *`; resetting first repeats the
+   failure.

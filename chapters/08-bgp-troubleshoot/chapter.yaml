@@ -1,7 +1,7 @@
 id: 08-bgp-troubleshoot
 title:
   en: BGP troubleshooting
-  zh: BGP 排错
+  zh: BGP 排错：邻居状态与下一跳
 difficulty: 4
 tags: [l3, bgp, troubleshooting, routing]
 estimated_minutes: 60
@@ -13,10 +13,10 @@ objectives:
     - Fix a rejected OPEN (NOTIFICATION Bad Peer AS)
     - Fix an iBGP route that is learned but not installed (next-hop-self)
   zh:
-    - 把症状（卡 Active、收不到路由、bad peer AS）映射到 BGP 状态
-    - 修复一直停留在 Active 的邻居
-    - 修复被拒绝的 OPEN（NOTIFICATION Bad Peer AS）
-    - 修复"学到但未安装"的 iBGP 路由（next-hop-self）
+    - 看到卡在 Active、收不到路由、Bad Peer AS 这些症状，能说出它们分别落在 BGP 的哪个状态或属性上
+    - 把一直停在 Active 的邻居修到 Established
+    - 处理被 NOTIFICATION Bad Peer AS 拒绝的 OPEN
+    - 让 core 装上那条“学到了却没安装”的 iBGP 路由，理解 next-hop-self 的作用
 topology: topology.clab.yml
 deploy:
   timeout: 240s

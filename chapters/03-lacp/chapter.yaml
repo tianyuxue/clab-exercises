@@ -12,9 +12,9 @@ objectives:
     - Describe LACP active/passive negotiation and admin-key matching
     - Bring a LAG up by fixing LACP configuration
   zh:
-    - 解释链路聚合相比被 STP 阻塞的冗余链路有什么收益
-    - 描述 LACP 的 active/passive 协商与 admin-key 匹配
-    - 通过修复 LACP 配置让 LAG 起来
+    - 说清楚链路聚合比“STP 挡掉一条”的冗余链路强在哪
+    - 讲明白 LACP 的 active/passive 协商，以及 admin-key 为什么必须一致
+    - 修好 LACP 配置，把 LAG 拉起来
 topology: topology.clab.yml
 deploy:
   timeout: 300s
