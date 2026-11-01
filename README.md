@@ -78,7 +78,7 @@ chapters/<chapter-id>/
 - `config-fix`：在运行中的拓扑里修配置，用断言判定。
 - `code-implement`：写代码、构建、下发到节点运行。
 
-内容写作规范在 [clablings 内容规范](https://github.com/tianyuxue/clablings/blob/main/docs/superpowers/specs/2026-09-19-clablings-content-style-guide.md)。中文是主稿，英文是摘要，不要求逐句对应。
+中文是主稿，英文是摘要，不要求逐句对应；详细写作规范在本地维护。
 
 ## 章节
 
