@@ -37,7 +37,7 @@ export CLABLINGS_ROOT=/path/to/clab-exercises
 - LACP 章要用 `ghcr.io/nokia/srlinux:24.10.1`。拓扑里已经设了 `shm-size: 1g`；24.7.1 在这个环境里提交不了配置。
 - BGP 章要用 `quay.io/frrouting/frr:10.7.1` 和 `nicolaka/netshoot:v0.13`，抓包和解包靠 tshark。
 - 章节目录里的 `make debug` 会调用 `clablings debug` 启动 `clab-tui`，所以 PATH 上得同时有 `clablings` 和 `clab-tui`。
-- 跑实验通常需要 root，或者给 containerlab 配 SUID。
+- 跑实验通常需要 root，或者给 containerlab 配 SUID。用户目录安装的 clablings 可以直接用 `clablings watch --sudo` 提权，不必用 `sudo clablings`（sudo 的 PATH 不含 `~/.local/bin`）。
 
 ## 怎么用
 
